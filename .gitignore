@@ -1,0 +1,17 @@
+build/
+lib/*.jar
+target
+.idea
+.idea_modules
+.settings
+.cache
+atlassian-ide-plugin.xml
+*.iml
+.java-version
+.zip
+.tgz
+.gz
+sonar-project.properties
+test-output/
+
+
