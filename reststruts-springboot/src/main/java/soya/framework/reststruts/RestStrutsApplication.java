@@ -14,7 +14,8 @@ public class RestStrutsApplication {
 
     @Bean
     ServletRegistrationBean actionServlet() {
-        ServletRegistrationBean bean = new ServletRegistrationBean(new ActionServlet(), "/dispatch/*");
+        ServletRegistrationBean bean = new ServletRegistrationBean(new ActionServlet(),
+                "/api/*");
         bean.setLoadOnStartup(10);
 
         return bean;
