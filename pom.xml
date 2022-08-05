@@ -10,7 +10,7 @@
     <url>https://github.com/</url>
 
     <modules>
-        <module>reststruts-servlet</module>
+        <module>reststruts</module>
         <module>reststruts-springboot</module>
     </modules>
 

@@ -25,7 +25,7 @@
     <dependencies>
         <dependency>
             <groupId>soya.framework.reststruts</groupId>
-            <artifactId>reststruts-servlet</artifactId>
+            <artifactId>reststruts</artifactId>
             <version>${project.version}</version>
         </dependency>
 
