@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import soya.framework.action.servlet.ActionServlet;
+import soya.framework.struts.action.ActionServlet;
 
 @SpringBootApplication
 public class RestStrutsApplication {
