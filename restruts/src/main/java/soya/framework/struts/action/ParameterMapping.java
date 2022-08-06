@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface PropertyMapping {
+public @interface ParameterMapping {
     String value();
 
     ParameterType parameterType();

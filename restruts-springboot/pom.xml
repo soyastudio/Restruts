@@ -10,8 +10,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>soya.framework.reststruts</groupId>
-    <artifactId>reststruts-springboot</artifactId>
+    <groupId>soya.framework.restruts</groupId>
+    <artifactId>restruts-springboot</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -24,8 +24,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>soya.framework.reststruts</groupId>
-            <artifactId>reststruts</artifactId>
+            <groupId>soya.framework.restruts</groupId>
+            <artifactId>restruts</artifactId>
             <version>${project.version}</version>
         </dependency>
 

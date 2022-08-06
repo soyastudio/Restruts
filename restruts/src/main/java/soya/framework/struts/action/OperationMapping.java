@@ -5,7 +5,9 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ActionMapping {
+public @interface OperationMapping {
+    String api();
+
     String path();
 
     HttpMethod method();
