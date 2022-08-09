@@ -1,4 +1,4 @@
-package soya.framework.struts.action;
+package soya.framework.restruts.action;
 
 import java.lang.annotation.*;
 
@@ -6,6 +6,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface PayloadMapping {
+    String name() default "";
+
     String[] consumes();
 
     String description() default "";

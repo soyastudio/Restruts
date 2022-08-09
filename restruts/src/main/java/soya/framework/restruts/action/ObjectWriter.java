@@ -1,4 +1,4 @@
-package soya.framework.struts.action;
+package soya.framework.restruts.action;
 
 import java.io.IOException;
 import java.io.OutputStream;

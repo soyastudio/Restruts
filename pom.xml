@@ -11,6 +11,7 @@
 
     <modules>
         <module>restruts</module>
+        <module>restruts-starter</module>
         <module>restruts-springboot</module>
     </modules>
 

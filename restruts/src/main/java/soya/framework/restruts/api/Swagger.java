@@ -1,4 +1,4 @@
-package soya.framework.struts.api;
+package soya.framework.restruts.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

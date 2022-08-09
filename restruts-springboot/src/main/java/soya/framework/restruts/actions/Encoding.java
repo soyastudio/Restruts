@@ -1,7 +1,8 @@
-package soya.framework.reststruts.actions;
+package soya.framework.restruts.actions;
 
-import soya.framework.struts.action.API;
+import soya.framework.restruts.action.API;
 
 @API(value = "Encoding", description = "Encoding Services")
 public interface Encoding {
+
 }
