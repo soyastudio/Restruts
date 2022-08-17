@@ -5,8 +5,10 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface API {
-    String value();
+public @interface Domain {
+    String name();
+
+    String title() default "";
 
     String description() default "";
 }

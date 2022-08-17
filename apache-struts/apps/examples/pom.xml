@@ -58,7 +58,7 @@
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
+         <artifactId>servlet-domain</artifactId>
       </dependency>
       <dependency>
          <groupId>taglibs</groupId>

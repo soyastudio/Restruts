@@ -962,27 +962,27 @@
 
             <ul>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/config/package-summary.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/config/package-summary.html">
                         config</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/nested/package-summary.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/nested/package-summary.html">
                         taglib.nested</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/nested/bean/package-summary.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/nested/bean/package-summary.html">
                         taglib.nested.bean</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/nested/html/package-summary.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/nested/html/package-summary.html">
                         taglib.nested.html</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/nested/logic/package-summary.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/nested/logic/package-summary.html">
                         taglib.nested.logic</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/validator/package-frame.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/validator/package-frame.html">
                         validator</a>
                 </li>
             </ul>
@@ -993,82 +993,82 @@
             <p>action</p>
             <ul>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/ActionMessage.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/ActionMessage.html">
                         ActionMessage</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/ActionMessages.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/ActionMessages.html">
                         ActionMessages</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/DynaActionForm.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/DynaActionForm.html">
                         DynaActionForm</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/DynaActionFormClass.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/DynaActionFormClass.html">
                         DynaActionFormClass</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/ExceptionHandler.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/ExceptionHandler.html">
                         ExceptionHandler</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/RequestProcessor.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/RequestProcessor.html">
                         RequestProcessor</a>
                 </li>
             </ul>
             <p>actions</p>
             <ul>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/actions/LookupDispatchAction.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/actions/LookupDispatchAction.html">
                         LookupDispatchAction</a>
                 </li>
             </ul>
             <p>taglib.html</p>
             <ul>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/html/FrameTag.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/html/FrameTag.html">
                         FrameTag</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/html/JavascriptValidatorTag.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/html/JavascriptValidatorTag.html">
                         JavascriptValidatorTag</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/html/MessagesTag.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/html/MessagesTag.html">
                         MessagesTag</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/html/OptionsCollectionTag.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/html/OptionsCollectionTag.html">
                         OptionsCollectionTag</a>
                 </li>
             </ul>
             <p>taglib.logic</p>
             <ul>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/logic/EmptyTag.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/logic/EmptyTag.html">
                         EmptyTag</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/logic/MessagesNotPresentTag.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/logic/MessagesNotPresentTag.html">
                         MessagesNotPresentTag</a>
                 </li>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/logic/MessagesPresentTag.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/logic/MessagesPresentTag.html">
                         MessagesPresentTag</a>
                 </li>
             </ul>
             <p>upload</p>
             <ul>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/upload/CommonsMultipartRequestHandler.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/upload/CommonsMultipartRequestHandler.html">
                         CommonsMultipartRequestHandler</a>
                 </li>
             </ul>
             <p>util</p>
             <ul>
                 <li>
-                    <a href="http://jakarta.apache.org/struts/api/org/apache/struts/util/LabelValueBean.html">
+                    <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/util/LabelValueBean.html">
                         LabelValueBean</a>
                 </li>
             </ul>
@@ -1076,7 +1076,7 @@
                 <strong>Classes with members added in Struts 1.1</strong>
             </p>
             <p>
-                <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/Action.html">
+                <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/Action.html">
                     action.Action</a>
             </p>
             <ul>
@@ -1090,9 +1090,9 @@
                 <li>saveMessages</li>
             </ul>
             <p>
-                <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/ActionServlet.html">
+                <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/ActionServlet.html">
                     action.A</a>
-                <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/ActionServlet.html">
+                <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/ActionServlet.html">
                     ctionServlet</a>
             </p>
             <ul>
@@ -1121,7 +1121,7 @@
                 </li>
             </ul>
             <p>
-                <a href="http://jakarta.apache.org/struts/api/org/apache/struts/taglib/html/BaseHandlerTag.html">
+                <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/taglib/html/BaseHandlerTag.html">
                     taglib.html.BaseHandlerTag</a>
             </p>
             <ul>
@@ -1145,7 +1145,7 @@
                     Struts 1.1</strong>
             </p>
             <p>
-                <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/Action.html">
+                <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/Action.html">
                     action.Action</a>
             </p>
 
@@ -1157,7 +1157,7 @@
                 <li>perform</li>
             </ul>
             <p>
-                <a href="http://jakarta.apache.org/struts/api/org/apache/struts/action/ActionServlet.html">
+                <a href="http://jakarta.apache.org/struts/domain/org/apache/struts/action/ActionServlet.html">
                     ActionServlet</a>
             </p>
             <ul>

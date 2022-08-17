@@ -1,8 +1,8 @@
 package soya.framework.restruts.actions;
 
-import soya.framework.restruts.action.API;
+import soya.framework.restruts.action.Domain;
 
-@API(value = "Encoding", description = "Encoding Services")
+@Domain(name = "Encoding", description = "Encoding Services")
 public interface Encoding {
 
 }

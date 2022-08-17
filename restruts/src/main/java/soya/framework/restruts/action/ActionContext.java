@@ -22,4 +22,25 @@ public abstract class ActionContext {
     public static ActionContext getInstance() {
         return INSTANCE;
     }
+
+    public class DefaultBuilder {
+
+    }
+
+    class DefaultActionContext extends ActionContext{
+
+        protected DefaultActionContext(ActionMappings actionMappings) {
+            super(actionMappings);
+        }
+
+        @Override
+        public <T> T getService(Class<T> type) {
+            return null;
+        }
+
+        @Override
+        public <T> T getService(String name, Class<T> type) {
+            return null;
+        }
+    }
 }

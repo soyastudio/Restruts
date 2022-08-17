@@ -104,7 +104,7 @@ applications is straightforward, and requires the following steps:
 
 * Add the following JAR files from the JavaServer Faces reference
   implementation's "lib" directory to your application's
-  "/WEB-INF/lib" directory:  jsf-api.jar, jsf-impl.jar,
+  "/WEB-INF/lib" directory:  jsf-domain.jar, jsf-impl.jar,
   or install them in your servlet container's shared folder.
   (You can also use any other JSF implementation that has
   been certified to be compatible with the JSF specification.)

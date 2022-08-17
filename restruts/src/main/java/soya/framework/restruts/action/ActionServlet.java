@@ -1,7 +1,8 @@
 package soya.framework.restruts.action;
 
 import org.reflections.Reflections;
-import soya.framework.restruts.api.Swagger;
+import soya.framework.restruts.action.api.Swagger;
+import soya.framework.restruts.action.io.DefaultServletStreamHandler;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
@@ -19,8 +20,7 @@ import java.util.*;
 public class ActionServlet extends HttpServlet {
 
     public static final String INIT_PARAM_SCAN_PACKAGES = "soya.framework.restruts.SCAN_ACTION_PACKAGES";
-    public static final String INIT_PARAM_SERIALIZER = "soya.framework.restruts.SERIALIZER";
-    public static final String INIT_PARAM_DESERIALIZER = "soya.framework.restruts.DESERIALIZER";
+    public static final String INIT_PARAM_STREAM_HANDLER = "soya.framework.restruts.STREAM_HANDLER";
 
     public static final String SPRING_ROOT_ATTRIBUTE = "org.springframework.web.context.WebApplicationContext.ROOT";
 
@@ -28,17 +28,21 @@ public class ActionServlet extends HttpServlet {
     private DefaultActionMappings actionMappings;
     private Swagger swagger;
 
+    private ServletStreamHandler streamHandler;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         ServletContext servletContext = config.getServletContext();
 
         if (ActionContext.getInstance() == null) {
-             this.actionMappings = new DefaultActionMappings();
+            this.actionMappings = new DefaultActionMappings();
 
             String scanPackages = config.getInitParameter(INIT_PARAM_SCAN_PACKAGES);
             if (scanPackages != null) {
                 actionMappings.scan(scanPackages.split(","));
+            } else {
+                actionMappings.scan("soya.framework");
             }
 
             if (servletContext.getAttribute(SPRING_ROOT_ATTRIBUTE) != null) {
@@ -55,6 +59,12 @@ public class ActionServlet extends HttpServlet {
             }
         }
         swagger.setBasePath(path);
+
+        if (config.getInitParameter(INIT_PARAM_STREAM_HANDLER) != null) {
+
+        } else {
+            this.streamHandler = new DefaultServletStreamHandler();
+        }
     }
 
     @Override
@@ -98,14 +108,11 @@ public class ActionServlet extends HttpServlet {
         } else {
             try {
                 Action action = actionMappings.create(event);
-                final String contentType = contentType(req.getHeader("Accept"),
-                        actionMappings.get(event.registration).getAnnotation(OperationMapping.class).produces());
-
                 AsyncContext asyncContext = req.startAsync();
                 asyncContext.start(() -> {
                     try {
                         Object result = action.execute();
-                        ServletIoSupport.write(result, contentType, resp.getOutputStream());
+                        streamHandler.write(result, req, resp);
 
                     } catch (Exception e) {
                         resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -227,10 +234,10 @@ public class ActionServlet extends HttpServlet {
         void scan(String... pkgs) {
             for (String pkg : pkgs) {
                 Reflections reflections = new Reflections(pkg.trim());
-                Set<Class<?>> set = reflections.getTypesAnnotatedWith(API.class);
+                Set<Class<?>> set = reflections.getTypesAnnotatedWith(Domain.class);
                 set.forEach(c -> {
-                    API api = c.getAnnotation(API.class);
-                    apis.put(api.value(), c);
+                    Domain domain = c.getAnnotation(Domain.class);
+                    apis.put(domain.name(), c);
                 });
             }
 
@@ -257,8 +264,10 @@ public class ActionServlet extends HttpServlet {
             List<String> tags = new ArrayList<>(apis.keySet());
             Collections.sort(tags);
             tags.forEach(e -> {
-                API api = apis.get(e).getAnnotation(API.class);
-                builder.addTag(Swagger.TagObject.instance().name(api.value()).description(api.description()));
+                Domain domain = apis.get(e).getAnnotation(Domain.class);
+                builder.addTag(Swagger.TagObject.instance()
+                        .name(domain.title().isEmpty() ? domain.name() : domain.title())
+                        .description(domain.description()));
             });
 
             List<Registration> registrations = new ArrayList<>(keySet());
@@ -314,9 +323,19 @@ public class ActionServlet extends HttpServlet {
 
                 }
 
-                pathBuilder
-                        .addTag(operationMapping.api())
-                        .produces(operationMapping.produces());
+                Class<?> domainClass = apis.get(operationMapping.domain());
+                if(domainClass != null) {
+                    Domain domain = domainClass.getAnnotation(Domain.class);
+                    pathBuilder
+                            .addTag(domain.title().isEmpty()? domain.name() : domain.title())
+                            .produces(operationMapping.produces());
+
+                } else {
+                    pathBuilder
+                            .addTag(operationMapping.domain())
+                            .produces(operationMapping.produces());
+
+                }
 
 
                 pathBuilder.build();
@@ -371,7 +390,7 @@ public class ActionServlet extends HttpServlet {
                     ParameterMapping parameterMapping = e.getAnnotation(ParameterMapping.class);
                     String name = parameterMapping.name() == null ? parameterMapping.name() : e.getName();
                     String paramValue = null;
-                    if(ParameterMapping.ParameterType.HEADER_PARAM.equals(parameterMapping.parameterType())) {
+                    if (ParameterMapping.ParameterType.HEADER_PARAM.equals(parameterMapping.parameterType())) {
                         paramValue = httpServletRequest.getHeader(name);
 
                     } else if (ParameterMapping.ParameterType.QUERY_PARAM.equals(parameterMapping.parameterType())) {
@@ -451,27 +470,29 @@ public class ActionServlet extends HttpServlet {
 
             try {
                 ServletInputStream inputStream = request.getInputStream();
-                inputData = new byte[request.getContentLength()];
+                if (inputStream != null && inputStream.available() > 0) {
+                    inputData = new byte[request.getContentLength()];
 
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                int nRead;
-                while ((nRead = inputStream.read(inputData, 0, inputData.length)) != -1) {
-                    buffer.write(inputData, 0, nRead);
+                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                    int nRead;
+                    while ((nRead = inputStream.read(inputData, 0, inputData.length)) != -1) {
+                        buffer.write(inputData, 0, nRead);
+                    }
                 }
             } catch (IOException exception) {
-
+                exception.printStackTrace();
             }
         }
 
         public String getHeader(String name) {
             HttpServletRequest request = (HttpServletRequest) getSource();
-            return  request.getHeader(name);
+            return request.getHeader(name);
         }
 
         public String getQueryParameter(String name) {
-            if(queryParams.containsKey(name)) {
+            if (queryParams.containsKey(name)) {
                 return queryParams.get(name).size() > 0 ? queryParams.get(name).get(0) : null;
-             } else {
+            } else {
                 return null;
             }
         }

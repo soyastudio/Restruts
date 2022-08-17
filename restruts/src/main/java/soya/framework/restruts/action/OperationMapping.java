@@ -6,9 +6,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface OperationMapping {
-    String name() default "";
 
-    String api();
+    String domain();
+
+    String name();
 
     String path();
 

@@ -49,7 +49,7 @@
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
+         <artifactId>servlet-domain</artifactId>
       </dependency>
       <dependency>
          <groupId>myfaces</groupId>
@@ -62,7 +62,7 @@
       </dependency>
       <dependency>
          <groupId>myfaces</groupId>
-         <artifactId>myfaces-jsf-api</artifactId>
+         <artifactId>myfaces-jsf-domain</artifactId>
       </dependency>
       <dependency>
          <groupId>taglibs</groupId>

@@ -296,11 +296,11 @@
                 <configuration>
                   <aggregate>true</aggregate>
                   <links>
-                    <link>http://commons.apache.org/beanutils/api/</link>
+                    <link>http://commons.apache.org/beanutils/domain/</link>
                     <link>http://commons.apache.org/logging/apidocs/</link>
                     <link>http://commons.apache.org/validator/apidocs/</link>
-                    <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
-                    <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
+                    <link>http://java.sun.com/j2se/1.4.2/docs/domain/</link>
+                    <link>http://java.sun.com/j2ee/1.4/docs/domain/</link>
                   </links>
                 </configuration>
             </plugin>
@@ -379,11 +379,11 @@
                 <exclusions>
                     <exclusion>
                         <groupId>myfaces</groupId>
-                        <artifactId>myfaces-api</artifactId>
+                        <artifactId>myfaces-domain</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>javax.portlet</groupId>
-                        <artifactId>portlet-api</artifactId>
+                        <artifactId>portlet-domain</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -426,7 +426,7 @@
             </dependency>
             <dependency>
               <groupId>javax.servlet</groupId>
-              <artifactId>jsp-api</artifactId>
+              <artifactId>jsp-domain</artifactId>
               <version>2.0</version>
               <scope>provided</scope>
             </dependency>
@@ -437,7 +437,7 @@
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
+                <artifactId>servlet-domain</artifactId>
                 <version>2.3</version>
                 <scope>provided</scope>
             </dependency>
@@ -459,7 +459,7 @@
             </dependency>
             <dependency>
                <groupId>myfaces</groupId>
-               <artifactId>myfaces-jsf-api</artifactId>
+               <artifactId>myfaces-jsf-domain</artifactId>
                <version>${myfaces.version}</version>
             </dependency>
             <dependency>

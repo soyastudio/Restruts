@@ -95,7 +95,7 @@
       <item value="Download"       link="/doc/download.jsp" />
       <item value="Installation"   link="/doc/installation.jsp" />
       <item value="User Guide"	   link="/doc/userGuide.jsp" />
-      <item value="Javadoc"        link="/api/index.html" />
+      <item value="Javadoc"        link="/domain/index.html" />
       <item value="Struts Home"    link="http://www.apache.org"   icon="/images/struts-power.gif"        
 			classtype="org.apache.struts.tiles.beans.SimpleMenuItem" />
     </putList>

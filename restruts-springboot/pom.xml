@@ -28,6 +28,11 @@
             <artifactId>restruts-starter</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>soya.framework.restruts</groupId>
+            <artifactId>restruts-azure</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
 

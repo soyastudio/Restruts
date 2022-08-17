@@ -86,7 +86,7 @@
                 <ul>
 
                     <li>
-                        <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/util/Locale.html">
+                        <a href="http://java.sun.com/j2se/1.4.1/docs/domain/java/util/Locale.html">
                             <strong>Locale</strong>
                         </a>
                         - The fundamental Java class that supports
@@ -103,7 +103,7 @@
                     </li>
 
                     <li>
-                        <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/util/ResourceBundle.html">
+                        <a href="http://java.sun.com/j2se/1.4.1/docs/domain/java/util/ResourceBundle.html">
                             <strong>ResourceBundle</strong>
                         </a>
                         - The
@@ -120,7 +120,7 @@
                     </li>
 
                     <li>
-                        <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/util/PropertyResourceBundle.html">
+                        <a href="http://java.sun.com/j2se/1.4.1/docs/domain/java/util/PropertyResourceBundle.html">
                             <strong>PropertyResourceBundle</strong>
                         </a>
                         - One of the standard
@@ -138,7 +138,7 @@
                     </li>
 
                     <li>
-                        <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/text/MessageFormat.html">
+                        <a href="http://java.sun.com/j2se/1.4.1/docs/domain/java/text/MessageFormat.html">
                             <strong>MessageFormat</strong>
                         </a>
                         - The
@@ -235,7 +235,7 @@
                         <strong>MyApplication_xx.properties</strong>
                         - Contains the same messages in the
                         language whose ISO language code is "xx" (See the
-                        <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/util/ResourceBundle.html">
+                        <a href="http://java.sun.com/j2se/1.4.1/docs/domain/java/util/ResourceBundle.html">
                             ResourceBundle Javadoc</a>
                         page for a link to the current list).
                         For a French version of the message shown above, you
@@ -424,8 +424,8 @@ value="<%= loginBean.getUsername() >"/>
 
                 <p>
                     Documentation on the Beanutils package can be found at
-                    <a href="http://commons.apache.org/beanutils/api/index.html">
-                        http://commons.apache.org/beanutils/api/index.html.</a>
+                    <a href="http://commons.apache.org/beanutils/domain/index.html">
+                        http://commons.apache.org/beanutils/domain/index.html.</a>
                     More information about using indexed and mapped properties
                     in Struts can
                     be found in the FAQ describing

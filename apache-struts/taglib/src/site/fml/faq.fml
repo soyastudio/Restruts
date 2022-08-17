@@ -149,7 +149,7 @@
                 </p>
                 <p>
                     One popular approach is to use a 
-                    <a href="../api/org/apache/struts/actions/LookupDispatchAction.html">
+                    <a href="../domain/org/apache/struts/actions/LookupDispatchAction.html">
                         <code>LookupDispatchAction.</code>
                     </a>
                     Basically,

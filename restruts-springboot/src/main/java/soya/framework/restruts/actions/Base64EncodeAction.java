@@ -5,7 +5,8 @@ import soya.framework.restruts.action.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-@OperationMapping(api = "Encoding",
+@OperationMapping(domain = "Encoding",
+        name = "base64-encoding",
         path = "/encoding/base64-encoding",
         method = OperationMapping.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN)

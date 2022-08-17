@@ -18,7 +18,7 @@
 
 
     <!-- Local system paths -->
-    <property name="servlet.jar" value="../../common/lib/servlet-api.jar"/>
+    <property name="servlet.jar" value="../../common/lib/servlet-domain.jar"/>
     <property name="distpath.project" value="dist"/>
 
 
@@ -29,7 +29,7 @@
 
 
     <!-- Path settings -->
-    <property name="doc.path" value="./doc/api"/>
+    <property name="doc.path" value="./doc/domain"/>
     <property name="doc.src" value="./src/java"/>
 
 
@@ -83,10 +83,10 @@
     <!-- Build Javadoc documentation -->
     <target name="javadoc"
      description="Generate JavaDoc API docs">
-        <delete dir="./doc/api"/>
-        <mkdir dir="./doc/api"/>
+        <delete dir="./doc/domain"/>
+        <mkdir dir="./doc/domain"/>
         <javadoc sourcepath="./src/java"
-            destdir="./doc/api"
+            destdir="./doc/domain"
             classpath="${servlet.jar}"
             packagenames="*"
             author="false"

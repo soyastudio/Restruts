@@ -96,17 +96,17 @@
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
-         <artifactId>jsp-api</artifactId>
+         <artifactId>jsp-domain</artifactId>
          <version>2.0</version>
          <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
+         <artifactId>servlet-domain</artifactId>
       </dependency>
       <dependency>
          <groupId>myfaces</groupId>
-         <artifactId>myfaces-jsf-api</artifactId>
+         <artifactId>myfaces-jsf-domain</artifactId>
       </dependency>
    </dependencies>
 

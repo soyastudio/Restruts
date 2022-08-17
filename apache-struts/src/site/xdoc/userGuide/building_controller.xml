@@ -2422,7 +2422,7 @@ public ActionForward execute(ActionMapping mapping,
                     For more information about the currently-supported
                     implementations,
                     please refer to the
-                    <a href="http://commons.apache.org/logging/api/index.html">
+                    <a href="http://commons.apache.org/logging/domain/index.html">
                         the description for the org.apache.commons.logging
                         package.</a>
                 </p>

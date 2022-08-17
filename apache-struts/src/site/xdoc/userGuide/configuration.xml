@@ -1283,7 +1283,7 @@
                     package,
                     or the built-in logging capabilities of JDK 1.4 or later
                     in the
-                    <a href="http://java.sun.com/j2se/1.4/docs/api/java/util/logging/package-summary.html">
+                    <a href="http://java.sun.com/j2se/1.4/docs/domain/java/util/logging/package-summary.html">
                         java.util.logging</a>
                     package.
                 </p>
@@ -1298,7 +1298,7 @@
                     on using Commons Logging, consult the documentation for
                     the logging system
                     you are using, plus the Commons Logging
-                    <a href="http://commons.apache.org/logging/commons-logging-1.0.3/docs/api/">
+                    <a href="http://commons.apache.org/logging/commons-logging-1.0.3/docs/domain/">
                         Javadocs.</a>
                 </p>
 
