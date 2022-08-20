@@ -309,7 +309,17 @@ public class ActionServlet extends HttpServlet {
                         if (f.getAnnotation(ParameterMapping.class) != null) {
                             ParameterMapping param = f.getAnnotation(ParameterMapping.class);
                             String name = param.name().isEmpty() ? f.getName() : param.name();
-                            pathBuilder.parameterBuilder(name, param.parameterType().name().toLowerCase(), param.description()).build();
+                            String in = null;
+                            if(ParameterMapping.ParameterType.PATH_PARAM.equals(param.parameterType())) {
+                                in = "path";
+                            } else if (ParameterMapping.ParameterType.QUERY_PARAM.equals(param.parameterType())) {
+                                in = "query";
+                            } else if (ParameterMapping.ParameterType.HEADER_PARAM.equals(param.parameterType())) {
+                                in = "header";
+                            }else if (ParameterMapping.ParameterType.COOKIE_PARAM.equals(param.parameterType())) {
+                                in = "cookie";
+                            }
+                            pathBuilder.parameterBuilder(name, in, param.description()).build();
 
                         } else if (f.getAnnotation(PayloadMapping.class) != null) {
                             PayloadMapping payload = f.getAnnotation(PayloadMapping.class);
@@ -388,7 +398,7 @@ public class ActionServlet extends HttpServlet {
 
                 } else if (e.getAnnotation(ParameterMapping.class) != null) {
                     ParameterMapping parameterMapping = e.getAnnotation(ParameterMapping.class);
-                    String name = parameterMapping.name() == null ? parameterMapping.name() : e.getName();
+                    String name = parameterMapping.name().isEmpty() ? e.getName() : parameterMapping.name();
                     String paramValue = null;
                     if (ParameterMapping.ParameterType.HEADER_PARAM.equals(parameterMapping.parameterType())) {
                         paramValue = httpServletRequest.getHeader(name);
@@ -397,8 +407,13 @@ public class ActionServlet extends HttpServlet {
                         paramValue = event.queryParams.get(name).get(0);
 
                     } else if (ParameterMapping.ParameterType.QUERY_PARAM.equals(parameterMapping.parameterType())) {
+                        paramValue = event.getQueryParameter(name);
 
+                    } else if (ParameterMapping.ParameterType.COOKIE_PARAM.equals(parameterMapping.parameterType())) {
+                        // TODO:
                     }
+
+                    value = convert(paramValue, e.getType());
                 }
 
                 if (value != null) {
@@ -412,6 +427,10 @@ public class ActionServlet extends HttpServlet {
             });
 
             return action;
+        }
+
+        private Object convert(String value, Class<?> type) {
+            return value;
         }
     }
 

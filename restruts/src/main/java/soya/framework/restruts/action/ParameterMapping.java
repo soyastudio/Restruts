@@ -13,6 +13,8 @@ public @interface ParameterMapping {
 
     String description() default "";
 
+    boolean required() default false;
+
     enum ParameterType {
         COOKIE_PARAM, HEADER_PARAM, PATH_PARAM, QUERY_PARAM, FORM_PARAM, MATRIX_PARAM, BEAN_PARAM;
 

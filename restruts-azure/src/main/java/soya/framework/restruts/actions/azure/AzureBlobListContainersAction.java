@@ -1,4 +1,4 @@
-package soya.framework.restruts.azure;
+package soya.framework.restruts.actions.azure;
 
 import soya.framework.restruts.action.MediaType;
 import soya.framework.restruts.action.OperationMapping;

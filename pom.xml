@@ -12,6 +12,7 @@
     <modules>
         <module>restruts</module>
         <module>restruts-starter</module>
+        <module>restruts-kafka</module>
         <module>restruts-azure</module>
         <module>restruts-springboot</module>
     </modules>
