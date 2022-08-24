@@ -12,7 +12,7 @@ public class Swagger {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public enum HttpMethod {
-        get, put, post, delete, patch, options, head
+        get, post, put, delete, patch, options, head
     }
 
     private String swagger = "2.0";
@@ -291,6 +291,11 @@ public class Swagger {
 
         public BodyParameterBuilder bodyParameterBuilder(String name, String description) {
             return new BodyParameterBuilder(this, name, description);
+        }
+
+        public PathBuilder description(String description) {
+            operation.description = description;
+            return this;
         }
 
         public PathBuilder addTag(String name) {

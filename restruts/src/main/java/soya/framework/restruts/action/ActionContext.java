@@ -27,7 +27,7 @@ public abstract class ActionContext {
 
     }
 
-    class DefaultActionContext extends ActionContext{
+    class DefaultActionContext extends ActionContext {
 
         protected DefaultActionContext(ActionMappings actionMappings) {
             super(actionMappings);

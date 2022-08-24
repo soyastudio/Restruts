@@ -3,7 +3,7 @@ package soya.framework.restruts.action;
 import java.io.Serializable;
 import java.util.Objects;
 
-public final class ActionName implements Serializable {
+public final class ActionName implements Comparable<ActionName>, Serializable {
 
     private final String domain;
     private final String name;
@@ -19,6 +19,10 @@ public final class ActionName implements Serializable {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
+    }
+
+    public static ActionName create(String domain, String name) {
+        return new ActionName(domain, name);
     }
 
     public String getDomain() {
@@ -47,4 +51,12 @@ public final class ActionName implements Serializable {
         return Objects.hash(domain, name);
     }
 
+    @Override
+    public int compareTo(ActionName o) {
+        int result = domain.compareTo(o.domain);
+        if(result == 0) {
+            result = name.compareTo(o.name);
+        }
+        return result;
+    }
 }

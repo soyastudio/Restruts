@@ -17,6 +17,8 @@ public @interface OperationMapping {
 
     String[] produces();
 
+    String displayName() default "";
+
     String description() default "";
 
     String externalLink() default "";

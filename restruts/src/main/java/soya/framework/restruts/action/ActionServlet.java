@@ -102,47 +102,31 @@ public class ActionServlet extends HttpServlet {
 
     protected void dispatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ActionRequestEvent event = new ActionRequestEvent(req);
+
         if (!actionMappings.containsKey(event.registration)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
         } else {
-            try {
-                Action action = actionMappings.create(event);
-                AsyncContext asyncContext = req.startAsync();
-                asyncContext.start(() -> {
+            AsyncContext asyncContext = req.startAsync();
+            asyncContext.start(() -> {
+                try {
+                    Action action = actionMappings.create(event);
+                    Object result = action.execute();
+
+                    streamHandler.write(result, req, resp);
+
+                } catch (Exception e) {
                     try {
-                        Object result = action.execute();
-                        streamHandler.write(result, req, resp);
-
-                    } catch (Exception e) {
-                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-                    } finally {
-                        asyncContext.complete();
+                        streamHandler.write(e, req, resp);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
-                });
 
-            } catch (Exception ex) {
-                throw new ServletException(ex);
-            }
-        }
-    }
-
-    private String contentType(String accept, String[] produces) {
-        if (accept != null) {
-            String token = accept.indexOf(";") > 0 ? accept.substring(0, accept.indexOf(";")) : accept;
-            String[] accepts = token.split(",");
-            for (String acc : accepts) {
-                for (String p : produces) {
-                    if (acc.equalsIgnoreCase(p)) {
-                        return acc;
-                    }
+                } finally {
+                    asyncContext.complete();
                 }
-            }
-
+            });
         }
-
-        return produces[0];
     }
 
     static class Registration implements Comparable<Registration> {
@@ -206,7 +190,9 @@ public class ActionServlet extends HttpServlet {
 
     static class DefaultActionMappings extends AbstractMap<Registration, Class<? extends Action>> implements ActionMappings {
 
-        private Map<String, Class<?>> apis = new HashMap<>();
+        private Map<String, Class<?>> domains = new HashMap<>();
+        private Map<ActionName, Class<? extends Action>> actions = new HashMap<>();
+
         private Set<Entry<Registration, Class<? extends Action>>> entrySet = new HashSet<>();
 
         @Override
@@ -237,7 +223,7 @@ public class ActionServlet extends HttpServlet {
                 Set<Class<?>> set = reflections.getTypesAnnotatedWith(Domain.class);
                 set.forEach(c -> {
                     Domain domain = c.getAnnotation(Domain.class);
-                    apis.put(domain.name(), c);
+                    domains.put(domain.name(), c);
                 });
             }
 
@@ -246,6 +232,8 @@ public class ActionServlet extends HttpServlet {
                 Set<Class<?>> set = reflections.getTypesAnnotatedWith(OperationMapping.class);
                 set.forEach(c -> {
                     OperationMapping operationMapping = c.getAnnotation(OperationMapping.class);
+                    actions.put(ActionName.create(operationMapping.domain(), operationMapping.name()), (Class<? extends Action>) c);
+
                     Registration registration = new Registration(operationMapping.method().name(), operationMapping.path());
                     if (Action.class.isAssignableFrom(c)) {
                         put(registration, (Class<? extends Action>) c);
@@ -261,10 +249,11 @@ public class ActionServlet extends HttpServlet {
 
             Swagger.SwaggerBuilder builder = Swagger.builder();
 
-            List<String> tags = new ArrayList<>(apis.keySet());
+            List<String> tags = new ArrayList<>(domains.keySet());
             Collections.sort(tags);
+
             tags.forEach(e -> {
-                Domain domain = apis.get(e).getAnnotation(Domain.class);
+                Domain domain = domains.get(e).getAnnotation(Domain.class);
                 builder.addTag(Swagger.TagObject.instance()
                         .name(domain.title().isEmpty() ? domain.name() : domain.title())
                         .description(domain.description()));
@@ -304,19 +293,22 @@ public class ActionServlet extends HttpServlet {
 
                 }
 
+
+                pathBuilder.description(operationMapping.description());
+
                 if (pathBuilder != null) {
                     for (Field f : paramFields(cls)) {
                         if (f.getAnnotation(ParameterMapping.class) != null) {
                             ParameterMapping param = f.getAnnotation(ParameterMapping.class);
                             String name = param.name().isEmpty() ? f.getName() : param.name();
                             String in = null;
-                            if(ParameterMapping.ParameterType.PATH_PARAM.equals(param.parameterType())) {
+                            if (ParameterMapping.ParameterType.PATH_PARAM.equals(param.parameterType())) {
                                 in = "path";
                             } else if (ParameterMapping.ParameterType.QUERY_PARAM.equals(param.parameterType())) {
                                 in = "query";
                             } else if (ParameterMapping.ParameterType.HEADER_PARAM.equals(param.parameterType())) {
                                 in = "header";
-                            }else if (ParameterMapping.ParameterType.COOKIE_PARAM.equals(param.parameterType())) {
+                            } else if (ParameterMapping.ParameterType.COOKIE_PARAM.equals(param.parameterType())) {
                                 in = "cookie";
                             }
                             pathBuilder.parameterBuilder(name, in, param.description()).build();
@@ -330,14 +322,13 @@ public class ActionServlet extends HttpServlet {
 
                         }
                     }
-
                 }
 
-                Class<?> domainClass = apis.get(operationMapping.domain());
-                if(domainClass != null) {
+                Class<?> domainClass = domains.get(operationMapping.domain());
+                if (domainClass != null) {
                     Domain domain = domainClass.getAnnotation(Domain.class);
                     pathBuilder
-                            .addTag(domain.title().isEmpty()? domain.name() : domain.title())
+                            .addTag(domain.title().isEmpty() ? domain.name() : domain.title())
                             .produces(operationMapping.produces());
 
                 } else {
@@ -346,7 +337,6 @@ public class ActionServlet extends HttpServlet {
                             .produces(operationMapping.produces());
 
                 }
-
 
                 pathBuilder.build();
 
@@ -360,15 +350,17 @@ public class ActionServlet extends HttpServlet {
             Set<String> fieldNames = new HashSet<>();
             Class<?> cls = actionType;
             while (!cls.getName().equals("java.lang.Object")) {
+
                 for (Field field : cls.getDeclaredFields()) {
-                    if (field.getAnnotation(ParameterMapping.class) != null
-                            || field.getAnnotation(PayloadMapping.class) != null
-                            || !fieldNames.contains(field.getName())) {
+                    if ((field.getAnnotation(ParameterMapping.class) != null
+                            || field.getAnnotation(PayloadMapping.class) != null)
+                            && !fieldNames.contains(field.getName())) {
 
                         fields.add(field);
                         fieldNames.add(field.getName());
                     }
                 }
+
                 cls = cls.getSuperclass();
             }
 
@@ -377,6 +369,42 @@ public class ActionServlet extends HttpServlet {
         }
 
         @Override
+        public String[] domains() {
+            List<String> list = new ArrayList<>(domains.keySet());
+            Collections.sort(list);
+            return list.toArray(new String[list.size()]);
+        }
+
+        @Override
+        public Class<?> domainType(String domain) {
+            return domains.get(domain);
+        }
+
+        @Override
+        public ActionName[] actions(String domain) {
+            List<ActionName> list = new ArrayList<>();
+            actions.keySet().forEach(e -> {
+                if (e.getDomain().equals(domain)) {
+                    list.add(e);
+                }
+
+            });
+
+            Collections.sort(list);
+            return list.toArray(new ActionName[list.size()]);
+        }
+
+        @Override
+        public Class<? extends Action> actionType(ActionName actionName) {
+            return actions.get(actionName);
+        }
+
+        @Override
+        public Field[] parameterFields(Class<? extends Action> actionType) {
+            List<Field> fields = paramFields(actionType);
+            return fields.toArray(new Field[fields.size()]);
+        }
+
         public Class<? extends Action> getActionType(HttpServletRequest request) {
             ActionRequestEvent event = new ActionRequestEvent(request);
             return get(event.registration);
