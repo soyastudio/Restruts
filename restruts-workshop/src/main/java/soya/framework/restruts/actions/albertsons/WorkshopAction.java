@@ -1,5 +1,7 @@
 package soya.framework.restruts.actions.albertsons;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import soya.framework.restruts.action.Action;
 
 import java.io.File;
@@ -8,6 +10,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 public abstract class WorkshopAction<T> implements Action<T> {
+    public static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     private static final File WORKSPACE_HOME;
 
     private static final File CMM_DIR;
@@ -47,7 +51,7 @@ public abstract class WorkshopAction<T> implements Action<T> {
         return IIB_DEVELOPMENT_DIR;
     }
 
-    protected File edmDeploymentDir() {
+    protected File getEdmDevelopmentDir() {
         return EDM_DEVELOPMENT_DIR;
     }
 }

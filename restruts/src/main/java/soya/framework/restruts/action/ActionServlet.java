@@ -1,5 +1,8 @@
 package soya.framework.restruts.action;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import org.reflections.Reflections;
 import soya.framework.restruts.action.api.Swagger;
 import soya.framework.restruts.action.io.DefaultServletStreamHandler;
@@ -15,6 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ActionServlet extends HttpServlet {
@@ -29,6 +33,8 @@ public class ActionServlet extends HttpServlet {
     private Swagger swagger;
 
     private ServletStreamHandler streamHandler;
+    private DefaultExceptionHandler exceptionHandler = new DefaultExceptionHandler();
+
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -116,11 +122,7 @@ public class ActionServlet extends HttpServlet {
                     streamHandler.write(result, req, resp);
 
                 } catch (Exception e) {
-                    try {
-                        streamHandler.write(e, req, resp);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                    exceptionHandler.onException(e, req,resp);
 
                 } finally {
                     asyncContext.complete();
@@ -550,6 +552,28 @@ public class ActionServlet extends HttpServlet {
             }
 
             return null;
+        }
+    }
+
+    static class DefaultExceptionHandler implements ExceptionHandler<Exception> {
+        private Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+        @Override
+        public void onException(Exception exception, HttpServletRequest request, HttpServletResponse response) {
+
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType(MediaType.APPLICATION_JSON);
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("exception", exception.getClass().getName());
+            jsonObject.addProperty("cause", exception.getCause().getClass().getName());
+            jsonObject.addProperty("message", exception.getMessage());
+
+            try {
+                response.getOutputStream().write(GSON.toJson(jsonObject).getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

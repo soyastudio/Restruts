@@ -33,36 +33,21 @@ public class DefaultServletStreamHandler implements ServletStreamHandler {
 
     @Override
     public void write(Object object, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if(object instanceof Exception) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.setContentType(MediaType.APPLICATION_JSON);
+        String contentType = contentType(request.getHeader("Accept"));
+        response.setHeader("Content-Type", contentType);
 
-            Exception exception = (Exception) object;
+        OutputStream outputStream = response.getOutputStream();
 
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("exception", exception.getClass().getName());
-            jsonObject.addProperty("cause", exception.getCause().getClass().getName());
-            jsonObject.addProperty("message", exception.getMessage());
-
-            response.getOutputStream().write(GSON.toJson(jsonObject).getBytes(StandardCharsets.UTF_8));
+        if (object instanceof String) {
+            outputStream.write(((String) object).getBytes(StandardCharsets.UTF_8));
 
         } else {
-            String contentType = contentType(request.getHeader("Accept"));
-            response.setHeader("Content-Type", contentType);
+            if (MediaType.TEXT_PLAIN.equals(contentType)) {
+                outputStream.write(object.toString().getBytes(StandardCharsets.UTF_8));
 
-            OutputStream outputStream = response.getOutputStream();
+            } else if (MediaType.APPLICATION_JSON.equalsIgnoreCase(contentType)) {
+                outputStream.write(GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
 
-            if (object instanceof String) {
-                outputStream.write(((String) object).getBytes(StandardCharsets.UTF_8));
-
-            } else {
-                if (MediaType.TEXT_PLAIN.equals(contentType)) {
-                    outputStream.write(object.toString().getBytes(StandardCharsets.UTF_8));
-
-                } else if (MediaType.APPLICATION_JSON.equalsIgnoreCase(contentType)) {
-                    outputStream.write(GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
-
-                }
             }
         }
 

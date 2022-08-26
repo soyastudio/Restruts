@@ -7,7 +7,7 @@ import soya.framework.restruts.action.MediaType;
 import soya.framework.restruts.action.OperationMapping;
 import soya.framework.restruts.action.ParameterMapping;
 import soya.framework.restruts.actions.poi.SpreadSheetAction;
-import soya.framework.restruts.actions.poi.XlxsDynaClass;
+import soya.framework.restruts.actions.poi.XlsxDynaClass;
 
 import java.io.File;
 
@@ -31,7 +31,7 @@ public class IIBDevMappingsValidateAction extends IIBDevAction<String> {
         File workDir = workDir(application);
         File xlsx = new File(workDir, fileName);
 
-        XlxsDynaClass data = (XlxsDynaClass) ActionExecutor.executor(SpreadSheetAction.class)
+        XlsxDynaClass data = (XlsxDynaClass) ActionExecutor.executor(SpreadSheetAction.class)
                 .setProperty("uri", xlsx.toURI().toString())
                 .setProperty("sheet", sheetName)
                 .setProperty("columns", COLUMNS)

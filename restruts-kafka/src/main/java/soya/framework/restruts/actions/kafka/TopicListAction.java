@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 
 @OperationMapping(domain = "kafka",
         name = "topics",
-        path = "/kafka/topics",
+        path = "/kafka/admin/topics",
         method = OperationMapping.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON)
 public class TopicListAction extends KafkaAction<String[]> {

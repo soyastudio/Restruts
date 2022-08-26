@@ -30,19 +30,18 @@ public class ApplicationCreateAction extends IIBDevAction<String> {
 
         File bod = bod(application);
         String result = "";
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (!bod.exists()) {
             bod.createNewFile();
 
             BOD model = new BOD(application);
-            result = gson.toJson(model);
+            result = GSON.toJson(model);
             FileWriter writer = new FileWriter(bod);
             writer.write(result);
             writer.flush();
             writer.close();
 
         } else {
-            result = gson.toJson(JsonParser.parseReader(new FileReader(bod)));
+            result = GSON.toJson(JsonParser.parseReader(new FileReader(bod)));
         }
 
         return result;

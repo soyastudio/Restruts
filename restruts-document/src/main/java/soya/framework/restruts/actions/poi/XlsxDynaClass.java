@@ -1,5 +1,6 @@
 package soya.framework.restruts.actions.poi;
 
+import com.google.common.base.CaseFormat;
 import org.apache.commons.beanutils.BasicDynaBean;
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
-public class XlxsDynaClass implements DynaClass, Serializable {
+public class XlsxDynaClass implements DynaClass, Serializable {
 
     private String name;
     protected Map<String, DynaProperty> propertiesMap = new LinkedHashMap<>();
@@ -23,11 +24,11 @@ public class XlxsDynaClass implements DynaClass, Serializable {
     protected DynaProperty[] properties;
     protected List<DynaBean> beans = new ArrayList<>();
 
-    protected XlxsDynaClass(String name) {
+    protected XlsxDynaClass(String name) {
         this.name = name;
     }
 
-    public XlxsDynaClass(String name, String[] columnNames, File file, String sheetName) {
+    public XlsxDynaClass(String name, String[] columnNames, File file, String sheetName) {
         this.name = name;
 
         XSSFWorkbook workbook = null;
@@ -43,13 +44,14 @@ public class XlxsDynaClass implements DynaClass, Serializable {
             while (sheetIterator.hasNext()) {
                 Row currentRow = sheetIterator.next();
                 if (start) {
+
                     DynaBean bean = newInstance();
                     columnIndexes.entrySet().forEach(e -> {
                         int index = e.getKey();
                         String propName = e.getValue();
 
                         Cell cell = currentRow.getCell(index);
-                        if(cell != null) {
+                        if (cell != null) {
                             String propValue = cell.getStringCellValue();
                             bean.set(propName, propValue);
                         }
@@ -68,13 +70,13 @@ public class XlxsDynaClass implements DynaClass, Serializable {
                             Cell cell = currentRow.getCell(i);
                             if (cell != null && cell.getCellType().equals(CellType.STRING)) {
                                 String cellValue = cell.getStringCellValue();
-                                if(columnSet.contains(cellValue)) {
+                                if (columnSet.contains(cellValue)) {
                                     columnIndexes.put(i, cellValue);
                                 }
                             }
                         }
 
-                        for (String col: columnNames) {
+                        for (String col : columnNames) {
                             propertiesMap.put(col, new DynaProperty(col, String.class));
 
                         }
@@ -99,6 +101,106 @@ public class XlxsDynaClass implements DynaClass, Serializable {
 
             }
         }
+    }
+
+    public XlsxDynaClass(File file, String sheetName) {
+
+        this.name = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sheetName.replaceAll(" ", "_"));
+
+        XSSFWorkbook workbook = null;
+        Sheet sheet = null;
+        try {
+            workbook = new XSSFWorkbook(file);
+            sheet = workbook.getSheet(sheetName);
+
+            boolean start = false;
+            Iterator<Row> sheetIterator = sheet.iterator();
+
+            while (sheetIterator.hasNext()) {
+                Row currentRow = sheetIterator.next();
+                if (start && !isEmptyRow(currentRow)) {
+                    DynaBean bean = newInstance();
+                    columnIndexes.entrySet().forEach(e -> {
+                        int index = e.getKey();
+                        String propName = e.getValue();
+
+                        Cell cell = currentRow.getCell(index);
+                        if (cell != null) {
+                            String propValue = getCellValue(cell);
+
+                            bean.set(propName, propValue);
+                        }
+                    });
+
+                    beans.add(bean);
+
+                } else {
+                    if (!isEmptyRow(currentRow)) {
+                        int first = currentRow.getFirstCellNum();
+                        int last = currentRow.getLastCellNum();
+
+                        for (int i = first; i <= last; i++) {
+                            Cell cell = currentRow.getCell(i);
+                            if (cell != null && cell.getCellType().equals(CellType.STRING)
+                                    && cell.getStringCellValue() != null && cell.getStringCellValue().trim().length() > 0) {
+
+                                String col = cell.getStringCellValue().replaceAll(" ", "_").toLowerCase();
+                                propertiesMap.put(col, new DynaProperty(col, String.class));
+                                columnIndexes.put(i, col);
+                            }
+                        }
+
+                        properties = propertiesMap.values().toArray(new DynaProperty[propertiesMap.size()]);
+
+                        start = true;
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+
+        } finally {
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+    private String getCellValue(Cell cell) {
+        if (CellType.STRING.equals(cell.getCellType())) {
+            return cell.getStringCellValue();
+
+        } else if (CellType.BOOLEAN.equals(cell.getCellType())) {
+            return  "" + cell.getBooleanCellValue();
+
+        } else if (CellType.NUMERIC.equals(cell.getCellType())) {
+            return  "" + cell.getNumericCellValue();
+        }
+
+        return null;
+    }
+
+    private boolean isEmptyRow(Row row) {
+        int first = row.getFirstCellNum();
+        int last = row.getLastCellNum();
+
+        for (int i = first; i <= last; i++) {
+            Cell cell = row.getCell(i);
+            if (cell != null && cell.getCellType().equals(CellType.STRING)
+                    && cell.getStringCellValue() != null && cell.getStringCellValue().trim().length() > 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private boolean isLabelRow(Row row, Set<String> columnSet) {
