@@ -1,9 +1,13 @@
 package soya.framework.restruts.action;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+
 import java.lang.reflect.Field;
 import java.util.*;
 
 public final class ActionExecutor {
+
     private Class<? extends Action> actionType;
     private Map<String, Field> fieldMap = new LinkedHashMap<>();
     private Action action;
@@ -44,17 +48,20 @@ public final class ActionExecutor {
         return new ActionExecutor(actionType);
     }
 
-    public ActionExecutor setProperty(String name, String value) {
-        if(!fieldMap.containsKey(name)) {
+    public ActionExecutor setProperty(String name, Object value) {
+        if (!fieldMap.containsKey(name)) {
             throw new IllegalArgumentException("Field does not exist: " + name);
         }
 
-        Field field = fieldMap.get(name);
-        field.setAccessible(true);
-        try {
-            field.set(action, value);
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException(e);
+        if (value != null) {
+            Field field = fieldMap.get(name);
+            field.setAccessible(true);
+            try {
+                field.set(action, ConvertUtils.convert(value,field.getType()));
+
+            } catch (IllegalAccessException e) {
+                throw new IllegalArgumentException(e);
+            }
         }
 
         return this;
@@ -64,7 +71,10 @@ public final class ActionExecutor {
         return action.execute();
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
+        System.out.println(Boolean.TYPE == boolean.class);
+
+
         ActionExecutor.executor(TestAction.class)
                 .setProperty("message", "Hello Restruts!")
                 .execute();

@@ -1,14 +1,29 @@
 package soya.framework.restruts.action;
 
+import java.util.Properties;
+
 public abstract class ActionContext {
 
     protected static ActionContext INSTANCE;
 
+    protected Properties properties = new Properties();
     protected ActionMappings actionMappings;
 
     protected ActionContext(ActionMappings actionMappings) {
         this.actionMappings = actionMappings;
         INSTANCE = this;
+    }
+
+    public String getProperty(String key) {
+        if (properties.contains(key)) {
+            return properties.getProperty(key);
+
+        } else if (System.getProperty(key) != null) {
+            return System.getProperty(key);
+
+        } else {
+            return null;
+        }
     }
 
     public abstract <T> T getService(Class<T> type);

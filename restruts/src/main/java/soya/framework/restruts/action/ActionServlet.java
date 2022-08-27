@@ -578,16 +578,25 @@ public class ActionServlet extends HttpServlet {
     }
 
     static class SpringActionContext extends ActionContext {
+        private static final Method GET_ENVIRONMENT;
+        private static final Method GET_PROPERTY;
+
         private static final Method GET_SERVICE_BY_TYPE;
         private static final Method GET_SERVICE_BY_NAME;
+
 
         private Object applicationContext;
 
         static {
             try {
-                Class<?> INTERFACE = Class.forName("org.springframework.beans.factory.BeanFactory");
-                GET_SERVICE_BY_TYPE = INTERFACE.getDeclaredMethod("getBean", new Class[]{Class.class});
-                GET_SERVICE_BY_NAME = INTERFACE.getDeclaredMethod("getBean", new Class[]{String.class, Class.class});
+                Class<?> BEAN_FACTORY = Class.forName("org.springframework.beans.factory.BeanFactory");
+                Class<?> ENVIRONMENT_CAPABLE = Class.forName("org.springframework.core.env.EnvironmentCapable");
+                Class<?> PROPERTY_RESOLVER = Class.forName("org.springframework.core.env.PropertyResolver");
+
+                GET_ENVIRONMENT = ENVIRONMENT_CAPABLE.getDeclaredMethod("getEnvironment", new Class[0]);
+                GET_PROPERTY = PROPERTY_RESOLVER.getDeclaredMethod("getProperty", String.class);
+                GET_SERVICE_BY_TYPE = BEAN_FACTORY.getDeclaredMethod("getBean", new Class[]{Class.class});
+                GET_SERVICE_BY_NAME = BEAN_FACTORY.getDeclaredMethod("getBean", new Class[]{String.class, Class.class});
 
             } catch (Exception e) {
                 throw new ExceptionInInitializerError(e);
@@ -597,6 +606,22 @@ public class ActionServlet extends HttpServlet {
         SpringActionContext(ActionMappings actionMappings, Object applicationContext) {
             super(actionMappings);
             this.applicationContext = applicationContext;
+        }
+
+        @Override
+        public String getProperty(String key) {
+            String prop = super.getProperty(key);
+            if(prop == null) {
+                try {
+                    Object env = GET_ENVIRONMENT.invoke(applicationContext, new Object[0]);
+                    prop = (String) GET_PROPERTY.invoke(env, new Object[]{key});
+
+                } catch (Exception e) {
+
+                }
+            }
+
+            return prop;
         }
 
         @Override
