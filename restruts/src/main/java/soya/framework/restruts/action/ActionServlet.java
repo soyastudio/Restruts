@@ -35,7 +35,6 @@ public class ActionServlet extends HttpServlet {
     private ServletStreamHandler streamHandler;
     private DefaultExceptionHandler exceptionHandler = new DefaultExceptionHandler();
 
-
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -53,6 +52,7 @@ public class ActionServlet extends HttpServlet {
 
             if (servletContext.getAttribute(SPRING_ROOT_ATTRIBUTE) != null) {
                 this.actionContext = new SpringActionContext(actionMappings, servletContext.getAttribute(SPRING_ROOT_ATTRIBUTE));
+
             }
         }
 
@@ -583,7 +583,6 @@ public class ActionServlet extends HttpServlet {
 
         private static final Method GET_SERVICE_BY_TYPE;
         private static final Method GET_SERVICE_BY_NAME;
-
 
         private Object applicationContext;
 

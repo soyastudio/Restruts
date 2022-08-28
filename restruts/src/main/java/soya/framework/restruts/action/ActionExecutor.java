@@ -1,15 +1,14 @@
 package soya.framework.restruts.action;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.Future;
 
 public final class ActionExecutor {
 
     private Class<? extends Action> actionType;
     private Map<String, Field> fieldMap = new LinkedHashMap<>();
+    private Map<String, Boolean> requiredSettings = new LinkedHashMap<>();
     private Action action;
 
     private ActionExecutor(Class<? extends Action> actionType) {
@@ -26,6 +25,19 @@ public final class ActionExecutor {
 
                     fields.add(field);
                     fieldNames.add(field.getName());
+
+                    boolean required = false;
+                    if (field.getAnnotation(ParameterMapping.class) != null) {
+                        required = field.getAnnotation(ParameterMapping.class).required();
+
+                    } else if (field.getAnnotation(PayloadMapping.class) != null) {
+                        required = field.getAnnotation(PayloadMapping.class).required();
+
+                    }
+
+                    if (required) {
+                        requiredSettings.put(field.getName(), Boolean.FALSE);
+                    }
                 }
             }
             cls = cls.getSuperclass();
@@ -35,6 +47,7 @@ public final class ActionExecutor {
         fields.forEach(e -> {
             fieldMap.put(e.getName(), e);
         });
+
         try {
             action = actionType.newInstance();
 
@@ -57,7 +70,10 @@ public final class ActionExecutor {
             Field field = fieldMap.get(name);
             field.setAccessible(true);
             try {
-                field.set(action, ConvertUtils.convert(value,field.getType()));
+                field.set(action, ConvertUtils.convert(value, field.getType()));
+                if (requiredSettings.containsKey(field.getName())) {
+                    requiredSettings.put(field.getName(), Boolean.TRUE);
+                }
 
             } catch (IllegalAccessException e) {
                 throw new IllegalArgumentException(e);
@@ -68,15 +84,47 @@ public final class ActionExecutor {
     }
 
     public Object execute() throws Exception {
+        checkRequired();
         return action.execute();
     }
 
+    public Future<?> submit() {
+        checkRequired();
+        return ActionContext.getInstance().getExecutorService().submit(() -> action.execute());
+    }
+
+    public void call(ActionCallback callback) {
+        checkRequired();
+        ActionContext.getInstance().getExecutorService().execute(() -> {
+            try {
+                callback.onComplete(action.execute());
+
+            } catch (Exception e) {
+                callback.onException(e);
+            }
+        });
+    }
+
+    private void checkRequired() {
+        requiredSettings.entrySet().forEach(e -> {
+            if (!e.getValue()) {
+                throw new IllegalStateException("Required property is not set: " + e.getKey());
+            }
+        });
+    }
+
     public static void main(String[] args) throws Exception {
-        System.out.println(Boolean.TYPE == boolean.class);
 
+        Future<?> future = ActionExecutor.executor(TestAction.class)
+                .setProperty("message", "Good morning!")
+                .submit();
 
-        ActionExecutor.executor(TestAction.class)
-                .setProperty("message", "Hello Restruts!")
-                .execute();
+        while (!future.isDone()) {
+            Thread.sleep(500l);
+        }
+
+        System.out.println(future.get());
+
+        System.exit(0);
     }
 }

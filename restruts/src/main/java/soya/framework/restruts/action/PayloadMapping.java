@@ -8,6 +8,8 @@ import java.lang.annotation.*;
 public @interface PayloadMapping {
     String name() default "";
 
+    boolean required() default true;
+
     String[] consumes();
 
     String description() default "";
