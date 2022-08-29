@@ -1,6 +1,6 @@
 package soya.framework.restruts.action;
 
-public class TestAction implements Action<String> {
+public class TestAction extends Action<String> {
 
     @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
     private String message;

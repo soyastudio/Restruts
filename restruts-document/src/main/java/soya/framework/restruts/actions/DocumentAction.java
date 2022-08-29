@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 
-public abstract class DocumentAction<T> implements Action<T> {
+public abstract class DocumentAction<T> extends Action<T> {
 
     public static final String SCHEMA_SYSTEM = "system";
 

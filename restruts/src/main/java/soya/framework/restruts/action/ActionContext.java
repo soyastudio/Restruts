@@ -52,9 +52,6 @@ public abstract class ActionContext {
     }
 
     public static ActionContext getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new DefaultActionContextBuilder().create();
-        }
         return INSTANCE;
     }
 
@@ -70,7 +67,7 @@ public abstract class ActionContext {
         private Properties properties = new Properties();
 
         private Map<String, Class<?>> domains = new HashMap<>();
-        private Map<ActionName, Class<? extends Action>> actions = new HashMap<>();
+        private Map<ActionName, Class<? extends ActionCallable>> actions = new HashMap<>();
 
         public DefaultActionContextBuilder setProperty(String key, String value) {
             this.properties.setProperty(key, value);
@@ -97,7 +94,7 @@ public abstract class ActionContext {
                 Set<Class<?>> set = reflections.getTypesAnnotatedWith(OperationMapping.class);
                 set.forEach(c -> {
                     OperationMapping operationMapping = c.getAnnotation(OperationMapping.class);
-                    actions.put(ActionName.create(operationMapping.domain(), operationMapping.name()), (Class<? extends Action>) c);
+                    actions.put(ActionName.create(operationMapping.domain(), operationMapping.name()), (Class<? extends ActionCallable>) c);
                 });
             }
             return this;
@@ -137,12 +134,12 @@ public abstract class ActionContext {
         }
 
         @Override
-        public Class<? extends Action> actionType(ActionName actionName) {
+        public Class<? extends ActionCallable> actionType(ActionName actionName) {
             return actions.get(actionName);
         }
 
         @Override
-        public Field[] parameterFields(Class<? extends Action> actionType) {
+        public Field[] parameterFields(Class<? extends ActionCallable> actionType) {
             List<Field> fields = new ArrayList<>();
             Set<String> fieldNames = new HashSet<>();
             Class<?> cls = actionType;

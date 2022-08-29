@@ -2,16 +2,17 @@ package soya.framework.restruts.action;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public final class ActionExecutor {
 
-    private Class<? extends Action> actionType;
+    private Class<? extends ActionCallable> actionType;
     private Map<String, Field> fieldMap = new LinkedHashMap<>();
     private Map<String, Boolean> requiredSettings = new LinkedHashMap<>();
-    private Action action;
+    private ActionCallable action;
 
-    private ActionExecutor(Class<? extends Action> actionType) {
+    private ActionExecutor(Class<? extends ActionCallable> actionType) {
         this.actionType = actionType;
 
         List<Field> fields = new ArrayList<>();
@@ -85,24 +86,24 @@ public final class ActionExecutor {
 
     public Object execute() throws Exception {
         checkRequired();
-        return action.execute();
+        ActionResult result = action.call();
+        if (result.success()) {
+            return result.get();
+        } else {
+            throw (Exception) result.get();
+        }
     }
 
-    public Future<?> submit() {
+    public Future<ActionResult> submit() {
         checkRequired();
-        return ActionContext.getInstance().getExecutorService().submit(() -> action.execute());
+        return ActionContext.getInstance().getExecutorService().submit(action);
     }
 
     public void call(ActionCallback callback) {
         checkRequired();
-        ActionContext.getInstance().getExecutorService().execute(() -> {
-            try {
-                callback.onComplete(action.execute());
+        ActionContext.getInstance().getExecutorService()
+                .execute(() -> callback.onActionResult(action.call()));
 
-            } catch (Exception e) {
-                callback.onException(e);
-            }
-        });
     }
 
     private void checkRequired() {
@@ -114,17 +115,21 @@ public final class ActionExecutor {
     }
 
     public static void main(String[] args) throws Exception {
-
-        Future<?> future = ActionExecutor.executor(TestAction.class)
-                .setProperty("message", "Good morning!")
-                .submit();
-
-        while (!future.isDone()) {
-            Thread.sleep(500l);
+        if (ActionContext.getInstance() == null) {
+            ActionContext.defaultActionContextBuilder().create();
         }
 
-        System.out.println(future.get());
+        ActionExecutor.executor(TestAction.class)
+                .setProperty("message", "Good morning!")
+                .call(result -> {
+                    if(result.success()) {
+                        System.out.println("----------------------" + result.get());
 
-        System.exit(0);
+                    } else {
+
+                    }
+
+                    System.exit(0);
+                });
     }
 }

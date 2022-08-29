@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
         produces = MediaType.TEXT_PLAIN,
         displayName = "About",
         description = "Print as markdown format.")
-public class AboutAction implements Action<String> {
+public class AboutAction extends Action<String> {
 
     @Override
     public String execute() throws Exception {
@@ -27,7 +27,7 @@ public class AboutAction implements Action<String> {
             builder.appendLine();
 
             for (ActionName actionName : mappings.actions(dm)) {
-                Class<? extends Action> cls = mappings.actionType(actionName);
+                Class<? extends ActionCallable> cls = mappings.actionType(actionName);
                 OperationMapping operation = cls.getAnnotation(OperationMapping.class);
                 builder.append("## ACTION: ").appendLine(operation.displayName().isEmpty() ? operation.name() : operation.displayName());
                 builder.appendLine(operation.description());

@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
-public abstract class AzureBlobAction<T> implements Action<T> {
+public abstract class AzureBlobAction<T> extends Action<T> {
 
     protected BlobServiceClient blobServiceClient() {
         return ActionContext.getInstance().getService(BlobServiceClient.class);

@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-public abstract class KafkaAction<T> implements Action<T> {
+public abstract class KafkaAction<T> extends Action<T> {
 
     public static final long DEFAULT_TIMEOUT = 30000l;
     public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

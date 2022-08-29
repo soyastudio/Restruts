@@ -57,6 +57,7 @@ public class ActionServlet extends HttpServlet {
         }
 
         this.swagger = actionMappings.toSwagger();
+
         String path = this.getServletInfo();
         ServletRegistration registration = config.getServletContext().getServletRegistration(getServletName());
         for (String e : registration.getMappings()) {
@@ -115,14 +116,20 @@ public class ActionServlet extends HttpServlet {
         } else {
             AsyncContext asyncContext = req.startAsync();
             asyncContext.start(() -> {
-                try {
-                    Action action = actionMappings.create(event);
-                    Object result = action.execute();
 
-                    streamHandler.write(result, req, resp);
+                try {
+                    ActionCallable action = actionMappings.create(event);
+                    ActionResult actionResult = action.call();
+
+                    if(actionResult.success()) {
+                        streamHandler.write(actionResult.get(), req, resp);
+
+                    } else {
+                        exceptionHandler.onException((Exception) actionResult.get(), req, resp);
+                    }
 
                 } catch (Exception e) {
-                    exceptionHandler.onException(e, req,resp);
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
                 } finally {
                     asyncContext.complete();
@@ -347,12 +354,11 @@ public class ActionServlet extends HttpServlet {
             return builder.build();
         }
 
-        private List<Field> paramFields(Class<? extends Action> actionType) {
+        private List<Field> paramFields(Class<? extends ActionCallable> actionType) {
             List<Field> fields = new ArrayList<>();
             Set<String> fieldNames = new HashSet<>();
             Class<?> cls = actionType;
             while (!cls.getName().equals("java.lang.Object")) {
-
                 for (Field field : cls.getDeclaredFields()) {
                     if ((field.getAnnotation(ParameterMapping.class) != null
                             || field.getAnnotation(PayloadMapping.class) != null)
@@ -397,24 +403,24 @@ public class ActionServlet extends HttpServlet {
         }
 
         @Override
-        public Class<? extends Action> actionType(ActionName actionName) {
+        public Class<? extends ActionCallable> actionType(ActionName actionName) {
             return actions.get(actionName);
         }
 
         @Override
-        public Field[] parameterFields(Class<? extends Action> actionType) {
+        public Field[] parameterFields(Class<? extends ActionCallable> actionType) {
             List<Field> fields = paramFields(actionType);
             return fields.toArray(new Field[fields.size()]);
         }
 
-        public Class<? extends Action> getActionType(HttpServletRequest request) {
+        public Class<? extends ActionCallable> getActionType(HttpServletRequest request) {
             ActionRequestEvent event = new ActionRequestEvent(request);
             return get(event.registration);
         }
 
-        Action<?> create(ActionRequestEvent event) throws Exception {
-            Class<? extends Action> actionType = get(event.registration);
-            Action<?> action = get(event.registration).newInstance();
+        ActionCallable create(ActionRequestEvent event) throws Exception {
+            Class<? extends ActionCallable> actionType = get(event.registration);
+            ActionCallable action = actionType.newInstance();
             HttpServletRequest httpServletRequest = (HttpServletRequest) event.getSource();
 
             List<Field> fields = paramFields(actionType);
@@ -610,7 +616,7 @@ public class ActionServlet extends HttpServlet {
         @Override
         public String getProperty(String key) {
             String prop = super.getProperty(key);
-            if(prop == null) {
+            if (prop == null) {
                 try {
                     Object env = GET_ENVIRONMENT.invoke(applicationContext, new Object[0]);
                     prop = (String) GET_PROPERTY.invoke(env, new Object[]{key});

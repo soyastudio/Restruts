@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public abstract class WorkshopAction<T> implements Action<T> {
+public abstract class WorkshopAction<T> extends Action<T> {
     public static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final File WORKSPACE_HOME;

@@ -9,7 +9,7 @@ public interface ActionMappings {
 
     ActionName[] actions(String domain);
 
-    Class<? extends Action> actionType(ActionName actionName);
+    Class<? extends ActionCallable> actionType(ActionName actionName);
 
-    Field[] parameterFields(Class<? extends Action> actionType);
+    Field[] parameterFields(Class<? extends ActionCallable> actionType);
 }
