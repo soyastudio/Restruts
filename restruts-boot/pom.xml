@@ -53,6 +53,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>11.2.0.jre8</version>
+        </dependency>
+
     </dependencies>
 
     <build>

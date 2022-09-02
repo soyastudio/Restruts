@@ -7,16 +7,18 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class ActionContext {
+public final class ActionContext {
 
     protected static ActionContext INSTANCE;
 
     private final ExecutorService executorService;
+    private final ServiceLocator serviceLocator;
 
     protected Properties properties = new Properties();
     protected ActionMappings actionMappings;
 
-    protected ActionContext(ActionMappings actionMappings) {
+    protected ActionContext(ServiceLocator serviceLocator, ActionMappings actionMappings) {
+        this.serviceLocator = serviceLocator;
         this.actionMappings = actionMappings;
         this.executorService = createExecutorService();
 
@@ -25,6 +27,23 @@ public abstract class ActionContext {
 
     protected ExecutorService createExecutorService() {
         return Executors.newFixedThreadPool(3);
+    }
+
+    public Map<String, String> properties() {
+        Map<String, String> map = new LinkedHashMap<>();
+        List<String> keys = new ArrayList<>();
+        Enumeration<?> enumeration = properties.propertyNames();
+        while (enumeration.hasMoreElements()) {
+            keys.add((String) enumeration.nextElement());
+        }
+        Collections.sort(keys);
+
+        keys.forEach(e -> {
+            map.put(e, properties.getProperty(e));
+        });
+
+        return map;
+
     }
 
     public String getProperty(String key) {
@@ -43,9 +62,13 @@ public abstract class ActionContext {
         return executorService;
     }
 
-    public abstract <T> T getService(Class<T> type);
+    public <T> T getService(Class<T> type) {
+        return serviceLocator.getService(type);
+    }
 
-    public abstract <T> T getService(String name, Class<T> type);
+    public <T> T getService(String name, Class<T> type) {
+        return serviceLocator.getService(name, type);
+    }
 
     public ActionMappings getActionMappings() {
         return actionMappings;
@@ -55,37 +78,42 @@ public abstract class ActionContext {
         return INSTANCE;
     }
 
-    public static DefaultActionContextBuilder defaultActionContextBuilder() {
+    public static ActionContextBuilder builder() {
         if (INSTANCE != null) {
             throw new IllegalStateException("ActionContext is already created.");
         }
 
-        return new DefaultActionContextBuilder();
+        return new ActionContextBuilder();
     }
 
-    public static class DefaultActionContextBuilder implements ActionMappings {
+    public static class ActionContextBuilder {
+        private ServiceLocator serviceLocator;
         private Properties properties = new Properties();
 
-        private Map<String, Class<?>> domains = new HashMap<>();
-        private Map<ActionName, Class<? extends ActionCallable>> actions = new HashMap<>();
+        private DefaultActionMappings actionMappings = new DefaultActionMappings();
 
-        public DefaultActionContextBuilder setProperty(String key, String value) {
+        public ActionContextBuilder serviceLocator(ServiceLocator serviceLocator) {
+            this.serviceLocator = serviceLocator;
+            return this;
+        }
+
+        public ActionContextBuilder setProperty(String key, String value) {
             this.properties.setProperty(key, value);
             return this;
         }
 
-        public DefaultActionContextBuilder setProperties(Properties properties) {
+        public ActionContextBuilder setProperties(Properties properties) {
             this.properties.putAll(properties);
             return this;
         }
 
-        public DefaultActionContextBuilder scan(String... pkg) {
+        public ActionContextBuilder scan(String... pkg) {
             for (String pk : pkg) {
                 Reflections reflections = new Reflections(pk.trim());
                 Set<Class<?>> set = reflections.getTypesAnnotatedWith(Domain.class);
                 set.forEach(c -> {
                     Domain domain = c.getAnnotation(Domain.class);
-                    domains.put(domain.name(), c);
+                    actionMappings.domains.put(domain.name(), c);
                 });
             }
 
@@ -94,18 +122,27 @@ public abstract class ActionContext {
                 Set<Class<?>> set = reflections.getTypesAnnotatedWith(OperationMapping.class);
                 set.forEach(c -> {
                     OperationMapping operationMapping = c.getAnnotation(OperationMapping.class);
-                    actions.put(ActionName.create(operationMapping.domain(), operationMapping.name()), (Class<? extends ActionCallable>) c);
+                    actionMappings.actions.put(ActionName.create(operationMapping.domain(), operationMapping.name()), (Class<? extends ActionCallable>) c);
                 });
             }
             return this;
         }
 
-        public ActionContext create() {
-            DefaultActionContext context = new DefaultActionContext(this);
-            context.properties = properties;
+        public ActionMappings getActionMappings() {
+            return actionMappings;
+        }
 
+        public ActionContext create() {
+            ActionContext context = new ActionContext(serviceLocator, actionMappings);
+            context.properties = properties;
             return context;
         }
+    }
+
+    static class DefaultActionMappings implements ActionMappings {
+
+        private Map<String, Class<?>> domains = new HashMap<>();
+        private Map<ActionName, Class<? extends ActionCallable>> actions = new HashMap<>();
 
         @Override
         public String[] domains() {
@@ -122,12 +159,17 @@ public abstract class ActionContext {
         @Override
         public ActionName[] actions(String domain) {
             List<ActionName> list = new ArrayList<>();
-            actions.keySet().forEach(e -> {
-                if (e.getDomain().equals(domain)) {
-                    list.add(e);
-                }
+            if (domain == null) {
+                list.addAll(actions.keySet());
+            } else {
+                actions.keySet().forEach(e -> {
+                    if (e.getDomain().equals(domain)) {
+                        list.add(e);
+                    }
 
-            });
+                });
+
+            }
 
             Collections.sort(list);
             return list.toArray(new ActionName[list.size()]);
@@ -158,47 +200,10 @@ public abstract class ActionContext {
                 cls = cls.getSuperclass();
             }
 
-            Collections.sort(fields, new ActionServlet.ParameterFieldComparator());
+            Collections.sort(fields, new ParameterFieldComparator());
             return fields.toArray(new Field[fields.size()]);
         }
+
     }
 
-    protected static class DefaultActionContext extends ActionContext {
-
-        protected DefaultActionContext(ActionMappings actionMappings) {
-            super(actionMappings);
-        }
-
-        @Override
-        public <T> T getService(Class<T> type) {
-            return null;
-        }
-
-        @Override
-        public <T> T getService(String name, Class<T> type) {
-            return null;
-        }
-    }
-
-    protected static class ParameterFieldComparator implements Comparator<Field> {
-
-        @Override
-        public int compare(Field o1, Field o2) {
-            if (o1.getAnnotation(PayloadMapping.class) != null) {
-                return 1;
-            } else if (o2.getAnnotation(PayloadMapping.class) != null) {
-                return -1;
-            }
-
-            if (o1.getAnnotation(ParameterMapping.class) != null && o2.getAnnotation(ParameterMapping.class) != null) {
-                int result = ParameterMapping.ParameterType.index(o1.getAnnotation(ParameterMapping.class).parameterType())
-                        - ParameterMapping.ParameterType.index(o2.getAnnotation(ParameterMapping.class).parameterType());
-                if (result != 0) {
-                    return result;
-                }
-            }
-
-            return o1.getName().compareTo(o2.getName());
-        }
-    }
 }

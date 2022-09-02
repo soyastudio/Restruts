@@ -3,8 +3,6 @@ package soya.framework.restruts.action;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
-import java.util.Optional;
-
 public class ConvertUtils {
     private static final Gson GSON = new Gson();
 
@@ -12,7 +10,10 @@ public class ConvertUtils {
     }
 
     public static Object convert(Object value, Class<?> type) {
-        if (type.isInstance(value)) {
+        if (value == null) {
+            return null;
+
+        } else if (type.isInstance(value)) {
             return value;
 
         } else if ("java.lang.String".equals(type.getName())) {

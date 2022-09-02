@@ -42,15 +42,13 @@ public class RestrutsApplication {
     @EventListener(classes = {ApplicationReadyEvent.class})
     public void onApplicationEvent(ApplicationReadyEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
-        System.out.println("--------- " + applicationContext.getEnvironment().getProperty("server.port"));
-
-        System.out.println("====================== " + ActionContext.getInstance().getProperty("server.port"));
-
 
         Workshop workshop = applicationContext.getBean(Workshop.class);
 
         String encoded = workshop.base64Encode();
         String decoded = workshop.base64Decode(encoded);
+
+        System.out.println("-------------------- workspace.home = " + ActionContext.getInstance().getProperty("workspace.home"));
 
         System.out.println("---------------------- encoded: " + encoded);
         System.out.println("---------------------- decoded: " + decoded);

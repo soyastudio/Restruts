@@ -54,24 +54,36 @@ public class ApplicationConstructAction extends IIBDevAction<String> {
         File deployDir = deployDir(application);
         if (!deployDir.exists()) {
             deployDir.mkdir();
+
+            File mqsi = new File(deployDir, "mqsi.md");
+            mqsi.createNewFile();
+
+            InputStream readmeInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("mustache/mqsi.mustache");
+            String result = Mustache.compiler().compile(new InputStreamReader(readmeInputStream)).execute(bod);
+
+            Writer readmeWriter = new FileWriter(mqsi);
+            readmeWriter.write(result);
+            readmeWriter.close();
+
+
             // ----------- ESEDA:
             File esedA = new File(deployDir, "ESEDA");
             esedA.mkdir();
-            File overrideDev = new File(esedA, application + ".DV.override.properties");
+            File overrideDev = new File(esedA, bod.getApplication() + ".DV.override.properties");
             overrideDev.createNewFile();
-            File overrideQA = new File(esedA, application + ".QA.override.properties");
+            File overrideQA = new File(esedA, bod.getApplication() + ".QA.override.properties");
             overrideQA.createNewFile();
-            File overridePR = new File(esedA, application + ".PR.override.properties");
+            File overridePR = new File(esedA, bod.getApplication() + ".PR.override.properties");
             overridePR.createNewFile();
 
             // ----------- ESEDA:
             File esedB = new File(deployDir, "ESEDB");
             esedB.mkdir();
-            File deployDV = new File(esedB, application + ".DV.deploy.properties");
+            File deployDV = new File(esedB, bod.getApplication() + ".DV.deploy.properties");
             deployDV.createNewFile();
-            File deployQA = new File(esedB, application + ".QA.deploy.properties");
+            File deployQA = new File(esedB, bod.getApplication() + ".QA.deploy.properties");
             deployQA.createNewFile();
-            File deployPR = new File(esedB, application + ".PR.deploy.properties");
+            File deployPR = new File(esedB, bod.getApplication() + ".PR.deploy.properties");
             deployPR.createNewFile();
 
         }

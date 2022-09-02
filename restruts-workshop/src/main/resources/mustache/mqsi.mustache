@@ -1,0 +1,6 @@
+# MQSI Commands for {{application}}
+cd C:\Albertsons\workspace\ESED_IIB_Development\{{name}}\deployment\ESEDA
+
+mqsiapplybaroverride -k {{application}} -b {{application}}.bar -p {{application}}.PR.override.properties
+
+mqsireadbar -b {{application}}.bar -r

@@ -1,10 +1,9 @@
-package soya.framework.restruts.action.io;
+package soya.framework.restruts.action.servlet.io;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import soya.framework.restruts.action.MediaType;
-import soya.framework.restruts.action.ServletStreamHandler;
+import soya.framework.restruts.action.servlet.ServletStreamHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

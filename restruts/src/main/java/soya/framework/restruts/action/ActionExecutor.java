@@ -2,7 +2,6 @@ package soya.framework.restruts.action;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public final class ActionExecutor {
@@ -43,7 +42,7 @@ public final class ActionExecutor {
             }
             cls = cls.getSuperclass();
         }
-        Collections.sort(fields, new ActionServlet.ParameterFieldComparator());
+        Collections.sort(fields, new ActionMappings.ParameterFieldComparator());
 
         fields.forEach(e -> {
             fieldMap.put(e.getName(), e);
@@ -116,7 +115,7 @@ public final class ActionExecutor {
 
     public static void main(String[] args) throws Exception {
         if (ActionContext.getInstance() == null) {
-            ActionContext.defaultActionContextBuilder().create();
+            ActionContext.builder().create();
         }
 
         ActionExecutor.executor(TestAction.class)

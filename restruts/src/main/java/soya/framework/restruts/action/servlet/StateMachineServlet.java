@@ -1,4 +1,4 @@
-package soya.framework.restruts.action;
+package soya.framework.restruts.action.servlet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

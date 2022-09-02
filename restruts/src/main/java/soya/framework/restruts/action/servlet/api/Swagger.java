@@ -1,4 +1,4 @@
-package soya.framework.restruts.action.api;
+package soya.framework.restruts.action.servlet.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -250,17 +250,17 @@ public class Swagger {
 
             api.schemas = this.schemas.toArray(new String[this.schemas.size()]);
 
-            if(!consumes.isEmpty()){
+            if (!consumes.isEmpty()) {
                 api.consumes = this.consumes.toArray(new String[consumes.size()]);
             }
 
-            if(!produces.isEmpty()) {
+            if (!produces.isEmpty()) {
                 api.produces = this.produces.toArray(new String[produces.size()]);
             }
 
             api.paths = this.paths;
 
-            if(!tags.isEmpty()) {
+            if (!tags.isEmpty()) {
                 api.tags = tags.toArray(new TagObject[tags.size()]);
             }
 
@@ -304,8 +304,8 @@ public class Swagger {
         }
 
         public PathBuilder consumes(String... consume) {
-            if(consume != null) {
-                for(String c: consume) {
+            if (consume != null) {
+                for (String c : consume) {
                     operation.consumes.add(c);
                 }
             }
@@ -313,8 +313,8 @@ public class Swagger {
         }
 
         public PathBuilder produces(String... produces) {
-            if(produces != null) {
-                for(String p: produces) {
+            if (produces != null) {
+                for (String p : produces) {
                     operation.produces.add(p);
                 }
             }
@@ -330,7 +330,7 @@ public class Swagger {
             }
 
             List<ParameterObject> pathParams = new ArrayList<>();
-            if(pathItem.parameters != null) {
+            if (pathItem.parameters != null) {
                 pathParams.addAll(Arrays.asList(pathItem.parameters));
             }
 
@@ -341,7 +341,7 @@ public class Swagger {
                     operation.parameters.add(e);
                 }
             }
-            if(!pathParams.isEmpty()) {
+            if (!pathParams.isEmpty()) {
                 pathItem.parameters = pathParams.toArray(new ParameterObject[pathParams.size()]);
             }
 
@@ -392,7 +392,7 @@ public class Swagger {
 
         protected SimpleParameterBuilder(PathBuilder owner, String name, String in, String description) {
             super(owner, name, in, description);
-            if("query".equals(in)) {
+            if ("query".equals(in)) {
                 parameterObject.required = true;
             }
         }
