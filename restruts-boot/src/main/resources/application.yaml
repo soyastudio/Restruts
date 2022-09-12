@@ -1,6 +1,10 @@
 server:
   port: 7833
 
+logging:
+  level:
+    soya.framework: DEBUG
+
 spring:
   cloud:
     azure:

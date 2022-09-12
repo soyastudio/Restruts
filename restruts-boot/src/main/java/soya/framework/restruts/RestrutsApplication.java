@@ -4,10 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
-import soya.framework.restruts.action.ActionContext;
+import soya.framework.action.ActionContext;
+import soya.framework.action.patterns.ActionProxyFactory;
 import soya.framework.restruts.service.Workshop;
 
 import java.io.File;
@@ -43,13 +42,13 @@ public class RestrutsApplication {
     public void onApplicationEvent(ApplicationReadyEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
 
-        Workshop workshop = applicationContext.getBean(Workshop.class);
+        ActionProxyFactory factory = applicationContext.getBean(ActionProxyFactory.class);
+        Workshop workshop = factory.create(Workshop.class);
 
         String encoded = workshop.base64Encode();
         String decoded = workshop.base64Decode(encoded);
 
         System.out.println("-------------------- workspace.home = " + ActionContext.getInstance().getProperty("workspace.home"));
-
         System.out.println("---------------------- encoded: " + encoded);
         System.out.println("---------------------- decoded: " + decoded);
     }
