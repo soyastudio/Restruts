@@ -1,15 +1,15 @@
 package soya.framework.albertsons.actions.edm;
 
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.io.File;
 import java.io.FileWriter;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "edm-application-create",
         path = "/workshop/edm/application",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.APPLICATION_JSON,
         displayName = "EDM Application",
         description = "Display EDM application information, or EDM application list if application is not specified.")

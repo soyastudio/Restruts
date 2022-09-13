@@ -4,17 +4,17 @@ import org.apache.commons.beanutils.DynaBean;
 import soya.framework.common.util.CodeBuilder;
 import soya.framework.action.ActionExecutor;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 import soya.framework.document.actions.poi.SpreadSheetAction;
 import soya.framework.document.actions.poi.XlsxDynaClass;
 
 import java.io.File;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "validate-iib-mappings",
         path = "/workshop/iib/mappings/validate",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         description = "Validate IIB Mapping Sheet.")
 public class IIBDevMappingsValidateAction extends IIBDevAction<String> {

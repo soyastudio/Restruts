@@ -1,13 +1,13 @@
 package soya.framework.albertsons.actions.transform;
 
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.PayloadMapping;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "xml-to-json-transform",
         path = "/workshop/transform/xml-to-json",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.APPLICATION_JSON,
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")

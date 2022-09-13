@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 
 import java.io.File;
@@ -12,10 +12,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "iib-application",
         path = "/workshop/iib",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "IIB Application",
         description = "Display IIB application information, or IIB application list if application is not specified.")

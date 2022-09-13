@@ -2,14 +2,14 @@ package soya.framework.kafka.actions;
 
 import org.apache.kafka.common.Metric;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.util.Collection;
 
-@OperationMapping(domain = "kafka",
+@ActionDefinition(domain = "kafka",
         name = "admin-metrics",
         path = "/kafka/admin/metrics",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON)
 public class MetricsAction extends KafkaAction<Metric[]> {
 

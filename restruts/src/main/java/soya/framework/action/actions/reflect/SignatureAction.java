@@ -4,10 +4,10 @@ import soya.framework.action.*;
 
 import java.net.URI;
 
-@OperationMapping(domain = "about",
+@ActionDefinition(domain = "about",
         name = "signature",
         path = "/signature",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Action Signature",
         description = "Action Signature Template.")

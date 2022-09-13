@@ -1,9 +1,9 @@
 package soya.framework.action;
 
-@OperationMapping(domain = "test",
+@ActionDefinition(domain = "test",
         name = "Test",
         path = "/test",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "TEST",
         description = "Print as markdown format.")

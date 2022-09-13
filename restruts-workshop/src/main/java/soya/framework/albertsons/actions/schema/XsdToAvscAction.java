@@ -2,7 +2,7 @@ package soya.framework.albertsons.actions.schema;
 
 import org.apache.xmlbeans.SchemaTypeSystem;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.document.actions.avro.XsdToAvsc;
@@ -10,10 +10,10 @@ import soya.framework.document.actions.xmlbeans.xs.XmlBeansUtils;
 
 import java.io.File;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "xsd-to-avsc-transform",
         path = "/workshop/cmm/xsd-to-avsc",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.APPLICATION_JSON,
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")

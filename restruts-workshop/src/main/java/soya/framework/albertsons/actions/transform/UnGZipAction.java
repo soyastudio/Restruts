@@ -2,7 +2,7 @@ package soya.framework.albertsons.actions.transform;
 
 import soya.framework.common.util.StreamUtils;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,10 +10,10 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.zip.GZIPInputStream;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "ungzip",
         path = "/workshop/transform/ungzip",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")

@@ -1,13 +1,13 @@
 package soya.framework.albertsons.actions.edm;
 
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "edm-table-mapping",
         path = "/workshop/edm/table-mapping",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")

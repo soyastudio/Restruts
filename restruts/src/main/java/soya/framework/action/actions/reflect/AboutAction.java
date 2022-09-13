@@ -6,10 +6,10 @@ import soya.framework.common.util.CodeBuilder;
 
 import java.lang.reflect.Field;
 
-@OperationMapping(domain = "about",
+@ActionDefinition(domain = "about",
         name = "about",
         path = "/about",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "About",
         description = "Print as markdown format.")
@@ -31,7 +31,7 @@ public class AboutAction extends Action<String> {
                 ActionClass actionClass = mappings.actionClass(actionName);
 
                 Class<? extends ActionCallable> cls = actionClass.getActionType();
-                OperationMapping operation = cls.getAnnotation(OperationMapping.class);
+                ActionDefinition operation = cls.getAnnotation(ActionDefinition.class);
                 builder.append("## ACTION: ").appendLine(operation.displayName().isEmpty() ? operation.name() : operation.displayName());
                 builder.appendLine(operation.description());
 

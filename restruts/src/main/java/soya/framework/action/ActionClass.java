@@ -1,5 +1,7 @@
 package soya.framework.action;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -13,7 +15,7 @@ public final class ActionClass implements Serializable {
 
     private ActionClass(Class<? extends ActionCallable> actionType) {
 
-        OperationMapping mapping = actionType.getAnnotation(OperationMapping.class);
+        ActionDefinition mapping = actionType.getAnnotation(ActionDefinition.class);
         if (mapping == null) {
             throw new IllegalArgumentException("Class is not annotated as 'OperationMapping': " + actionType.getName());
         }
@@ -67,7 +69,7 @@ public final class ActionClass implements Serializable {
     public ActionSignature signature() {
         ActionSignature.Builder builder = ActionSignature.builder(actionName);
         for (ActionProperty prop : actionProperties) {
-            builder.addAssignment(prop.getName(), ActionSignature.ParameterAssignment.PARAM);
+            builder.addAssignment(prop.getName(), AssignmentMethod.PARAMETER, prop.getName());
         }
 
         return builder.create();

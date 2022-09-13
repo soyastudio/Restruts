@@ -3,17 +3,17 @@ package soya.framework.albertsons.actions.iib;
 import com.google.gson.GsonBuilder;
 import com.samskivert.mustache.Mustache;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "version-iib-application",
         path = "/workshop/iib/application/version",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Create IIB Application",
         description = "Create IIB Application based on template.")

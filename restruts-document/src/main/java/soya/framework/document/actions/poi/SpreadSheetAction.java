@@ -2,15 +2,15 @@ package soya.framework.document.actions.poi;
 
 import soya.framework.document.actions.DocumentAction;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 
 import java.io.File;
 
-@OperationMapping(domain = "document",
+@ActionDefinition(domain = "document",
         name = "xlsx-to-json",
         path = "/xlsx/read",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN)
 public class SpreadSheetAction extends DocumentAction<XlsxDynaClass> {
 

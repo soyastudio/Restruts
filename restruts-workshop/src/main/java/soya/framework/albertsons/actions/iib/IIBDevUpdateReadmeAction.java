@@ -2,17 +2,17 @@ package soya.framework.albertsons.actions.iib;
 
 import soya.framework.common.util.StreamUtils;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.PayloadMapping;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "iib-update-readme",
         path = "/workshop/iib/readme",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         description = "Update README file.")
 public class IIBDevUpdateReadmeAction extends IIBDevAction<String> {

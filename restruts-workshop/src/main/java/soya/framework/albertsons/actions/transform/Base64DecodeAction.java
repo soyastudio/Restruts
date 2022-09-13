@@ -1,14 +1,14 @@
 package soya.framework.albertsons.actions.transform;
 
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.util.Base64;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "base64-decode",
         path = "/workshop/transform/base64-decode",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")

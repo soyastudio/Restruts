@@ -96,12 +96,12 @@ public final class ActionExecutor {
     }
 
     public static void main(String[] args) throws Exception {
-        String signature = "class://soya.framework.action.TestAction";
+        String signature = "class://soya.framework.action.TestAction?message=ref(msg)";
         Map<String, Object> params = new HashMap<>();
+        params.put("msg", "Hello World!");
 
         ActionResult actionResult = ActionExecutor.execute(signature, params);
         System.out.println(actionResult.get());
-
 
         if (ActionContext.getInstance() == null) {
             ActionContext.builder().create();

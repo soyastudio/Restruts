@@ -1,16 +1,16 @@
 package soya.framework.azure.actions;
 
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@OperationMapping(domain = "azure-blob-storage",
+@ActionDefinition(domain = "azure-blob-storage",
         name = "container-list",
         path = "/azure-blob-storage/containers",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON)
 public class AzureBlobContainerListAction extends AzureBlobAction<String[]> {
 

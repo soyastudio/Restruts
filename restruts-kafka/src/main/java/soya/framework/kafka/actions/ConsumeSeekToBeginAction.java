@@ -1,12 +1,12 @@
 package soya.framework.kafka.actions;
 
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
-@OperationMapping(domain = "kafka",
+@ActionDefinition(domain = "kafka",
         name = "consume-seek-to-begin",
         path = "/kafka/consume/seek-to-begin",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN)
 public class ConsumeSeekToBeginAction extends ConsumeAction<String>{
 

@@ -4,17 +4,17 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 import soya.framework.action.PayloadMapping;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
-@OperationMapping(domain = "kafka",
+@ActionDefinition(domain = "kafka",
         name = "produce",
         path = "/kafka/produce",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.APPLICATION_JSON)
 public class ProduceAction extends KafkaAction<RecordMetadata> {
 

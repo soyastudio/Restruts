@@ -18,7 +18,7 @@ public class ActionSignature {
     public <T> ActionCallable create(T context, Evaluator<T> evaluator) {
 
         Class<? extends ActionCallable> actionType = null;
-        if("class".equals(actionName.getDomain())) {
+        if ("class".equals(actionName.getDomain())) {
             try {
                 actionType = (Class<? extends ActionCallable>) Class.forName(actionName.getName());
             } catch (ClassNotFoundException e) {
@@ -27,8 +27,6 @@ public class ActionSignature {
         } else {
             actionType = ActionContext.getInstance().getActionMappings().actionClass(actionName).getActionType();
         }
-
-        System.out.println("------------------- " + actionType.getName());
 
         try {
             ActionCallable action = actionType.newInstance();
@@ -45,7 +43,7 @@ public class ActionSignature {
         if (assignments.size() > 0) {
             builder.append("?");
             assignments.entrySet().forEach(e -> {
-                builder.append(e.getKey()).append("=").append(e.getValue().toString(e.getKey())).append("&");
+                builder.append(e.getKey()).append("=").append(e.getValue().toString()).append("&");
             });
             builder.deleteCharAt(builder.length() - 1);
         }
@@ -61,8 +59,8 @@ public class ActionSignature {
         if (uri.getQuery() != null) {
             splitQuery(uri.getQuery()).entrySet().forEach(e -> {
                 String name = e.getKey();
-                String value = e.getValue().get(0);
-
+                String expression = e.getValue().get(0);
+                builder.addAssignment(name, expression);
 
             });
         }
@@ -103,19 +101,31 @@ public class ActionSignature {
         return new Builder(actionName);
     }
 
-    public enum ParameterAssignment {
-        VALUE("val"),
-        PARAM("param"),
-        REFERENCE("ref");
+    static class ParameterAssignment {
+        private final AssignmentMethod assignmentMethod;
+        private final String expression;
 
-        private final String function;
-
-        ParameterAssignment(String function) {
-            this.function = function;
+        ParameterAssignment(String assignment) {
+            this.assignmentMethod = AssignmentMethod.getAssignmentMethod(assignment);
+            this.expression = assignment.substring(assignment.indexOf('(') + 1, assignment.lastIndexOf(')')).trim();
         }
 
-        public String toString(String var) {
-            return function + "(" + var + ")";
+        ParameterAssignment(AssignmentMethod assignmentMethod, String expression) {
+            this.assignmentMethod = assignmentMethod;
+            this.expression = expression;
+        }
+
+        public AssignmentMethod getAssignmentMethod() {
+            return assignmentMethod;
+        }
+
+        public String getExpression() {
+            return expression;
+        }
+
+        @Override
+        public String toString() {
+            return assignmentMethod.toString(expression);
         }
     }
 
@@ -127,8 +137,13 @@ public class ActionSignature {
             this.actionName = actionName;
         }
 
-        public Builder addAssignment(String name, ParameterAssignment parameterAssignment) {
-            params.put(name, parameterAssignment);
+        public Builder addAssignment(String name, String assignment) {
+            params.put(name, new ParameterAssignment(assignment));
+            return this;
+        }
+
+        public Builder addAssignment(String name, AssignmentMethod assignmentMethod, String expression) {
+            params.put(name, new ParameterAssignment(assignmentMethod, expression));
             return this;
         }
 

@@ -118,10 +118,10 @@ public final class ActionContext {
 
             for (String pk : pkg) {
                 Reflections reflections = new Reflections(pk.trim());
-                Set<Class<?>> set = reflections.getTypesAnnotatedWith(OperationMapping.class);
+                Set<Class<?>> set = reflections.getTypesAnnotatedWith(ActionDefinition.class);
                 set.forEach(c -> {
-                    OperationMapping operationMapping = c.getAnnotation(OperationMapping.class);
-                    actionMappings.actions.put(ActionName.create(operationMapping.domain(), operationMapping.name()), (Class<? extends ActionCallable>) c);
+                    ActionDefinition actionDefinition = c.getAnnotation(ActionDefinition.class);
+                    actionMappings.actions.put(ActionName.create(actionDefinition.domain(), actionDefinition.name()), (Class<? extends ActionCallable>) c);
                 });
             }
             return this;

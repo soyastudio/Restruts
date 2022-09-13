@@ -4,15 +4,15 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 
 import java.util.*;
 
-@OperationMapping(domain = "kafka",
+@ActionDefinition(domain = "kafka",
         name = "admin-topic-info",
         path = "/kafka/admin/topic",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON)
 public class TopicInfoAction extends KafkaAction<PartitionStatus[]> {
 

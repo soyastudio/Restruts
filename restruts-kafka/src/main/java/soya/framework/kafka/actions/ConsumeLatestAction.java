@@ -5,17 +5,17 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-@OperationMapping(domain = "kafka",
+@ActionDefinition(domain = "kafka",
         name = "consume-latest",
         path = "/kafka/consume/latest",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN)
 public class ConsumeLatestAction extends ConsumeAction<String> {
     @Override

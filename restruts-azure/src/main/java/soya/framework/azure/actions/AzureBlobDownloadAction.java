@@ -3,16 +3,16 @@ package soya.framework.azure.actions;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 import soya.framework.common.util.StreamUtils;
 
 import java.io.InputStream;
 
-@OperationMapping(domain = "azure-blob-storage",
+@ActionDefinition(domain = "azure-blob-storage",
         name = "blob-download",
         path = "/azure-blob-storage/blob/download",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_OCTET_STREAM)
 public class AzureBlobDownloadAction extends AzureBlobAction<byte[]> {
 

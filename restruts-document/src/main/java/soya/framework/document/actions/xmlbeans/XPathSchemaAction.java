@@ -7,13 +7,13 @@ import soya.framework.common.util.CodeBuilder;
 import soya.framework.document.actions.xmlbeans.xs.XsNode;
 import soya.framework.document.actions.xmlbeans.xs.XsUtils;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 
-@OperationMapping(domain = "document",
+@ActionDefinition(domain = "document",
         name = "xmlbeans-xpath-schema",
         path = "/xmlbean/xpath-schema",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN)
 public class XPathSchemaAction extends XmlBeansAction<String> {
 

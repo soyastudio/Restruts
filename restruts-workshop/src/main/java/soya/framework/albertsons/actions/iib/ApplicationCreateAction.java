@@ -3,16 +3,16 @@ package soya.framework.albertsons.actions.iib;
 import com.google.gson.JsonParser;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "create-iib-application",
         path = "/workshop/iib/application",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Create IIB Application",
         description = "Create IIB Application based on template.")

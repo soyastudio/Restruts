@@ -2,14 +2,14 @@ package soya.framework.albertsons.actions.iib;
 
 import com.samskivert.mustache.Mustache;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.io.*;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "construct-iib-application",
         path = "/workshop/iib/application/construct",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Construct IIB Application",
         description = "Construct IIB Application based on bod.json.")

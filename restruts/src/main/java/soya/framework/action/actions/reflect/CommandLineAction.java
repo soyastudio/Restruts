@@ -2,10 +2,10 @@ package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
 
-@OperationMapping(domain = "about",
+@ActionDefinition(domain = "about",
         name = "commandline",
         path = "/command",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "About",
         description = "Print as markdown format.")

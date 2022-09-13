@@ -183,36 +183,36 @@ public class ActionServlet extends HttpServlet {
         for (ActionName actionName : actionNames) {
             ActionClass actionClass = actionMappings.actionClass(actionName);
             Class<? extends ActionCallable> cls = actionClass.getActionType();
-            OperationMapping operationMapping = cls.getAnnotation(OperationMapping.class);
+            ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
 
-            String operationId = operationMapping.name().isEmpty() ? cls.getSimpleName() : operationMapping.name();
+            String operationId = actionDefinition.name().isEmpty() ? cls.getSimpleName() : actionDefinition.name();
 
-            OperationMapping.HttpMethod httpMethod = operationMapping.method();
+            ActionDefinition.HttpMethod httpMethod = actionDefinition.method();
             Swagger.PathBuilder pathBuilder = null;
-            if (httpMethod.equals(OperationMapping.HttpMethod.GET)) {
-                pathBuilder = builder.get(operationMapping.path(), operationId);
+            if (httpMethod.equals(ActionDefinition.HttpMethod.GET)) {
+                pathBuilder = builder.get(actionDefinition.path(), operationId);
 
-            } else if (httpMethod.equals(OperationMapping.HttpMethod.POST)) {
-                pathBuilder = builder.post(operationMapping.path(), operationId);
+            } else if (httpMethod.equals(ActionDefinition.HttpMethod.POST)) {
+                pathBuilder = builder.post(actionDefinition.path(), operationId);
 
-            } else if (httpMethod.equals(OperationMapping.HttpMethod.DELETE)) {
-                pathBuilder = builder.delete(operationMapping.path(), operationId);
+            } else if (httpMethod.equals(ActionDefinition.HttpMethod.DELETE)) {
+                pathBuilder = builder.delete(actionDefinition.path(), operationId);
 
-            } else if (httpMethod.equals(OperationMapping.HttpMethod.PUT)) {
-                pathBuilder = builder.put(operationMapping.path(), operationId);
+            } else if (httpMethod.equals(ActionDefinition.HttpMethod.PUT)) {
+                pathBuilder = builder.put(actionDefinition.path(), operationId);
 
-            } else if (httpMethod.equals(OperationMapping.HttpMethod.HEAD)) {
-                pathBuilder = builder.head(operationMapping.path(), operationId);
+            } else if (httpMethod.equals(ActionDefinition.HttpMethod.HEAD)) {
+                pathBuilder = builder.head(actionDefinition.path(), operationId);
 
-            } else if (httpMethod.equals(OperationMapping.HttpMethod.OPTIONS)) {
-                pathBuilder = builder.options(operationMapping.path(), operationId);
+            } else if (httpMethod.equals(ActionDefinition.HttpMethod.OPTIONS)) {
+                pathBuilder = builder.options(actionDefinition.path(), operationId);
 
-            } else if (httpMethod.equals(OperationMapping.HttpMethod.PATCH)) {
-                pathBuilder = builder.patch(operationMapping.path(), operationId);
+            } else if (httpMethod.equals(ActionDefinition.HttpMethod.PATCH)) {
+                pathBuilder = builder.patch(actionDefinition.path(), operationId);
 
             }
 
-            pathBuilder.description(operationMapping.description());
+            pathBuilder.description(actionDefinition.description());
 
             if (pathBuilder != null) {
                 for (Field f : actionClass.getActionFields()) {
@@ -242,23 +242,23 @@ public class ActionServlet extends HttpServlet {
                 }
             }
 
-            Class<?> domainClass = actionMappings.domainType(operationMapping.domain());
+            Class<?> domainClass = actionMappings.domainType(actionDefinition.domain());
             if (domainClass != null) {
                 Domain domain = domainClass.getAnnotation(Domain.class);
                 pathBuilder
                         .addTag(domain.title().isEmpty() ? domain.name() : domain.title())
-                        .produces(operationMapping.produces());
+                        .produces(actionDefinition.produces());
 
             } else {
                 pathBuilder
-                        .addTag(operationMapping.domain())
-                        .produces(operationMapping.produces());
+                        .addTag(actionDefinition.domain())
+                        .produces(actionDefinition.produces());
 
             }
 
             pathBuilder.build();
 
-            registry.put(new Registration(operationMapping.method().name(), operationMapping.path()), actionClass);
+            registry.put(new Registration(actionDefinition.method().name(), actionDefinition.path()), actionClass);
 
         }
 

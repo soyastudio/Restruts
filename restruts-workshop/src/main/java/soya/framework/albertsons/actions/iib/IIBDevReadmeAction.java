@@ -2,16 +2,16 @@ package soya.framework.albertsons.actions.iib;
 
 import soya.framework.common.util.StreamUtils;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "iib-create-application",
         path = "/workshop/iib/readme",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         description = "Read the README file.")
 public class IIBDevReadmeAction extends IIBDevAction<String> {

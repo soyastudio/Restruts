@@ -3,16 +3,16 @@ package soya.framework.albertsons.actions.edm;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.beanutils.DynaBean;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 import soya.framework.document.actions.poi.XlsxDynaClass;
 
 import java.util.*;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "edm-tables",
         path = "/workshop/edm/tables",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")

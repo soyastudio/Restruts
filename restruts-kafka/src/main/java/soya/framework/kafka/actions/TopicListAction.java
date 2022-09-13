@@ -2,7 +2,7 @@ package soya.framework.kafka.actions;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-@OperationMapping(domain = "kafka",
+@ActionDefinition(domain = "kafka",
         name = "admin-topics",
         path = "/kafka/admin/topics",
-        method = OperationMapping.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON)
 public class TopicListAction extends KafkaAction<String[]> {
 

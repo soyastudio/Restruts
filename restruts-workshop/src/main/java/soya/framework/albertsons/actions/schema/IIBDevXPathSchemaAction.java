@@ -2,15 +2,15 @@ package soya.framework.albertsons.actions.schema;
 
 import soya.framework.action.ActionExecutor;
 import soya.framework.action.MediaType;
-import soya.framework.action.OperationMapping;
+import soya.framework.action.ActionDefinition;
 import soya.framework.action.ParameterMapping;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.document.actions.xmlbeans.XPathSchemaAction;
 
-@OperationMapping(domain = "albertsons",
+@ActionDefinition(domain = "albertsons",
         name = "cmm-xpath-schema",
         path = "/workshop/cmm/xpath-schema",
-        method = OperationMapping.HttpMethod.POST,
+        method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "CMM XPath-Schema Parsing",
         description = "Generate XPath Schema based on CMM XSD file.")
