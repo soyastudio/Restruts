@@ -1,10 +1,11 @@
 package soya.framework.albertsons.actions.transform;
 
-import soya.framework.action.MediaType;
-import soya.framework.action.PayloadMapping;
+import soya.framework.action.ActionProperty;
 
 public abstract class Converter extends TransformAction {
 
-    @PayloadMapping(description = "Text for converting", consumes = MediaType.TEXT_PLAIN)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD,
+            description = "Text for converting",
+            required = true)
     protected String message;
 }

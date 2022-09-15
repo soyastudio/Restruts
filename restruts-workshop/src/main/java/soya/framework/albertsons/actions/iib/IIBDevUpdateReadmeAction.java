@@ -1,9 +1,9 @@
 package soya.framework.albertsons.actions.iib;
 
-import soya.framework.common.util.StreamUtils;
-import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.PayloadMapping;
+import soya.framework.action.ActionProperty;
+import soya.framework.action.MediaType;
+import soya.framework.common.util.StreamUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +17,10 @@ import java.io.InputStream;
         description = "Update README file.")
 public class IIBDevUpdateReadmeAction extends IIBDevAction<String> {
 
-    @PayloadMapping(description = "README.md contents", consumes = MediaType.TEXT_PLAIN)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD,
+            description = "README.md contents",
+            contentType = MediaType.TEXT_PLAIN,
+            required = true)
     private String payload;
 
     @Override

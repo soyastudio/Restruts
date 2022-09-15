@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.beanutils.DynaBean;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 import soya.framework.document.actions.poi.XlsxDynaClass;
 
 import java.util.*;
@@ -18,7 +18,7 @@ import java.util.*;
         description = "EDM Table Mapping.")
 public class EdmTablesAction extends EdmAction<String> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     private String bod;
 
     @Override

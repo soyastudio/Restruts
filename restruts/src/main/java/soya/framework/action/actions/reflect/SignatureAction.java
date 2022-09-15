@@ -1,6 +1,7 @@
 package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
+import soya.framework.action.dispatch.ActionDispatch;
 
 import java.net.URI;
 
@@ -13,7 +14,7 @@ import java.net.URI;
         description = "Action Signature Template.")
 public class SignatureAction extends Action<String> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     private String actionName;
 
     @Override
@@ -25,6 +26,6 @@ public class SignatureAction extends Action<String> {
                 ActionClass.get((Class<? extends ActionCallable>) Class.forName(uri.getHost()))
                 : ActionContext.getInstance().getActionMappings().actionClass(name);
 
-        return actionClass.signature().toURI();
+        return ActionDispatch.fromAction(actionClass).toURI();
     }
 }

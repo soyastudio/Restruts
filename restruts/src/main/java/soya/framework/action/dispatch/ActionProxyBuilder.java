@@ -1,4 +1,4 @@
-package soya.framework.action.patterns;
+package soya.framework.action.dispatch;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;

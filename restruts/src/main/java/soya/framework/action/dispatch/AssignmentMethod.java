@@ -1,4 +1,4 @@
-package soya.framework.action;
+package soya.framework.action.dispatch;
 
 public enum AssignmentMethod {
 

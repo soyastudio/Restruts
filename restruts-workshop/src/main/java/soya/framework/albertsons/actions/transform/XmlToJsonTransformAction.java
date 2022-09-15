@@ -1,8 +1,8 @@
 package soya.framework.albertsons.actions.transform;
 
-import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.PayloadMapping;
+import soya.framework.action.ActionProperty;
+import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "albertsons",
         name = "xml-to-json-transform",
@@ -13,7 +13,10 @@ import soya.framework.action.PayloadMapping;
         description = "EDM Table Mapping.")
 public class XmlToJsonTransformAction extends TransformAction {
 
-    @PayloadMapping(consumes = MediaType.APPLICATION_XML, description = "XML to Json converter.")
+    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD,
+            description = "Text for converting",
+            contentType = MediaType.APPLICATION_XML,
+            required = true)
     private String message;
 
     @Override

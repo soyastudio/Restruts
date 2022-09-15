@@ -9,7 +9,7 @@ package soya.framework.action;
         description = "Print as markdown format.")
 public class TestAction extends Action<String> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     private String message;
 
     @Override

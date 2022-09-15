@@ -1,17 +1,16 @@
 package soya.framework.action;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
 
 public final class ActionClass implements Serializable {
+
     private final transient Class<? extends ActionCallable> actionType;
     private final transient Field[] actionFields;
 
     private final ActionName actionName;
-    private final ActionProperty[] actionProperties;
+    private final String produce;
 
     private ActionClass(Class<? extends ActionCallable> actionType) {
 
@@ -24,14 +23,24 @@ public final class ActionClass implements Serializable {
         this.actionFields = findActionFields();
 
         this.actionName = ActionName.create(mapping.domain(), mapping.name());
-        this.actionProperties = new ActionProperty[actionFields.length];
-        for (int i = 0; i < actionFields.length; i++) {
-            actionProperties[i] = new ActionProperty(actionFields[i]);
-        }
+        this.produce = mapping.produces()[0];
+
     }
 
     public ActionName getActionName() {
         return actionName;
+    }
+
+    public Class<? extends ActionCallable> getActionType() {
+        return actionType;
+    }
+
+    public Field[] getActionFields() {
+        return actionFields;
+    }
+
+    public String getProduce() {
+        return produce;
     }
 
     private Field[] findActionFields() {
@@ -41,8 +50,7 @@ public final class ActionClass implements Serializable {
         while (!cls.getName().equals("java.lang.Object")) {
 
             for (Field field : cls.getDeclaredFields()) {
-                if ((field.getAnnotation(ParameterMapping.class) != null
-                        || field.getAnnotation(PayloadMapping.class) != null)
+                if (field.getAnnotation(ActionProperty.class) != null
                         && !fieldNames.contains(field.getName())) {
 
                     fields.add(field);
@@ -58,40 +66,17 @@ public final class ActionClass implements Serializable {
         return fields.toArray(new Field[fields.size()]);
     }
 
-    public Class<? extends ActionCallable> getActionType() {
-        return actionType;
-    }
-
-    public Field[] getActionFields() {
-        return actionFields;
-    }
-
-    public ActionSignature signature() {
-        ActionSignature.Builder builder = ActionSignature.builder(actionName);
-        for (ActionProperty prop : actionProperties) {
-            builder.addAssignment(prop.getName(), AssignmentMethod.PARAMETER, prop.getName());
-        }
-
-        return builder.create();
-    }
-
     public static ActionClass get(Class<? extends ActionCallable> actionType) {
         return new ActionClass(actionType);
     }
 
-    final class ParameterFieldComparator implements Comparator<Field> {
+    private final class ParameterFieldComparator implements Comparator<Field> {
 
         @Override
         public int compare(Field o1, Field o2) {
-            if (o1.getAnnotation(PayloadMapping.class) != null) {
-                return 1;
-            } else if (o2.getAnnotation(PayloadMapping.class) != null) {
-                return -1;
-            }
-
-            if (o1.getAnnotation(ParameterMapping.class) != null && o2.getAnnotation(ParameterMapping.class) != null) {
-                int result = ParameterMapping.ParameterType.index(o1.getAnnotation(ParameterMapping.class).parameterType())
-                        - ParameterMapping.ParameterType.index(o2.getAnnotation(ParameterMapping.class).parameterType());
+            if (o1.getAnnotation(ActionProperty.class) != null && o2.getAnnotation(ActionProperty.class) != null) {
+                int result = ActionProperty.PropertyType.index(o1.getAnnotation(ActionProperty.class).parameterType())
+                        - ActionProperty.PropertyType.index(o2.getAnnotation(ActionProperty.class).parameterType());
                 if (result != 0) {
                     return result;
                 }

@@ -3,7 +3,7 @@ package soya.framework.albertsons.actions.schema;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.document.actions.avro.XsdToAvsc;
 import soya.framework.document.actions.xmlbeans.xs.XmlBeansUtils;
@@ -19,7 +19,7 @@ import java.io.File;
         description = "EDM Table Mapping.")
 public class XsdToAvscAction extends WorkshopAction<String> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     private String cmm;
 
     @Override

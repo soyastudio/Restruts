@@ -1,10 +1,10 @@
 package soya.framework.restruts.service;
 
 import soya.framework.action.actions.reflect.AboutAction;
-import soya.framework.action.patterns.ActionMapping;
-import soya.framework.action.patterns.ActionParameter;
-import soya.framework.action.patterns.ActionParameterSetting;
-import soya.framework.action.patterns.ActionProxy;
+import soya.framework.action.dispatch.ActionMapping;
+import soya.framework.action.dispatch.ActionParameter;
+import soya.framework.action.dispatch.ActionParameterSetting;
+import soya.framework.action.dispatch.ActionProxy;
 import soya.framework.albertsons.actions.transform.Base64DecodeAction;
 import soya.framework.albertsons.actions.transform.Base64EncodeAction;
 

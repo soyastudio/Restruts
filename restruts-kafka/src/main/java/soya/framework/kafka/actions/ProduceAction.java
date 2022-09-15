@@ -3,10 +3,9 @@ package soya.framework.kafka.actions;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.ParameterMapping;
-import soya.framework.action.PayloadMapping;
+import soya.framework.action.ActionProperty;
+import soya.framework.action.MediaType;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
@@ -18,19 +17,19 @@ import java.util.concurrent.TimeoutException;
         produces = MediaType.APPLICATION_JSON)
 public class ProduceAction extends KafkaAction<RecordMetadata> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     protected String topic;
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     protected Integer partition;
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     protected String keySerializer;
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     protected String valueSerializer;
 
-    @PayloadMapping(consumes = MediaType.TEXT_PLAIN, description = "Message for produce")
+    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD, description = "Message for produce", required = true)
     protected String message;
 
     @Override

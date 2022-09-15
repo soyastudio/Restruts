@@ -4,7 +4,7 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 import soya.framework.common.util.StreamUtils;
 
 import java.io.InputStream;
@@ -16,10 +16,10 @@ import java.io.InputStream;
         produces = MediaType.APPLICATION_OCTET_STREAM)
 public class AzureBlobDownloadAction extends AzureBlobAction<byte[]> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     private String container;
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     private String filename;
 
     @Override

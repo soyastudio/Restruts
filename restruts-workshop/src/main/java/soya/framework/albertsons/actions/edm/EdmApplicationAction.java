@@ -1,6 +1,6 @@
 package soya.framework.albertsons.actions.edm;
 
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 
 import java.io.File;
 
@@ -8,7 +8,7 @@ public abstract class EdmApplicationAction<T> extends EdmAction<T> {
 
     public static final String EDM_APP_FILE = "edm.json";
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     protected String application;
 
     protected File edmAppFile(String application) {

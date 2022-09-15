@@ -1,15 +1,18 @@
-package soya.framework.action;
+package soya.framework.action.dispatch;
+
+import soya.framework.action.*;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.*;
 
-public class ActionSignature {
+public class ActionDispatch {
     private final ActionName actionName;
     private final Map<String, ParameterAssignment> assignments;
 
-    private ActionSignature(ActionName actionName, Map<String, ParameterAssignment> assignments) {
+    private ActionDispatch(ActionName actionName, Map<String, ParameterAssignment> assignments) {
         this.actionName = actionName;
         this.assignments = assignments;
 
@@ -22,7 +25,7 @@ public class ActionSignature {
             try {
                 actionType = (Class<? extends ActionCallable>) Class.forName(actionName.getName());
             } catch (ClassNotFoundException e) {
-                throw new ActionSignatureException(e);
+                throw new ActionDispatchException(e);
             }
         } else {
             actionType = ActionContext.getInstance().getActionMappings().actionClass(actionName).getActionType();
@@ -30,10 +33,35 @@ public class ActionSignature {
 
         try {
             ActionCallable action = actionType.newInstance();
+            ActionClass actionClass = ActionClass.get(actionType);
+            Field[] fields = actionClass.getActionFields();
+            for (Field field : fields) {
+                if (assignments.containsKey(field.getName())) {
+                    ParameterAssignment assignment = assignments.get(field.getName());
+                    AssignmentMethod assignmentMethod = assignment.getAssignmentMethod();
+                    String expression = assignment.getExpression();
+
+                    Object value = null;
+                    if (AssignmentMethod.VALUE.equals(assignmentMethod)) {
+                        value = expression;
+
+                    } else if (AssignmentMethod.ENVIRONMENT.equals(assignmentMethod)) {
+                        value = ActionContext.getInstance().getProperty(expression);
+
+                    } else if (AssignmentMethod.REFERENCE.equals(assignmentMethod)) {
+                        value = ConvertUtils.convert(evaluator.evaluate(expression, context), field.getType());
+                    }
+
+                    if (value != null) {
+                        field.setAccessible(true);
+                        field.set(action, ConvertUtils.convert(value, field.getType()));
+                    }
+                }
+            }
 
             return action;
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new ActionSignatureException(e);
+            throw new ActionDispatchException(e);
         }
 
     }
@@ -50,11 +78,20 @@ public class ActionSignature {
         return builder.toString();
     }
 
-    public static ActionSignature fromURI(String uri) {
+    public static ActionDispatch fromAction(ActionClass actionClass) {
+        ActionDispatch.Builder builder = ActionDispatch.builder(actionClass.getActionName());
+        for (Field field : actionClass.getActionFields()) {
+            builder.addAssignment(field.getName(), AssignmentMethod.PARAMETER, field.getName());
+        }
+
+        return builder.create();
+    }
+
+    public static ActionDispatch fromURI(String uri) {
         return fromURI(URI.create(uri));
     }
 
-    public static ActionSignature fromURI(URI uri) {
+    public static ActionDispatch fromURI(URI uri) {
         Builder builder = builder(ActionName.create(uri.getScheme(), uri.getHost()));
         if (uri.getQuery() != null) {
             splitQuery(uri.getQuery()).entrySet().forEach(e -> {
@@ -147,8 +184,8 @@ public class ActionSignature {
             return this;
         }
 
-        public ActionSignature create() {
-            return new ActionSignature(actionName, params);
+        public ActionDispatch create() {
+            return new ActionDispatch(actionName, params);
         }
     }
 }

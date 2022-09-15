@@ -1,4 +1,4 @@
-package soya.framework.action.patterns;
+package soya.framework.action.dispatch;
 
 import soya.framework.action.Action;
 import soya.framework.action.ActionClass;

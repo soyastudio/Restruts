@@ -5,7 +5,7 @@ import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ import java.util.*;
         produces = MediaType.APPLICATION_JSON)
 public class TopicInfoAction extends KafkaAction<PartitionStatus[]> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     private String topic;
 
     @Override

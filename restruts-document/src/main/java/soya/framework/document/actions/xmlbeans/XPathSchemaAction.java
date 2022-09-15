@@ -8,7 +8,7 @@ import soya.framework.document.actions.xmlbeans.xs.XsNode;
 import soya.framework.document.actions.xmlbeans.xs.XsUtils;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 
 @ActionDefinition(domain = "document",
         name = "xmlbeans-xpath-schema",
@@ -17,7 +17,7 @@ import soya.framework.action.ParameterMapping;
         produces = MediaType.TEXT_PLAIN)
 public class XPathSchemaAction extends XmlBeansAction<String> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     protected String uri;
 
     @Override

@@ -1,8 +1,9 @@
 package soya.framework.action;
 
 import java.lang.reflect.Field;
-import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 public final class ActionExecutor {
@@ -10,6 +11,7 @@ public final class ActionExecutor {
     private Class<? extends ActionCallable> actionType;
     private Map<String, Field> fieldMap = new LinkedHashMap<>();
     private Map<String, Boolean> requiredSettings = new LinkedHashMap<>();
+
     private ActionCallable action;
 
     private ActionExecutor(Class<? extends ActionCallable> actionType) {
@@ -17,9 +19,6 @@ public final class ActionExecutor {
 
         ActionClass actionClass = ActionClass.get(actionType);
         Field[] fields = actionClass.getActionFields();
-        Set<String> fieldNames = new HashSet<>();
-        Class<?> cls = actionType;
-
         for (Field field : fields) {
             fieldMap.put(field.getName(), field);
         }
@@ -33,13 +32,7 @@ public final class ActionExecutor {
         }
     }
 
-    public static ActionResult execute(String signature, Map<String, Object> values) {
-        ActionSignature sig = ActionSignature.fromURI(signature);
-        ActionCallable action = sig.create(values, (expression, context) -> context.get(expression));
-        return action.call();
-    }
-
-    public static ActionExecutor executor(Class<? extends Action> actionType) {
+    public static ActionExecutor executor(Class<? extends ActionCallable> actionType) {
         return new ActionExecutor(actionType);
     }
 
@@ -66,10 +59,23 @@ public final class ActionExecutor {
     }
 
     public Object execute() throws Exception {
+        fieldMap.values().forEach(e -> {
+            ActionProperty property = e.getAnnotation(ActionProperty.class);
+            e.setAccessible(true);
+            try {
+                if (e.get(action) == null && !property.defaultValue().isEmpty()) {
+                    e.set(action, ConvertUtils.convert(property.defaultValue(), e.getType()));
+                }
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
         checkRequired();
         ActionResult result = action.call();
         if (result.success()) {
             return result.get();
+
         } else {
             throw (Exception) result.get();
         }
@@ -96,12 +102,10 @@ public final class ActionExecutor {
     }
 
     public static void main(String[] args) throws Exception {
+
         String signature = "class://soya.framework.action.TestAction?message=ref(msg)";
         Map<String, Object> params = new HashMap<>();
         params.put("msg", "Hello World!");
-
-        ActionResult actionResult = ActionExecutor.execute(signature, params);
-        System.out.println(actionResult.get());
 
         if (ActionContext.getInstance() == null) {
             ActionContext.builder().create();

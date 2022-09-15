@@ -1,40 +1,43 @@
 package soya.framework.action;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
+import java.lang.annotation.*;
 
-public final class ActionProperty implements Comparable<ActionProperty>, Serializable {
-    private final transient Field field;
-    private final String name;
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface ActionProperty {
 
-    ActionProperty(Field field) {
-        this.field = field;
-        this.name = field.getName();
-    }
+    PropertyType parameterType();
 
-    public String getName() {
-        return name;
-    }
+    String name() default "";
 
-    @Override
-    public int compareTo(ActionProperty o) {
-        Field o1 = this.field;
-        Field o2 = o.field;
+    String description() default "";
 
-        if (o1.getAnnotation(PayloadMapping.class) != null) {
-            return 1;
-        } else if (o2.getAnnotation(PayloadMapping.class) != null) {
+    boolean required() default false;
+
+    String defaultValue() default "";
+
+    String contentType() default MediaType.TEXT_PLAIN;
+
+
+    enum PropertyType {
+        COOKIE_PARAM, HEADER_PARAM, PATH_PARAM, QUERY_PARAM, FORM_PARAM, MATRIX_PARAM, BEAN_PARAM, PAYLOAD;
+
+        private static final PropertyType[] SEQUENCE
+                = {PATH_PARAM, QUERY_PARAM, HEADER_PARAM, COOKIE_PARAM, FORM_PARAM, MATRIX_PARAM, BEAN_PARAM, PAYLOAD};
+
+        public static final int index(PropertyType type) {
+            int i = 0;
+            for (PropertyType p : SEQUENCE) {
+                if (p.equals(type)) {
+                    return i;
+                } else {
+                    i++;
+                }
+            }
+
             return -1;
         }
-
-        if (o1.getAnnotation(ParameterMapping.class) != null && o2.getAnnotation(ParameterMapping.class) != null) {
-            int result = ParameterMapping.ParameterType.index(o1.getAnnotation(ParameterMapping.class).parameterType())
-                    - ParameterMapping.ParameterType.index(o2.getAnnotation(ParameterMapping.class).parameterType());
-            if (result != 0) {
-                return result;
-            }
-        }
-
-        return o1.getName().compareTo(o2.getName());
     }
+
 }

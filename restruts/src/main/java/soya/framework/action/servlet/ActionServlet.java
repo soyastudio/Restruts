@@ -34,7 +34,6 @@ public class ActionServlet extends HttpServlet {
         super.init(config);
         initStreamHandlers(config);
         initSwagger(config);
-
     }
 
     @Override
@@ -77,12 +76,15 @@ public class ActionServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
         } else {
+
+            ActionClass actionClass = registry.get(event.registration);
+
             AsyncContext asyncContext = req.startAsync();
             asyncContext.start(() -> {
                 try {
                     ActionCallable action = registry.create(event);
                     ActionResult actionResult = action.call();
-                    write(actionResult.get(), req, resp);
+                    write(actionResult.get(), actionClass.getProduce(), resp);
 
                 } catch (Exception e) {
                     logger.severe(e.getMessage());
@@ -96,14 +98,13 @@ public class ActionServlet extends HttpServlet {
         }
     }
 
-    protected void write(Object object, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void write(Object object, String contentType, HttpServletResponse response) throws IOException {
         if (object == null) {
 
         } else if (object instanceof Exception) {
             printException((Exception) object, response);
 
         } else {
-            String contentType = request.getHeader("Accept");
             response.setHeader("Content-Type", contentType);
 
             OutputStream outputStream = response.getOutputStream();
@@ -216,28 +217,26 @@ public class ActionServlet extends HttpServlet {
 
             if (pathBuilder != null) {
                 for (Field f : actionClass.getActionFields()) {
-                    if (f.getAnnotation(ParameterMapping.class) != null) {
-                        ParameterMapping param = f.getAnnotation(ParameterMapping.class);
+                    if (f.getAnnotation(ActionProperty.class) != null) {
+                        ActionProperty param = f.getAnnotation(ActionProperty.class);
                         String name = param.name().isEmpty() ? f.getName() : param.name();
-                        String in = null;
-                        if (ParameterMapping.ParameterType.PATH_PARAM.equals(param.parameterType())) {
-                            in = "path";
-                        } else if (ParameterMapping.ParameterType.QUERY_PARAM.equals(param.parameterType())) {
-                            in = "query";
-                        } else if (ParameterMapping.ParameterType.HEADER_PARAM.equals(param.parameterType())) {
-                            in = "header";
-                        } else if (ParameterMapping.ParameterType.COOKIE_PARAM.equals(param.parameterType())) {
-                            in = "cookie";
+                        if (ActionProperty.PropertyType.PATH_PARAM.equals(param.parameterType())) {
+                            pathBuilder.parameterBuilder(name, "path", param.description()).build();
+
+                        } else if (ActionProperty.PropertyType.QUERY_PARAM.equals(param.parameterType())) {
+                            pathBuilder.parameterBuilder(name, "query", param.description()).build();
+
+                        } else if (ActionProperty.PropertyType.HEADER_PARAM.equals(param.parameterType())) {
+                            pathBuilder.parameterBuilder(name, "header", param.description()).build();
+
+                        } else if (ActionProperty.PropertyType.COOKIE_PARAM.equals(param.parameterType())) {
+                            pathBuilder.parameterBuilder(name, "cookie", param.description()).build();
+
+                        } else if (ActionProperty.PropertyType.PAYLOAD.equals(param.parameterType())) {
+                            pathBuilder.bodyParameterBuilder(name, param.description())
+                                    .build()
+                                    .consumes(param.contentType());
                         }
-                        pathBuilder.parameterBuilder(name, in, param.description()).build();
-
-                    } else if (f.getAnnotation(PayloadMapping.class) != null) {
-                        PayloadMapping payload = f.getAnnotation(PayloadMapping.class);
-                        String name = payload.name().isEmpty() ? f.getName() : payload.name();
-                        pathBuilder.bodyParameterBuilder(name, payload.description())
-                                .build()
-                                .consumes(payload.consumes());
-
                     }
                 }
             }
@@ -301,29 +300,24 @@ public class ActionServlet extends HttpServlet {
             for (Field field : fields) {
                 Class<?> paramType = field.getType();
                 Object value = null;
-                if (field.getAnnotation(PayloadMapping.class) != null) {
-                    if (paramType.equals(String.class)) {
+                if (field.getAnnotation(ActionProperty.class) != null) {
+                    ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
+                    String name = actionProperty.name().isEmpty() ? field.getName() : actionProperty.name();
+                    if (ActionProperty.PropertyType.PAYLOAD.equals(actionProperty.parameterType())) {
                         value = event.getPayload(paramType);
-                    }
 
-                } else if (field.getAnnotation(ParameterMapping.class) != null) {
-                    ParameterMapping parameterMapping = field.getAnnotation(ParameterMapping.class);
-                    String name = parameterMapping.name().isEmpty() ? field.getName() : parameterMapping.name();
-                    String paramValue = null;
-                    if (ParameterMapping.ParameterType.HEADER_PARAM.equals(parameterMapping.parameterType())) {
-                        paramValue = httpServletRequest.getHeader(name);
+                    } else if (ActionProperty.PropertyType.HEADER_PARAM.equals(actionProperty.parameterType())) {
+                        value = ConvertUtils.convert(httpServletRequest.getHeader(name), field.getType());
 
-                    } else if (ParameterMapping.ParameterType.QUERY_PARAM.equals(parameterMapping.parameterType())) {
-                        paramValue = event.queryParams.get(name).get(0);
+                    } else if (ActionProperty.PropertyType.QUERY_PARAM.equals(actionProperty.parameterType())) {
+                        value = ConvertUtils.convert(event.queryParams.get(name).get(0), field.getType());
 
-                    } else if (ParameterMapping.ParameterType.QUERY_PARAM.equals(parameterMapping.parameterType())) {
-                        paramValue = event.getQueryParameter(name);
+                    } else if (ActionProperty.PropertyType.QUERY_PARAM.equals(actionProperty.parameterType())) {
+                        value = ConvertUtils.convert(event.getQueryParameter(name), field.getType());
 
-                    } else if (ParameterMapping.ParameterType.COOKIE_PARAM.equals(parameterMapping.parameterType())) {
+                    } else if (ActionProperty.PropertyType.COOKIE_PARAM.equals(actionProperty.parameterType())) {
                         // TODO:
                     }
-
-                    value = ConvertUtils.convert(paramValue, field.getType());
                 }
 
                 if (value != null) {
@@ -400,6 +394,7 @@ public class ActionServlet extends HttpServlet {
     }
 
     static class ActionRequestEvent extends EventObject {
+
         private Registration registration;
         private Map<String, List<String>> queryParams = new HashMap<>();
         private byte[] inputData;
@@ -460,6 +455,10 @@ public class ActionServlet extends HttpServlet {
         }
 
         public <T> T getPayload(Class<T> type) {
+            if (inputData == null || inputData.length == 0) {
+                return null;
+            }
+
             if (type.getName().equals("java.lang.String")) {
                 return (T) new String(inputData);
             }

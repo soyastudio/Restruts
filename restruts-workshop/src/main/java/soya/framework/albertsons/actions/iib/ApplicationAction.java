@@ -5,7 +5,7 @@ import com.google.gson.JsonParser;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 
 import java.io.File;
 import java.io.FileReader;
@@ -21,7 +21,7 @@ import java.util.List;
         description = "Display IIB application information, or IIB application list if application is not specified.")
 public class ApplicationAction extends WorkshopAction<String> {
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     protected String application;
 
     @Override

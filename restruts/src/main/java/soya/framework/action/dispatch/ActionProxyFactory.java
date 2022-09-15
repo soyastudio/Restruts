@@ -1,4 +1,4 @@
-package soya.framework.action.patterns;
+package soya.framework.action.dispatch;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -2,9 +2,9 @@ package soya.framework.restruts.service;
 
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.patterns.Pipeline;
-import soya.framework.action.patterns.PipelineAction;
-import soya.framework.action.patterns.Task;
+import soya.framework.action.dispatch.Pipeline;
+import soya.framework.action.dispatch.PipelineAction;
+import soya.framework.action.dispatch.Task;
 
 @ActionDefinition(domain = "pattern",
         name = "pipeline-example",
@@ -14,7 +14,7 @@ import soya.framework.action.patterns.Task;
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")
 @Pipeline(tasks = {
-        @Task(name = "encode", signature = "")
+        @Task(name = "encode", dispatch = "")
 })
 public class PipelineExampleAction extends PipelineAction<String> {
 

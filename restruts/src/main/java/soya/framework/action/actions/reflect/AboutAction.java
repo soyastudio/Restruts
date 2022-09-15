@@ -2,6 +2,7 @@ package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
 import soya.framework.action.ActionClass;
+import soya.framework.action.dispatch.ActionDispatch;
 import soya.framework.common.util.CodeBuilder;
 
 import java.lang.reflect.Field;
@@ -36,7 +37,7 @@ public class AboutAction extends Action<String> {
                 builder.appendLine(operation.description());
 
                 builder.appendLine("```");
-                builder.appendLine(ActionClass.get(cls).signature().toURI());
+                builder.appendLine(ActionDispatch.fromAction(ActionClass.get(cls)).toURI());
                 builder.appendLine("```");
 
                 builder.appendLine("### 1. Action Definition");
@@ -54,14 +55,12 @@ public class AboutAction extends Action<String> {
                 } else {
                     for (Field field : fields) {
                         builder.append("- ").appendLine(field.getName());
-                        if(field.getAnnotation(ParameterMapping.class) != null) {
-                            ParameterMapping parameterMapping = field.getAnnotation(ParameterMapping.class);
-                            builder.append("-- Description: ").appendLine(parameterMapping.description());
-                            builder.append("-- Required: ").appendLine("" + parameterMapping.required());
+                        if(field.getAnnotation(ActionProperty.class) != null) {
+                            ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
+                            builder.append("-- Description: ").appendLine(actionProperty.description());
+                            builder.append("-- Required: ").appendLine("" + actionProperty.required());
                             builder.append("-- Java Type: ").appendLine(field.getType().getName());
-                            builder.append("-- HTTP Type: ").appendLine(parameterMapping.parameterType().name());
-
-                        } else if(field.getAnnotation(PayloadMapping.class) != null) {
+                            builder.append("-- Property Type: ").appendLine(actionProperty.parameterType().name());
 
                         }
 

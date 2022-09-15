@@ -1,7 +1,7 @@
 package soya.framework.albertsons.actions.iib;
 
 import com.google.gson.Gson;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 import soya.framework.albertsons.actions.WorkshopAction;
 
 import java.io.File;
@@ -18,7 +18,7 @@ public abstract class IIBDevAction<T> extends WorkshopAction<T> {
     public static final String README_FILE = "README.md";
     public static final String BUILD_FILE = "build.xml";
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     protected String application;
 
     protected File workDir(String application) {

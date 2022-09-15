@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import soya.framework.action.ActionContext;
 import soya.framework.action.ServiceLocator;
-import soya.framework.action.patterns.ActionProxyFactory;
+import soya.framework.action.dispatch.ActionProxyFactory;
 import soya.framework.action.servlet.ActionServlet;
 import soya.framework.action.servlet.StateMachineServlet;
 

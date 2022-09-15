@@ -1,8 +1,8 @@
 package soya.framework.albertsons.actions.iib;
 
-import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.PayloadMapping;
+import soya.framework.action.ActionProperty;
+import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "albertsons",
         name = "init-iib-application",
@@ -13,7 +13,10 @@ import soya.framework.action.PayloadMapping;
         description = "Initialize IIB Application based on template and bod.json settings.")
 public class ApplicationUpdateAction extends IIBDevAction<String> {
 
-    @PayloadMapping(description = "text for encoding", consumes = MediaType.APPLICATION_JSON)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD,
+            description = "",
+            contentType = MediaType.APPLICATION_JSON,
+            required = true)
     private String bod;
 
     @Override

@@ -11,7 +11,7 @@ import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 import soya.framework.kafka.KafkaClient;
 import soya.framework.action.Action;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,10 +29,10 @@ public abstract class KafkaAction<T> extends Action<T> {
     public static final long DEFAULT_TIMEOUT = 30000l;
     public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     protected Long timeout;
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     protected String configuration;
 
     protected AdminClient adminClient() throws IOException {

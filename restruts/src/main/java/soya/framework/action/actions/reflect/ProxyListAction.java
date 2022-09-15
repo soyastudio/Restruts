@@ -4,7 +4,7 @@ import soya.framework.action.Action;
 import soya.framework.action.ActionContext;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.patterns.ActionProxyFactory;
+import soya.framework.action.dispatch.ActionProxyFactory;
 
 @ActionDefinition(domain = "about",
         name = "proxy-interfaces",

@@ -4,7 +4,7 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 
 @ActionDefinition(domain = "azure-blob-storage", name = "delete-blob", path = "/azure-blob-storage/delete-blob",
         method = ActionDefinition.HttpMethod.DELETE,
@@ -12,10 +12,10 @@ import soya.framework.action.ParameterMapping;
 public class AzureBlobDeleteBlobAction extends AzureBlobAction<Boolean> {
 
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     private String container;
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     private String filename;
 
     @Override

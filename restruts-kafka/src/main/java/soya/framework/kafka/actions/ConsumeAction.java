@@ -4,7 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
-import soya.framework.action.ParameterMapping;
+import soya.framework.action.ActionProperty;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -13,10 +13,10 @@ import java.util.*;
 public abstract class ConsumeAction<T> extends KafkaAction<T> {
     public static final long DEFAULT_POLL_DURATION = 5000l;
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     protected String topic;
 
-    @ParameterMapping(parameterType = ParameterMapping.ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
     protected Long pollDuration;
 
     protected List<ConsumerRecord<String, byte[]>> poll(Collection<TopicPartition> partitions, KafkaConsumer<String, byte[]> consumer) {

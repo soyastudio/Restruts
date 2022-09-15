@@ -1,4 +1,4 @@
-package soya.framework.action.patterns;
+package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
 
@@ -29,7 +29,7 @@ public abstract class PipelineAction<T> extends Action<T> {
         Pipeline pipeline = actionClass.getActionType().getAnnotation(Pipeline.class);
         Task[] tasks = pipeline.tasks();
         for (Task task : tasks) {
-            ActionSignature signature = ActionSignature.fromURI(task.signature());
+            ActionDispatch signature = ActionDispatch.fromURI(task.dispatch());
             queue.add(new Worker(task.name(), signature));
         }
 
@@ -64,9 +64,9 @@ public abstract class PipelineAction<T> extends Action<T> {
 
     private static class Worker {
         private final String name;
-        private final ActionSignature signature;
+        private final ActionDispatch signature;
 
-        private Worker(String name, ActionSignature signature) {
+        private Worker(String name, ActionDispatch signature) {
             this.name = name;
             this.signature = signature;
         }
@@ -79,7 +79,7 @@ public abstract class PipelineAction<T> extends Action<T> {
             session.out = result;
         }
 
-        private ActionCallable create(ActionSignature signature, Session session) {
+        private ActionCallable create(ActionDispatch signature, Session session) {
 
             return null;
         }
