@@ -19,7 +19,7 @@ public @interface ActionDefinition {
 
     String displayName() default "";
 
-    String description() default "";
+    String[] description() default {};
 
     String externalLink() default "";
 

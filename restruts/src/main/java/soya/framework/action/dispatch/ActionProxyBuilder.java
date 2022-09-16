@@ -2,11 +2,14 @@ package soya.framework.action.dispatch;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
-import soya.framework.action.Action;
-import soya.framework.action.ActionExecutor;
-import soya.framework.action.ConvertUtils;
+import soya.framework.action.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.net.URI;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public final class ActionProxyBuilder<T> {
 
@@ -18,12 +21,12 @@ public final class ActionProxyBuilder<T> {
     }
 
     public T create() throws ActionProxyBuildException {
-        if(!proxyInterface.isInterface()) {
+        if (!proxyInterface.isInterface()) {
             throw new ActionProxyBuildException("Class is not an interface: " + proxyInterface.getName());
         }
 
         ActionProxy actionProxy = proxyInterface.getAnnotation(ActionProxy.class);
-        if(actionProxy == null) {
+        if (actionProxy == null) {
             throw new ActionProxyBuildException("Class is not annotated as 'ActionProxy': " + proxyInterface.getName());
         }
 
@@ -32,25 +35,47 @@ public final class ActionProxyBuilder<T> {
 
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
 
-            ActionMapping actionMapping = method.getAnnotation(ActionMapping.class);
-            Class<? extends Action> actionType = actionMapping.actionType();
-            ActionExecutor executor = ActionExecutor.executor(actionType);
-
-            for(ActionParameterSetting setting: actionMapping.parameterSettings()) {
-
-                executor.setProperty(setting.name(), setting.value());
-            }
-
             Parameter[] parameters = method.getParameters();
-            for(int i = 0; i < parameters.length; i ++) {
-                Parameter param = parameters[i];
-                Object value = args[i];
-                ActionParameter ap = param.getAnnotation(ActionParameter.class);
-                executor.setProperty(ap.value(), value);
+            Map<String, Integer> paramIndex = new LinkedHashMap<>();
+            int index = 0;
+            for (Parameter parameter : parameters) {
+                ParamName paramName = parameter.getAnnotation(ParamName.class);
+                if (paramName == null) {
+                    throw new IllegalArgumentException("");
+                }
+
+                paramIndex.put(paramName.value(), index);
+                index++;
             }
 
-            Object result = executor.execute();
-            if(method.getReturnType() != Void.TYPE) {
+            ActionMapping actionMapping = method.getAnnotation(ActionMapping.class);
+            ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(URI.create(actionMapping.uri())));
+            ActionCallable action = actionClass.newInstance();
+
+            for (ActionParameter ap : actionMapping.parameters()) {
+                Object value = null;
+                if (AssignmentMethod.VALUE.equals(ap.assignmentMethod())) {
+                    value = ap.expression();
+
+                } else if (AssignmentMethod.ENVIRONMENT.equals(ap.assignmentMethod())) {
+                    value = ActionContext.getInstance().getProperty(ap.expression());
+
+                } else if (AssignmentMethod.REFERENCE.equals(ap.assignmentMethod())) {
+
+                } else if (AssignmentMethod.PARAMETER.equals(ap.assignmentMethod())) {
+                    value = args[paramIndex.get(ap.expression())];
+                }
+
+                if(value != null) {
+                    Field field = actionClass.getActionField(ap.name());
+                    field.setAccessible(true);
+                    field.set(action, ConvertUtils.convert(value, field.getType()));
+                }
+
+            }
+
+            Object result = action.call().get();
+            if (method.getReturnType() != Void.TYPE) {
                 return ConvertUtils.convert(result, method.getReturnType());
 
             } else {
@@ -59,7 +84,17 @@ public final class ActionProxyBuilder<T> {
 
         });
 
-        return (T)enhancer.create();
+        return (T) enhancer.create();
+    }
+
+    static class Context {
+        private Method method;
+        private Object[] args;
+
+        public Context(Method method, Object[] args) {
+            this.method = method;
+            this.args = args;
+        }
     }
 
     public static class ActionProxyBuildException extends RuntimeException {

@@ -2,10 +2,14 @@ package soya.framework.action.dispatch;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ActionParameter {
-    String value();
+    String name();
+
+    AssignmentMethod assignmentMethod();
+
+    String expression();
 
 }

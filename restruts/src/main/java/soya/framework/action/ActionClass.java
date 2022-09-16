@@ -7,7 +7,7 @@ import java.util.*;
 public final class ActionClass implements Serializable {
 
     private final transient Class<? extends ActionCallable> actionType;
-    private final transient Field[] actionFields;
+    private transient Map<String, Field> actionFields = new LinkedHashMap<>();
 
     private final ActionName actionName;
     private final String produce;
@@ -20,7 +20,9 @@ public final class ActionClass implements Serializable {
         }
 
         this.actionType = actionType;
-        this.actionFields = findActionFields();
+        for (Field field : findActionFields()) {
+            actionFields.put(field.getName(), field);
+        }
 
         this.actionName = ActionName.create(mapping.domain(), mapping.name());
         this.produce = mapping.produces()[0];
@@ -36,11 +38,45 @@ public final class ActionClass implements Serializable {
     }
 
     public Field[] getActionFields() {
-        return actionFields;
+        return actionFields.values().toArray(new Field[actionFields.size()]);
+    }
+
+    public Field getActionField(String name) {
+        return actionFields.get(name);
     }
 
     public String getProduce() {
         return produce;
+    }
+
+    public ActionCallable newInstance() throws ActionCreationException {
+        try {
+            ActionCallable action = actionType.newInstance();
+            actionFields.values().forEach(field -> {
+                ActionProperty property = field.getAnnotation(ActionProperty.class);
+                if (!property.defaultValue().isEmpty()) {
+                    Object value = null;
+                    if (property.parameterType().equals(ActionProperty.PropertyType.RESOURCE)) {
+
+                    } else {
+                        value = ConvertUtils.convert(property.defaultValue(), field.getType());
+                    }
+
+                    if(value != null) {
+                        field.setAccessible(true);
+                        try {
+                            field.set(action, value);
+                        } catch (IllegalAccessException e) {
+                            throw new ActionCreationException(e);
+                        }
+                    }
+                }
+            });
+
+            return action;
+        } catch (Exception e) {
+            throw new ActionCreationException(e);
+        }
     }
 
     private Field[] findActionFields() {

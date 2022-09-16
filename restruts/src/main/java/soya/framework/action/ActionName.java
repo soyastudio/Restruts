@@ -1,6 +1,7 @@
 package soya.framework.action;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Objects;
 
 public final class ActionName implements Comparable<ActionName>, Serializable {
@@ -19,6 +20,10 @@ public final class ActionName implements Comparable<ActionName>, Serializable {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
+    }
+
+    public static ActionName fromURI(URI uri) {
+        return new ActionName(uri.getScheme(), uri.getHost());
     }
 
     public static ActionName create(String domain, String name) {

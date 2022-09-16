@@ -1,9 +1,9 @@
 package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
-import soya.framework.action.ActionClass;
 import soya.framework.action.dispatch.ActionDispatch;
 import soya.framework.common.util.CodeBuilder;
+import soya.framework.common.util.StringUtils;
 
 import java.lang.reflect.Field;
 
@@ -34,7 +34,7 @@ public class AboutAction extends Action<String> {
                 Class<? extends ActionCallable> cls = actionClass.getActionType();
                 ActionDefinition operation = cls.getAnnotation(ActionDefinition.class);
                 builder.append("## ACTION: ").appendLine(operation.displayName().isEmpty() ? operation.name() : operation.displayName());
-                builder.appendLine(operation.description());
+                builder.appendLine(StringUtils.merge(operation.description(), "\n"));
 
                 builder.appendLine("```");
                 builder.appendLine(ActionDispatch.fromAction(ActionClass.get(cls)).toURI());
@@ -49,13 +49,13 @@ public class AboutAction extends Action<String> {
 
                 Field[] fields = actionClass.getActionFields();
                 builder.appendLine("### 2. Action Parameters");
-                if(fields.length == 0) {
+                if (fields.length == 0) {
                     builder.appendLine("No annotated parameter field.");
 
                 } else {
                     for (Field field : fields) {
                         builder.append("- ").appendLine(field.getName());
-                        if(field.getAnnotation(ActionProperty.class) != null) {
+                        if (field.getAnnotation(ActionProperty.class) != null) {
                             ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
                             builder.append("-- Description: ").appendLine(actionProperty.description());
                             builder.append("-- Required: ").appendLine("" + actionProperty.required());

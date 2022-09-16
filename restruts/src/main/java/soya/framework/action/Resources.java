@@ -1,7 +1,7 @@
 package soya.framework.action;
 
 import soya.framework.common.util.StreamUtils;
-import soya.framework.common.util.URIParser;
+import soya.framework.common.util.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -115,7 +115,8 @@ public class Resources {
 
         @Override
         public InputStream getAsInputStream() throws IOException {
-            return getClassLoader().getResourceAsStream(uri.getHost());
+            String res = uri.getPath() != null ? uri.getHost() + uri.getPath() : uri.getHost();
+            return getClassLoader().getResourceAsStream(res);
         }
 
         private ClassLoader getClassLoader() {
@@ -226,9 +227,8 @@ public class Resources {
             }
 
             if (this.uri.getQuery() != null) {
-                params = URIParser.splitQuery(this.uri.getQuery());
+                params = StringUtils.splitQuery(this.uri.getQuery());
             }
-
         }
 
         @Override

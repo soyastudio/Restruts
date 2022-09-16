@@ -5,8 +5,9 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.util.*;
 
-public final class URIParser {
-    private URIParser() {
+public class StringUtils {
+
+    private StringUtils() {
     }
 
     public static URI toURI(String commandline) {
@@ -68,5 +69,39 @@ public final class URIParser {
             }
         }
         return query_pairs;
+    }
+
+    public static String[] trim(String[] array) {
+        if(array == null) {
+            return null;
+        }
+
+        String[] arr = new String[array.length];
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] != null) {
+                arr[i] = array[i].trim();
+
+            } else {
+                arr[i] = array[i];
+            }
+        }
+
+        return arr;
+    }
+
+    public static String merge(String[] array, String separator) {
+        StringBuilder builder = new StringBuilder();
+        if (array != null && array.length > 0) {
+            for (int i = 0; i < array.length; i++) {
+                if (i > 0 && separator != null) {
+                    builder.append(separator);
+                }
+                builder.append(array[i]);
+            }
+
+        }
+
+        return builder.toString();
+
     }
 }

@@ -8,6 +8,7 @@ import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.common.util.ReflectUtils;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -21,20 +22,26 @@ import java.util.Map;
         name = "generic-command-dispatch",
         path = "/dispatch/command-dispatch",
         method = ActionDefinition.HttpMethod.POST,
-        produces = MediaType.APPLICATION_JSON,
+        produces = MediaType.TEXT_PLAIN,
         displayName = "Command Dispatch",
-        description = "Print as markdown format.")
+        description = "This action dispatches execution to an executing class which using **Command Design Pattern**. The execution method take zero argument, and parameter values are set through bean properties or fields.")
 public class GenericCommandDispatchAction extends Action<Object> {
 
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            description = "Command class full name.")
     private String className;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            description = "Execution method. The method must take no arguments.")
     private String methodName;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD, contentType = MediaType.APPLICATION_JSON)
+    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD,
+            contentType = MediaType.APPLICATION_JSON,
+            description = "Parameter values in json format.")
     private String payload;
 
     @Override
@@ -45,31 +52,28 @@ public class GenericCommandDispatchAction extends Action<Object> {
             propertyDescriptorMap.put(ppt.getName(), ppt);
         }
 
-
-        Method method = cls.getMethod(methodName, new Class[0]);
+        Method method = ReflectUtils.findMethod(cls, methodName);
 
         Object instance = cls.newInstance();
         if (payload != null) {
             JsonObject jsonObject = JsonParser.parseString(payload).getAsJsonObject();
             jsonObject.entrySet().forEach(e -> {
-                if(propertyDescriptorMap.containsKey(e.getKey())) {
-                    PropertyDescriptor ppt = propertyDescriptorMap.get(e.getKey());
-                    Object value = gson.fromJson(e.getValue(), ppt.getPropertyType());
-
-                    try {
-                        if(ppt.getWriteMethod() != null && Modifier.isPublic(ppt.getWriteMethod().getModifiers())) {
+                try {
+                    if (propertyDescriptorMap.containsKey(e.getKey())) {
+                        PropertyDescriptor ppt = propertyDescriptorMap.get(e.getKey());
+                        Object value = gson.fromJson(e.getValue(), ppt.getPropertyType());
+                        if (ppt.getWriteMethod() != null && Modifier.isPublic(ppt.getWriteMethod().getModifiers())) {
                             Method writer = ppt.getWriteMethod();
-                            writer.invoke(instance, new Object[] {value});
-
-                        } else {
-                            Field field = cls.getField(e.getKey());
-                            field.setAccessible(true);
-                            field.set(instance, value);
+                            writer.invoke(instance, new Object[]{value});
                         }
 
-                    } catch (Exception exception) {
-                        throw new RuntimeException(exception);
+                    } else {
+                        Field field = ReflectUtils.findField(cls, e.getKey());
+                        field.setAccessible(true);
+                        field.set(instance, gson.fromJson(e.getValue(), field.getType()));
                     }
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
                 }
             });
         }
