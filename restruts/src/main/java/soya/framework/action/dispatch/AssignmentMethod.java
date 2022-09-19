@@ -1,10 +1,9 @@
 package soya.framework.action.dispatch;
 
 public enum AssignmentMethod {
-
     VALUE("val"),
     PARAMETER("param"),
-    ENVIRONMENT("env"),
+    RESOURCE("res"),
     REFERENCE("ref");
 
     private final String function;
@@ -26,8 +25,10 @@ public enum AssignmentMethod {
         switch (token) {
             case "val":
                 return VALUE;
-            case "env":
-                return ENVIRONMENT;
+            case "param":
+                return PARAMETER;
+            case "res":
+                return RESOURCE;
             case "ref":
                 return REFERENCE;
 

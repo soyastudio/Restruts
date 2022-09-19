@@ -2,10 +2,11 @@ package soya.framework.action.dispatch;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Pipeline {
-    Task[] tasks();
+public @interface EventPublisher {
+    String uri();
 
+    ActionDispatchPattern dispatch();
 }

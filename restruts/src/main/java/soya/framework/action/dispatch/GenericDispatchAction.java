@@ -5,8 +5,8 @@ import com.google.gson.JsonParser;
 import soya.framework.action.*;
 
 @ActionDefinition(domain = "dispatch",
-        name = "generic-dispatch",
-        path = "/dispatch/action",
+        name = "action-dispatch",
+        path = "/dispatch/action-dispatch",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Dispatch",

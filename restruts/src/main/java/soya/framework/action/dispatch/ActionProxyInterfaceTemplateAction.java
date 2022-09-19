@@ -10,10 +10,10 @@ import soya.framework.action.MediaType;
         produces = MediaType.TEXT_PLAIN,
         displayName = "Pipeline Action Class Generator",
         description = "Print as markdown format.")
-@ActionMapping(
+@ActionDispatchPattern(
         uri = "dispatch://resource",
-        parameters = {
-                @ActionParameter(name = "uri",
+        propertyAssignments = {
+                @ActionPropertyAssignment(name = "uri",
                         assignmentMethod = AssignmentMethod.VALUE,
                         expression = "classpath://template/ActionProxyInterface.json")
         }

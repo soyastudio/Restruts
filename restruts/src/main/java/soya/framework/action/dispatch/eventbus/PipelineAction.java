@@ -1,6 +1,7 @@
-package soya.framework.action.dispatch;
+package soya.framework.action.dispatch.eventbus;
 
 import soya.framework.action.*;
+import soya.framework.action.dispatch.ActionDispatch;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -26,11 +27,10 @@ public abstract class PipelineAction<T> extends Action<T> {
 
         Session session = new Session(inputs);
 
-        Pipeline pipeline = actionClass.getActionType().getAnnotation(Pipeline.class);
-        Task[] tasks = pipeline.tasks();
+        PipelinePattern pipelinePattern = actionClass.getActionType().getAnnotation(PipelinePattern.class);
+        Task[] tasks = pipelinePattern.tasks();
         for (Task task : tasks) {
-            ActionDispatch signature = ActionDispatch.fromURI(task.dispatch());
-            queue.add(new Worker(task.name(), signature));
+            ActionDispatch signature = ActionDispatch.fromAnnotation(task.dispatch());
         }
 
         while (!queue.isEmpty()) {

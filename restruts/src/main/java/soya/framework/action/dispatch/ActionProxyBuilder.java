@@ -25,7 +25,7 @@ public final class ActionProxyBuilder<T> {
             throw new ActionProxyBuildException("Class is not an interface: " + proxyInterface.getName());
         }
 
-        ActionProxy actionProxy = proxyInterface.getAnnotation(ActionProxy.class);
+        ActionProxyPattern actionProxy = proxyInterface.getAnnotation(ActionProxyPattern.class);
         if (actionProxy == null) {
             throw new ActionProxyBuildException("Class is not annotated as 'ActionProxy': " + proxyInterface.getName());
         }
@@ -48,22 +48,24 @@ public final class ActionProxyBuilder<T> {
                 index++;
             }
 
-            ActionMapping actionMapping = method.getAnnotation(ActionMapping.class);
+            ActionDispatchPattern actionMapping = method.getAnnotation(ActionDispatchPattern.class);
             ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(URI.create(actionMapping.uri())));
             ActionCallable action = actionClass.newInstance();
 
-            for (ActionParameter ap : actionMapping.parameters()) {
+            for (ActionPropertyAssignment ap : actionMapping.propertyAssignments()) {
                 Object value = null;
                 if (AssignmentMethod.VALUE.equals(ap.assignmentMethod())) {
                     value = ap.expression();
 
-                } else if (AssignmentMethod.ENVIRONMENT.equals(ap.assignmentMethod())) {
-                    value = ActionContext.getInstance().getProperty(ap.expression());
+                } else if (AssignmentMethod.RESOURCE.equals(ap.assignmentMethod())) {
+                    value = Resources.getResourceAsString(ap.expression());
 
                 } else if (AssignmentMethod.REFERENCE.equals(ap.assignmentMethod())) {
+                    // TODO:
 
                 } else if (AssignmentMethod.PARAMETER.equals(ap.assignmentMethod())) {
                     value = args[paramIndex.get(ap.expression())];
+
                 }
 
                 if(value != null) {

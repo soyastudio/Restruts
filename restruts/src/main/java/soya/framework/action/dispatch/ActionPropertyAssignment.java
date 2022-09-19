@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 @Target({ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ActionParameter {
+public @interface ActionPropertyAssignment {
     String name();
 
     AssignmentMethod assignmentMethod();

@@ -1,7 +1,8 @@
-package soya.framework.action.dispatch;
+package soya.framework.action.dispatch.eventbus;
 
 import soya.framework.action.ActionCallable;
 import soya.framework.action.ActionResult;
+import soya.framework.action.dispatch.ActionDispatch;
 
 import java.util.Map;
 

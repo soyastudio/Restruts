@@ -20,7 +20,7 @@ public class ActionProxyFactory {
     }
 
     public <T> T create(Class<T> proxyInterface) {
-        if(proxyInterface.getAnnotation(ActionProxy.class) == null) {
+        if(proxyInterface.getAnnotation(ActionProxyPattern.class) == null) {
             throw new IllegalArgumentException("Not annotated as 'ActionProxy' for class: " + proxyInterface.getName());
         }
 

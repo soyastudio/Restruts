@@ -48,9 +48,13 @@ public class ActionContextAutoConfiguration {
                 .flatMap(Arrays::<String>stream)
                 .forEach(propName -> properties.setProperty(propName, environment.getProperty(propName)));
 
-
         return ActionContext.builder()
                 .serviceLocator(new ServiceLocator() {
+                    @Override
+                    public Object getService(String name) {
+                        return applicationContext.getBean(name);
+                    }
+
                     @Override
                     public <T> T getService(Class<T> type) {
                         return applicationContext.getBean(type);

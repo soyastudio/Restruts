@@ -1,7 +1,8 @@
-package soya.framework.action.dispatch;
+package soya.framework.action.dispatch.eventbus;
 
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
+import soya.framework.action.dispatch.DispatchClassGenerator;
 
 @ActionDefinition(domain = "dispatch",
         name = "/generator-pipeline-action-class",

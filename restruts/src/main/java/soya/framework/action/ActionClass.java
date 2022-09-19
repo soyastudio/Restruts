@@ -54,7 +54,7 @@ public final class ActionClass implements Serializable {
             ActionCallable action = actionType.newInstance();
             actionFields.values().forEach(field -> {
                 ActionProperty property = field.getAnnotation(ActionProperty.class);
-                if (!property.defaultValue().isEmpty()) {
+                if (property.required() && !property.defaultValue().isEmpty()) {
                     Object value = null;
                     if (property.parameterType().equals(ActionProperty.PropertyType.RESOURCE)) {
 

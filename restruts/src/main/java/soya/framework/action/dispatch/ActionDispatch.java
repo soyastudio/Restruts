@@ -1,18 +1,19 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
+import soya.framework.common.util.StringUtils;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.net.URLDecoder;
 import java.util.*;
 
-public class ActionDispatch {
-    private final ActionName actionName;
-    private final Map<String, ParameterAssignment> assignments;
+public final class ActionDispatch {
 
-    private ActionDispatch(ActionName actionName, Map<String, ParameterAssignment> assignments) {
+    private final ActionName actionName;
+    private final Map<String, Assignment> assignments;
+
+    private ActionDispatch(ActionName actionName, Map<String, Assignment> assignments) {
         this.actionName = actionName;
         this.assignments = assignments;
 
@@ -37,7 +38,7 @@ public class ActionDispatch {
             Field[] fields = actionClass.getActionFields();
             for (Field field : fields) {
                 if (assignments.containsKey(field.getName())) {
-                    ParameterAssignment assignment = assignments.get(field.getName());
+                    Assignment assignment = assignments.get(field.getName());
                     AssignmentMethod assignmentMethod = assignment.getAssignmentMethod();
                     String expression = assignment.getExpression();
 
@@ -45,8 +46,8 @@ public class ActionDispatch {
                     if (AssignmentMethod.VALUE.equals(assignmentMethod)) {
                         value = expression;
 
-                    } else if (AssignmentMethod.ENVIRONMENT.equals(assignmentMethod)) {
-                        value = ActionContext.getInstance().getProperty(expression);
+                    } else if (AssignmentMethod.RESOURCE.equals(assignmentMethod)) {
+                        value = Resources.getResourceAsString(expression);
 
                     } else if (AssignmentMethod.REFERENCE.equals(assignmentMethod)) {
                         value = ConvertUtils.convert(evaluator.evaluate(expression, context), field.getType());
@@ -60,7 +61,8 @@ public class ActionDispatch {
             }
 
             return action;
-        } catch (InstantiationException | IllegalAccessException e) {
+
+        } catch (InstantiationException | IllegalAccessException | IOException e) {
             throw new ActionDispatchException(e);
         }
 
@@ -94,7 +96,7 @@ public class ActionDispatch {
     public static ActionDispatch fromURI(URI uri) {
         Builder builder = builder(ActionName.create(uri.getScheme(), uri.getHost()));
         if (uri.getQuery() != null) {
-            splitQuery(uri.getQuery()).entrySet().forEach(e -> {
+            StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
                 String name = e.getKey();
                 String expression = e.getValue().get(0);
                 builder.addAssignment(name, expression);
@@ -106,81 +108,34 @@ public class ActionDispatch {
 
     }
 
-    public static Map<String, List<String>> splitQuery(String query) {
-        Map<String, List<String>> params = new HashMap<>();
-        try {
-            params = splitQuery(query, "UTF-8");
-
-        } catch (UnsupportedEncodingException e) {
-
+    public static ActionDispatch fromAnnotation(ActionDispatchPattern pattern) {
+        ActionDispatch.Builder builder = builder(ActionName.fromURI(URI.create(pattern.uri())));
+        for(ActionPropertyAssignment assignment: pattern.propertyAssignments()) {
+            builder.addAssignment(assignment.name(), assignment.assignmentMethod(), assignment.expression());
         }
-        return params;
-    }
 
-    public static Map<String, List<String>> splitQuery(String query, String encoding) throws UnsupportedEncodingException {
-        final Map<String, List<String>> query_pairs = new LinkedHashMap<String, List<String>>();
-        if (query != null && !query.isEmpty()) {
-            final String[] pairs = query.split("&");
-            for (String pair : pairs) {
-                final int idx = pair.indexOf("=");
-                final String key = idx > 0 ? URLDecoder.decode(pair.substring(0, idx), encoding) : pair;
-                if (!query_pairs.containsKey(key)) {
-                    query_pairs.put(key, new LinkedList<String>());
-                }
-                final String value = idx > 0 && pair.length() > idx + 1 ? URLDecoder.decode(pair.substring(idx + 1), "UTF-8") : null;
-                query_pairs.get(key).add(value);
-            }
-        }
-        return query_pairs;
+        return builder.create();
     }
 
     public static Builder builder(ActionName actionName) {
         return new Builder(actionName);
     }
 
-    static class ParameterAssignment {
-        private final AssignmentMethod assignmentMethod;
-        private final String expression;
-
-        ParameterAssignment(String assignment) {
-            this.assignmentMethod = AssignmentMethod.getAssignmentMethod(assignment);
-            this.expression = assignment.substring(assignment.indexOf('(') + 1, assignment.lastIndexOf(')')).trim();
-        }
-
-        ParameterAssignment(AssignmentMethod assignmentMethod, String expression) {
-            this.assignmentMethod = assignmentMethod;
-            this.expression = expression;
-        }
-
-        public AssignmentMethod getAssignmentMethod() {
-            return assignmentMethod;
-        }
-
-        public String getExpression() {
-            return expression;
-        }
-
-        @Override
-        public String toString() {
-            return assignmentMethod.toString(expression);
-        }
-    }
-
     public static class Builder {
         private final ActionName actionName;
-        private final Map<String, ParameterAssignment> params = new LinkedHashMap<>();
+        private final Map<String, Assignment> params = new LinkedHashMap<>();
 
         private Builder(ActionName actionName) {
             this.actionName = actionName;
         }
 
         public Builder addAssignment(String name, String assignment) {
-            params.put(name, new ParameterAssignment(assignment));
+            params.put(name, new Assignment(assignment));
             return this;
         }
 
         public Builder addAssignment(String name, AssignmentMethod assignmentMethod, String expression) {
-            params.put(name, new ParameterAssignment(assignmentMethod, expression));
+            params.put(name, new Assignment(assignmentMethod, expression));
             return this;
         }
 
