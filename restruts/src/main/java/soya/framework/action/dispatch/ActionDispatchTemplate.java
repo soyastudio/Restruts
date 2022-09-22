@@ -6,7 +6,7 @@ import java.net.URI;
 
 @ActionDefinition(domain = "dispatch",
         name = "action-dispatch-template",
-        path = "/dispatch/action",
+        path = "/dispatch/action/template",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",
