@@ -8,6 +8,7 @@ public final class ActionClass implements Serializable {
 
     private final transient Class<? extends ActionCallable> actionType;
     private transient Map<String, Field> actionFields = new LinkedHashMap<>();
+    private transient Map<String, Field> options = new LinkedHashMap<>();
 
     private final ActionName actionName;
     private final String produce;
@@ -21,7 +22,12 @@ public final class ActionClass implements Serializable {
 
         this.actionType = actionType;
         for (Field field : findActionFields()) {
+            ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
+
             actionFields.put(field.getName(), field);
+            if(!actionProperty.option().isEmpty()) {
+                options.put(actionProperty.option(), field);
+            }
         }
 
         this.actionName = ActionName.create(mapping.domain(), mapping.name());
@@ -42,11 +48,28 @@ public final class ActionClass implements Serializable {
     }
 
     public Field getActionField(String name) {
-        return actionFields.get(name);
+        if(name.length() == 1) {
+            return options.get(name);
+        } else {
+            return actionFields.get(name);
+        }
     }
 
     public String getProduce() {
         return produce;
+    }
+
+    public String toURI() {
+        StringBuilder builder = new StringBuilder(actionName.toString());
+        if (actionFields.size() > 0) {
+            builder.append("?");
+            actionFields.entrySet().forEach(e -> {
+                builder.append(e.getKey()).append("=assign(").append(e.getKey()).append(")").append("&");
+            });
+
+            builder.deleteCharAt(builder.length() - 1);
+        }
+        return builder.toString();
     }
 
     public ActionCallable newInstance() throws ActionCreationException {
@@ -55,14 +78,9 @@ public final class ActionClass implements Serializable {
             actionFields.values().forEach(field -> {
                 ActionProperty property = field.getAnnotation(ActionProperty.class);
                 if (property.required() && !property.defaultValue().isEmpty()) {
-                    Object value = null;
-                    if (property.parameterType().equals(ActionProperty.PropertyType.RESOURCE)) {
+                    Object value = ConvertUtils.convert(property.defaultValue(), field.getType());
 
-                    } else {
-                        value = ConvertUtils.convert(property.defaultValue(), field.getType());
-                    }
-
-                    if(value != null) {
+                    if (value != null) {
                         field.setAccessible(true);
                         try {
                             field.set(action, value);
@@ -111,8 +129,16 @@ public final class ActionClass implements Serializable {
         @Override
         public int compare(Field o1, Field o2) {
             if (o1.getAnnotation(ActionProperty.class) != null && o2.getAnnotation(ActionProperty.class) != null) {
-                int result = ActionProperty.PropertyType.index(o1.getAnnotation(ActionProperty.class).parameterType())
-                        - ActionProperty.PropertyType.index(o2.getAnnotation(ActionProperty.class).parameterType());
+                ActionProperty a1 = o1.getAnnotation(ActionProperty.class);
+                ActionProperty a2 = o2.getAnnotation(ActionProperty.class);
+
+                int result = ActionProperty.PropertyType.index(a1.parameterType())
+                        - ActionProperty.PropertyType.index(a2.parameterType());
+                if (result != 0) {
+                    return result;
+                }
+
+                result = a1.displayOrder() - a2.displayOrder();
                 if (result != 0) {
                     return result;
                 }

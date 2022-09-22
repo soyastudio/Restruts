@@ -26,6 +26,6 @@ public class SignatureAction extends Action<String> {
                 ActionClass.get((Class<? extends ActionCallable>) Class.forName(uri.getHost()))
                 : ActionContext.getInstance().getActionMappings().actionClass(name);
 
-        return ActionDispatch.fromAction(actionClass).toURI();
+        return actionClass.toURI();
     }
 }

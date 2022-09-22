@@ -5,13 +5,13 @@ import com.google.gson.JsonParser;
 import soya.framework.action.*;
 
 @ActionDefinition(domain = "dispatch",
-        name = "action-dispatch",
-        path = "/dispatch/action-dispatch",
+        name = "generic-action-dispatch",
+        path = "/dispatch/action",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
-        displayName = "Dispatch",
-        description = "Print as markdown format.")
-public class GenericDispatchAction extends Action<Object> {
+        displayName = "Generic Action Dispatch",
+        description = "Generic action dispatch action.")
+public class GenericActionDispatchAction extends Action<Object> {
 
     @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
     private String command;

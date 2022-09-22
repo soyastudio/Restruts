@@ -20,7 +20,7 @@ import java.util.Map;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-command-dispatch",
-        path = "/dispatch/command-dispatch",
+        path = "/dispatch/command",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Command Dispatch",

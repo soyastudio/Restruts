@@ -8,12 +8,12 @@ public abstract class Dispatcher {
 
     protected Class<?> executeClass;
     protected String methodName;
-    protected Class<?>[] parameterTypes = new Class[0];
+    protected Class<?>[] parameterTypes;
 
     public Dispatcher(Class<?> executeClass, String methodName, Class<?>[] parameterTypes) {
         this.executeClass = executeClass;
         this.methodName = methodName;
-        this.parameterTypes = parameterTypes;
+        this.parameterTypes = parameterTypes != null? parameterTypes: new Class[0];
     }
 
     public abstract Object dispatch(ActionCallable context) throws Exception;
@@ -21,6 +21,5 @@ public abstract class Dispatcher {
     protected Method method() throws NoSuchMethodException {
         return executeClass.getMethod(methodName, parameterTypes);
     }
-
 
 }

@@ -17,6 +17,7 @@ public class ConvertUtils {
             return value;
 
         } else if ("java.lang.String".equals(type.getName())) {
+
             return value.toString();
 
         } else if (value instanceof String) {

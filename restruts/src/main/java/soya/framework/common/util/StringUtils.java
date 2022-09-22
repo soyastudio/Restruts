@@ -43,6 +43,35 @@ public class StringUtils {
 
     }
 
+    public static URI toURI(String[] args) {
+        if (args.length == 0) {
+            throw new IllegalArgumentException("");
+        }
+
+        StringBuilder builder = new StringBuilder(args[0]);
+        if (args.length > 1) {
+            builder.append("?");
+            for (int i = 1; i < args.length; i++) {
+                if (args[i].startsWith("--")) {
+                    builder.append(args[i].substring(2)).append("=");
+
+                } else if (args[i].startsWith("-")) {
+                    builder.append(args[i].substring(1)).append("=");
+
+                } else {
+                    builder.append(args[i]).append("&");
+
+                }
+            }
+        }
+
+        if (builder.charAt(builder.length() - 1) == '&') {
+            builder.deleteCharAt(builder.length() - 1);
+        }
+
+        return URI.create(builder.toString());
+    }
+
     public static Map<String, List<String>> splitQuery(String query) {
         Map<String, List<String>> params = new HashMap<>();
         try {
@@ -54,7 +83,8 @@ public class StringUtils {
         return params;
     }
 
-    public static Map<String, List<String>> splitQuery(String query, String encoding) throws UnsupportedEncodingException {
+    public static Map<String, List<String>> splitQuery(String query, String encoding) throws
+            UnsupportedEncodingException {
         final Map<String, List<String>> query_pairs = new LinkedHashMap<String, List<String>>();
         if (query != null && !query.isEmpty()) {
             final String[] pairs = query.split("&");
@@ -72,7 +102,7 @@ public class StringUtils {
     }
 
     public static String[] trim(String[] array) {
-        if(array == null) {
+        if (array == null) {
             return null;
         }
 

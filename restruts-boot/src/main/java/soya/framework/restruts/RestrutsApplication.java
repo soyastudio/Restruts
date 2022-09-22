@@ -45,7 +45,7 @@ public class RestrutsApplication {
         ActionProxyFactory factory = applicationContext.getBean(ActionProxyFactory.class);
         Workshop workshop = factory.create(Workshop.class);
 
-        String encoded = workshop.base64Encode();
+        String encoded = workshop.base64Encode("SUCCESS!");
         String decoded = workshop.base64Decode(encoded);
 
         System.out.println("-------------------- workspace.home = " + ActionContext.getInstance().getProperty("workspace.home"));

@@ -9,9 +9,9 @@ public interface Workshop {
 
     @ActionDispatchPattern(uri = "albertsons://base64-encode",
             propertyAssignments = {
-                    @ActionPropertyAssignment(name = "message", assignmentMethod = AssignmentMethod.VALUE, expression = "Once upon a time...")
+                    @ActionPropertyAssignment(name = "message", assignmentMethod = AssignmentMethod.PARAMETER, expression = "msg")
             })
-    String base64Encode();
+    String base64Encode(@ParamName("msg") String msg);
 
     @ActionDispatchPattern(uri = "albertsons://base64-decode",
             propertyAssignments = {

@@ -186,6 +186,16 @@ public class ActionServlet extends HttpServlet {
             ActionClass actionClass = actionMappings.actionClass(actionName);
             Class<? extends ActionCallable> cls = actionClass.getActionType();
             ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
+            registry.put(new Registration(actionDefinition.method().name(), actionDefinition.path()), actionClass);
+        }
+
+        List<Registration> registrations = new ArrayList<>(registry.keySet());
+        Collections.sort(registrations);
+
+        registrations.forEach(e -> {
+            ActionClass actionClass = registry.get(e);
+            Class<? extends ActionCallable> cls = actionClass.getActionType();
+            ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
 
             String operationId = actionDefinition.name().isEmpty() ? cls.getSimpleName() : actionDefinition.name();
 
@@ -255,12 +265,8 @@ public class ActionServlet extends HttpServlet {
                         .produces(actionDefinition.produces());
 
             }
-
             pathBuilder.build();
-
-            registry.put(new Registration(actionDefinition.method().name(), actionDefinition.path()), actionClass);
-
-        }
+        });
 
         this.swagger = builder.build();
     }
@@ -376,16 +382,8 @@ public class ActionServlet extends HttpServlet {
 
         @Override
         public int compareTo(Registration o) {
-            int result = 0;
-            int size = Math.min(paths.length, o.paths.length);
-            for (int i = 0; i < size; i++) {
-                result = paths[i].compareTo(o.paths[i]);
-                if (result != 0) {
-                    return result;
-                }
-            }
+            int result = path.compareTo(o.path);
 
-            result = paths.length - o.paths.length;
             if (result == 0) {
                 result = method.compareTo(o.method);
             }

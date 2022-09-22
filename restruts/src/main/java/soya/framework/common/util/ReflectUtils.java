@@ -27,6 +27,22 @@ public class ReflectUtils {
         return null;
     }
 
+    public static Method[] findMethods(Class<?> cls, String methodName) {
+        List<Method> methodList = new ArrayList<>();
+        Class parent = cls;
+        while (parent != null) {
+            for (Method method : parent.getDeclaredMethods()) {
+                if (method.getName().equals(methodName) && Modifier.isPublic(method.getModifiers())) {
+                    methodList.add(method);
+                }
+            }
+
+            parent = cls.getSuperclass();
+        }
+
+        return methodList.toArray(new Method[methodList.size()]);
+    }
+
     public static Method findMethod(Class<?> cls, String methodName) {
         Class parent = cls;
         while (!parent.getName().equals("java.lang.Object")) {

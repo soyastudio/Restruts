@@ -16,7 +16,6 @@ public final class ActionDispatch {
     private ActionDispatch(ActionName actionName, Map<String, Assignment> assignments) {
         this.actionName = actionName;
         this.assignments = assignments;
-
     }
 
     public <T> ActionCallable create(T context, Evaluator<T> evaluator) {
@@ -80,10 +79,10 @@ public final class ActionDispatch {
         return builder.toString();
     }
 
-    public static ActionDispatch fromAction(ActionClass actionClass) {
-        ActionDispatch.Builder builder = ActionDispatch.builder(actionClass.getActionName());
-        for (Field field : actionClass.getActionFields()) {
-            builder.addAssignment(field.getName(), AssignmentMethod.PARAMETER, field.getName());
+    public static ActionDispatch fromAnnotation(ActionDispatchPattern pattern) {
+        ActionDispatch.Builder builder = builder(ActionName.fromURI(URI.create(pattern.uri())));
+        for(ActionPropertyAssignment assignment: pattern.propertyAssignments()) {
+            builder.addAssignment(assignment.name(), assignment.assignmentMethod(), assignment.expression());
         }
 
         return builder.create();
@@ -106,15 +105,6 @@ public final class ActionDispatch {
 
         return builder.create();
 
-    }
-
-    public static ActionDispatch fromAnnotation(ActionDispatchPattern pattern) {
-        ActionDispatch.Builder builder = builder(ActionName.fromURI(URI.create(pattern.uri())));
-        for(ActionPropertyAssignment assignment: pattern.propertyAssignments()) {
-            builder.addAssignment(assignment.name(), assignment.assignmentMethod(), assignment.expression());
-        }
-
-        return builder.create();
     }
 
     public static Builder builder(ActionName actionName) {

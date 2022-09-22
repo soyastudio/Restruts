@@ -8,8 +8,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 @ActionDefinition(domain = "dispatch",
-        name = "generic-method-dispatch-template",
-        path = "/dispatch/method-dispatch",
+        name = "method-dispatch-template",
+        path = "/dispatch/method/template",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Method Dispatch Template",

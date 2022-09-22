@@ -6,10 +6,17 @@ import soya.framework.common.util.CodeBuilder;
 
 public abstract class DispatchClassGenerator extends Action<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(description = "Package name.",
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            displayOrder = 1,
+            option = "p")
     protected String packageName;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(description = "Class name.",
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            displayOrder = 2)
     protected String className;
 
     @Override

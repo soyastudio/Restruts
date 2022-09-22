@@ -10,9 +10,11 @@ public abstract class ActionDispatchAction<T> extends Action<T> {
 
     @Override
     public T execute() throws Exception {
+
         ActionDispatchPattern actionMapping = getClass().getAnnotation(ActionDispatchPattern.class);
         ActionName actionName = ActionName.fromURI(URI.create(actionMapping.uri()));
         ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionName);
+
         Class<? extends ActionCallable> actionType = actionClass.getActionType();
         ActionCallable action = actionClass.newInstance();
 

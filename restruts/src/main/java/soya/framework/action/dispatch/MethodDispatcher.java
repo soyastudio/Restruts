@@ -5,9 +5,9 @@ import soya.framework.action.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public final class MethodDispatcher extends Dispatcher{
+public final class MethodDispatcher extends Dispatcher {
 
-    private Assignment[] parameterAssignments = new Assignment[0];
+    private Assignment[] parameterAssignments;
 
     public MethodDispatcher(Class<?> executeClass, String methodName, Class<?>[] parameterTypes) {
         super(executeClass, methodName, parameterTypes);
@@ -52,4 +52,5 @@ public final class MethodDispatcher extends Dispatcher{
 
         return method.invoke(executor, paramValues);
     }
+
 }

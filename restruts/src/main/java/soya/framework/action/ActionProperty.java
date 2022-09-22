@@ -7,9 +7,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface ActionProperty {
 
-    PropertyType parameterType();
-
     String name() default "";
+
+    String option() default "";
+
+    int displayOrder() default 5;
 
     String description() default "";
 
@@ -17,13 +19,15 @@ public @interface ActionProperty {
 
     String defaultValue() default "";
 
+    PropertyType parameterType();
+
     String contentType() default MediaType.TEXT_PLAIN;
 
     enum PropertyType {
-        RESOURCE, COOKIE_PARAM, HEADER_PARAM, PATH_PARAM, QUERY_PARAM, FORM_PARAM, MATRIX_PARAM, BEAN_PARAM, PAYLOAD;
+        PATH_PARAM, QUERY_PARAM, HEADER_PARAM, COOKIE_PARAM, FORM_PARAM, MATRIX_PARAM, BEAN_PARAM, PAYLOAD;
 
         private static final PropertyType[] SEQUENCE
-                = {RESOURCE, PATH_PARAM, QUERY_PARAM, HEADER_PARAM, COOKIE_PARAM, FORM_PARAM, MATRIX_PARAM, BEAN_PARAM, PAYLOAD};
+                = {PATH_PARAM, QUERY_PARAM, HEADER_PARAM, COOKIE_PARAM, FORM_PARAM, MATRIX_PARAM, BEAN_PARAM, PAYLOAD};
 
         public static final int index(PropertyType type) {
             int i = 0;

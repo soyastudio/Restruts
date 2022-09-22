@@ -1,6 +1,10 @@
 package soya.framework.action;
 
+import org.checkerframework.checker.units.qual.A;
+import soya.framework.common.util.StringUtils;
+
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,6 +34,37 @@ public final class ActionExecutor {
             throw new IllegalArgumentException(e);
 
         }
+    }
+
+    public static ActionExecutor executor(String[] args)  {
+        URI uri = StringUtils.toURI(args);
+
+        final ActionClass actionClass;
+        if(uri.getScheme().equals("class")) {
+            try {
+                actionClass = ActionClass.get((Class<? extends ActionCallable>) Class.forName(uri.getHost()));
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        } else {
+            actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
+        }
+
+        if(actionClass == null) {
+            throw new IllegalArgumentException("Cannot find action class from uri: " + uri);
+        }
+
+        ActionExecutor executor = new ActionExecutor(actionClass.getActionType());
+        StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
+            Field field = actionClass.getActionField(e.getKey());
+            if(field != null) {
+                executor.setProperty(field.getName(),ConvertUtils.convert(e.getValue().get(0), field.getType()));
+            }
+
+        });
+
+        return executor;
+
     }
 
     public static ActionExecutor executor(Class<? extends ActionCallable> actionType) {
@@ -103,25 +138,13 @@ public final class ActionExecutor {
 
     public static void main(String[] args) throws Exception {
 
-        String signature = "class://soya.framework.action.TestAction?message=ref(msg)";
-        Map<String, Object> params = new HashMap<>();
-        params.put("msg", "Hello World!");
+        String[] cmd = new String[] {
+                "class://soya.framework.action.TestAction",
+                "-m",
+                "XYZ"
+        };
 
-        if (ActionContext.getInstance() == null) {
-            ActionContext.builder().create();
-        }
-
-        ActionExecutor.executor(TestAction.class)
-                .setProperty("message", "Good morning!")
-                .call(result -> {
-                    if (result.success()) {
-                        //System.out.println("----------------------" + result.get());
-
-                    } else {
-
-                    }
-
-                    System.exit(0);
-                });
+        Object result = ActionExecutor.executor(cmd).execute();
+        System.out.println("---------------------- " + result);
     }
 }
