@@ -63,7 +63,7 @@ public class AboutAction extends Action<String> {
                         builder.append("- ").appendLine(field.getName());
                         if (field.getAnnotation(ActionProperty.class) != null) {
                             ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
-                            builder.append("-- Description: ").appendLine(actionProperty.description());
+                            builder.append("-- Description: ").appendLine(StringUtils.merge(actionProperty.description(), "\n"));
                             builder.append("-- Property Type: ").appendLine(field.getType().getName());
                             builder.append("-- HTTP Input Type: ").appendLine(actionProperty.parameterType().name());
                             builder.append("-- Required: ").appendLine("" + actionProperty.required());

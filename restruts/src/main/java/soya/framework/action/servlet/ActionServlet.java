@@ -197,7 +197,9 @@ public class ActionServlet extends HttpServlet {
             Class<? extends ActionCallable> cls = actionClass.getActionType();
             ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
 
-            String operationId = actionDefinition.name().isEmpty() ? cls.getSimpleName() : actionDefinition.name();
+            String operationId = actionDefinition.domain().replaceAll("_", "-")
+                    + "_"
+                    + actionDefinition.name().replaceAll("_", "-");
 
             ActionDefinition.HttpMethod httpMethod = actionDefinition.method();
             Swagger.PathBuilder pathBuilder = null;
@@ -232,19 +234,19 @@ public class ActionServlet extends HttpServlet {
                         ActionProperty param = f.getAnnotation(ActionProperty.class);
                         String name = param.name().isEmpty() ? f.getName() : param.name();
                         if (ActionProperty.PropertyType.PATH_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "path", param.description()).build();
+                            pathBuilder.parameterBuilder(name, "path", StringUtils.merge(param.description(), "\n")).build();
 
                         } else if (ActionProperty.PropertyType.QUERY_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "query", param.description()).build();
+                            pathBuilder.parameterBuilder(name, "query", StringUtils.merge(param.description(), "\n")).build();
 
                         } else if (ActionProperty.PropertyType.HEADER_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "header", param.description()).build();
+                            pathBuilder.parameterBuilder(name, "header", StringUtils.merge(param.description(), "\n")).build();
 
                         } else if (ActionProperty.PropertyType.COOKIE_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "cookie", param.description()).build();
+                            pathBuilder.parameterBuilder(name, "cookie", StringUtils.merge(param.description(), "\n")).build();
 
                         } else if (ActionProperty.PropertyType.PAYLOAD.equals(param.parameterType())) {
-                            pathBuilder.bodyParameterBuilder(name, param.description())
+                            pathBuilder.bodyParameterBuilder(name, StringUtils.merge(param.description(), "\n"))
                                     .build()
                                     .consumes(param.contentType());
                         }

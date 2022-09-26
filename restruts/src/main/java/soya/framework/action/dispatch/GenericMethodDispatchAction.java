@@ -17,61 +17,75 @@ import java.lang.reflect.Modifier;
         description = {
                 "Dispatch to method of service from context or static method."
         })
-public class GenericMethodDispatchAction extends Action<Object> {
+public class GenericMethodDispatchAction extends GenericDispatchAction<Object> {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(description = "Class name.",
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "c")
     private String className;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
-    private String methodName;
-
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
-    private String parameterTypes;
-
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, displayOrder = 6)
-    private String assignments;
-
-    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD, contentType = MediaType.TEXT_PLAIN)
-    private String payload;
+    @ActionProperty(description = "Method name or signature. If only name provided, it means the class has only one method of this name or method parameter number is zero. Examples are 'toString', 'myMethod()', 'anotherMethod(java.lang.String, java.util.Date)'.",
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "m")
+    private String method;
 
     @Override
     public Object execute() throws Exception {
         Class<?> cls = Class.forName(className);
-        Method method = null;
-
-        Method[] methods = ReflectUtils.findMethods(cls, methodName);
-        if (methods.length == 0) {
-            throw new NoSuchMethodException("Cannot find method '" + methodName + "' for class: " + className);
-
-        } else if (methods.length == 1) {
-            method = methods[0];
-
-        }
+        Method method = getMethod(cls, this.method);
 
         Object impl = Modifier.isStatic(method.getModifiers()) ? null : ActionContext.getInstance().getService(cls);
 
         Class[] paramTypes = method.getParameterTypes();
         Object[] paramValues = new Object[paramTypes.length];
 
-        if (assignments != null) {
-            JsonElement jsonElement = payload == null ? JsonNull.INSTANCE : JsonParser.parseString(payload);
-            Evaluator<JsonElement> evaluator = new JsonPayloadEvaluator();
+        if(paramTypes.length == 1) {
+            paramValues[0] = ConvertUtils.convert(data, paramTypes[0]);
 
-            String[] arr = assignments.split(",");
-            if (arr.length != paramTypes.length) {
-                throw new IllegalArgumentException();
+        } else if(paramTypes.length > 1 && data != null) {
+            JsonElement jsonElement = JsonParser.parseString(data);
+            if(!jsonElement.isJsonArray()) {
+                throw new IllegalArgumentException("Json array is expected.");
             }
 
-            for (int i = 0; i < paramTypes.length; i++) {
-                paramValues[i] = new Assignment(arr[i].trim()).evaluate(jsonElement, evaluator, paramTypes[i]);
-
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            if(jsonArray.size() != paramTypes.length) {
+                throw new IllegalArgumentException("The size of json array does not match the method parameter size.");
             }
-        } else if (paramTypes.length == 1) {
-            paramValues[0] = ConvertUtils.convert(payload, paramTypes[0]);
+
+            for(int i = 0; i < paramTypes.length; i ++) {
+                paramValues[i] = gson.fromJson(jsonArray.get(i), paramTypes[i]);
+            }
         }
 
         return method.invoke(impl, paramValues);
+    }
+
+    private Method getMethod(Class<?> cls, String signature) throws ClassNotFoundException, NoSuchMethodException {
+        String name = signature.trim();
+        Class<?>[] paramTypes = new Class<?>[0];
+        if (name.indexOf('(') > 0 && name.endsWith(")")) {
+            int sep = name.indexOf('(');
+            String[] arr = name.substring(sep + 1, name.length() - 1).split(",");
+            paramTypes = new Class[arr.length];
+            for(int i = 0; i < arr.length; i ++) {
+                paramTypes[i] = Class.forName(arr[i].trim());
+            }
+
+            name = name.substring(0, sep);
+
+        } else {
+            Method[] methods = ReflectUtils.findMethods(cls, name);
+            if(methods.length == 1) {
+                return methods[0];
+            }
+        }
+
+        return cls.getMethod(name, paramTypes);
+
     }
 
 }

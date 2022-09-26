@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.eventbus;
+package soya.framework.action.dispatch.workflow;
 
 import soya.framework.action.dispatch.ActionDispatchPattern;
 

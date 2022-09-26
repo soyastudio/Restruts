@@ -13,7 +13,7 @@ public @interface ActionProperty {
 
     int displayOrder() default 5;
 
-    String description() default "";
+    String[] description() default {};
 
     boolean required() default false;
 

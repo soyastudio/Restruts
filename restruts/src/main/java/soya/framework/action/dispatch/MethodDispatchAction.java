@@ -1,23 +1,54 @@
 package soya.framework.action.dispatch;
 
-import soya.framework.action.Action;
+import soya.framework.action.*;
+
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public abstract class MethodDispatchAction<T> extends Action<T> {
 
     @Override
     public T execute() throws Exception {
+        ActionClass actionClass = ActionClass.get(getClass());
         MethodDispatchPattern annotation = getClass().getAnnotation(MethodDispatchPattern.class);
-        if(annotation.methodParameterTypes().length != annotation.propertyAssignments().length) {
-            throw new IllegalArgumentException("");
+
+        Class<?> cls = annotation.type();
+        String methodName = annotation.methodName();
+
+        MethodParameterAssignment[] assignments = annotation.parameterAssignments();
+        Class<?>[] paramTypes = new Class[assignments.length];
+        Object[] paramValues = new Object[paramTypes.length];
+
+        for (int i = 0; i < assignments.length; i++) {
+            paramTypes[i] = assignments[i].type();
+
+            if (AssignmentMethod.VALUE.equals(assignments[i].assignmentMethod())) {
+                paramValues[i] = ConvertUtils.convert(assignments[i].expression(), paramTypes[i]);
+
+            } else if (AssignmentMethod.RESOURCE.equals(assignments[i].assignmentMethod())) {
+                if (InputStream.class.isAssignableFrom(paramTypes[i])) {
+                    paramValues[i] = Resources.getResourceAsInputStream(assignments[i].expression());
+                } else {
+                    paramValues[i] = ConvertUtils.convert(Resources.getResourceAsString(assignments[i].expression()), paramTypes[i]);
+                }
+
+            } else if (AssignmentMethod.REFERENCE.equals(assignments[i].assignmentMethod())) {
+                paramValues[i] = ActionContext.getInstance().getService(assignments[i].expression(), assignments[i].type());
+
+            } else if (AssignmentMethod.PARAMETER.equals(assignments[i].assignmentMethod())) {
+                Field field = actionClass.getActionField(assignments[i].expression());
+                field.setAccessible(true);
+                paramValues[i] = field.get(this);
+            }
         }
 
-        MethodDispatcher dispatcher = new MethodDispatcher(annotation.type(), annotation.methodName(), annotation.methodParameterTypes());
-        for(int i = 0; i < annotation.propertyAssignments().length; i ++) {
-            ActionPropertyAssignment assignment = annotation.propertyAssignments()[i];
-            dispatcher.assignParameter(i, assignment.assignmentMethod(), assignment.expression());
-        }
+        Method method = cls.getMethod(methodName, paramTypes);
+        Object instance = Modifier.isStatic(method.getModifiers()) ? null : ActionContext.getInstance().getService(cls);
 
-        return convert(dispatcher.dispatch(this));
+
+        return convert(method.invoke(instance, paramValues));
     }
 
     protected T convert(Object methodResult) {

@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.eventbus;
+package soya.framework.action.dispatch.workflow;
 
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
@@ -13,4 +13,8 @@ import soya.framework.action.dispatch.DispatchClassGenerator;
         description = "Print as markdown format.")
 public class PipelineActionClassGenerator extends DispatchClassGenerator {
 
+    @Override
+    public String execute() throws Exception {
+        return null;
+    }
 }

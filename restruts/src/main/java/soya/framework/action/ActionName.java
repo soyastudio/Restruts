@@ -14,11 +14,11 @@ public final class ActionName implements Comparable<ActionName>, Serializable {
         this.name = name;
 
         if (domain == null || domain.trim().length() == 0) {
-            throw new IllegalArgumentException("Domain cannot be null or empty");
+            throw new IllegalArgumentException("ActionName Syntax Error: domain cannot be null or empty");
         }
 
         if (name == null || name.trim().length() == 0) {
-            throw new IllegalArgumentException("Name cannot be null or empty");
+            throw new IllegalArgumentException("ActionName Syntax Error: name cannot be null or empty");
         }
     }
 

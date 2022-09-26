@@ -2,78 +2,117 @@ package soya.framework.action.dispatch;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import soya.framework.action.Action;
+import org.apache.commons.beanutils.PropertyUtils;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 import soya.framework.common.util.ReflectUtils;
+import soya.framework.common.util.StringUtils;
 
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@ActionDefinition(domain = "dispatch",
+@ActionDefinition(
+        domain = "dispatch",
         name = "generic-command-dispatch",
         path = "/dispatch/command",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Command Dispatch",
-        description = "This action dispatches execution to an executing class which using **Command Design Pattern**. The execution method take zero argument, and parameter values are set through bean properties or fields.")
-public class GenericCommandDispatchAction extends Action<Object> {
+        description = "Dispatch to an executing class which using **Command Design Pattern**. The execution method take zero argument, and parameter values are set through bean properties or fields.")
+public class GenericCommandDispatchAction extends GenericDispatchAction<Object> {
 
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+    @ActionProperty(
+            description = "Command class full name.",
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
             required = true,
-            description = "Command class full name.")
+            option = "c"
+    )
     private String className;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+    @ActionProperty(
+            description = "Execution method. The method must take no arguments.",
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
             required = true,
-            description = "Execution method. The method must take no arguments.")
+            option = "m")
     private String methodName;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD,
-            contentType = MediaType.APPLICATION_JSON,
-            description = "Parameter values in json format.")
-    private String payload;
+    @ActionProperty(
+            description = {
+                    "Command property assignments in query string format such as 'prop1=assign1(exp1)&prop2=assign2(exp2)'.",
+                    "Here assign() function should be one of val(exp), res(exp), param(exp) or ref(exp):",
+                    "- val(exp): directly assign property with string value from exp",
+                    "- res(exp): extract contents from resource uri exp, such as 'classpath://kafka-config.properties'",
+                    "- param(exp): evaluate value from payload input in json format using expression: exp",
+                    "- ref(exp): evaluate value from context using expression: exp, available for multiple action dispatch patterns such as pipeline, eventbus etc."
+            },
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "a")
+    private String propertyAssignments;
 
     @Override
     public Object execute() throws Exception {
         Class<?> cls = Class.forName(className);
-        Map<String, PropertyDescriptor> propertyDescriptorMap = new HashMap<>();
-        for (PropertyDescriptor ppt : Introspector.getBeanInfo(cls).getPropertyDescriptors()) {
-            propertyDescriptorMap.put(ppt.getName(), ppt);
-        }
-
         Method method = ReflectUtils.findMethod(cls, methodName);
 
         Object instance = cls.newInstance();
-        if (payload != null) {
-            JsonObject jsonObject = JsonParser.parseString(payload).getAsJsonObject();
-            jsonObject.entrySet().forEach(e -> {
-                try {
-                    if (propertyDescriptorMap.containsKey(e.getKey())) {
-                        PropertyDescriptor ppt = propertyDescriptorMap.get(e.getKey());
-                        Object value = gson.fromJson(e.getValue(), ppt.getPropertyType());
-                        if (ppt.getWriteMethod() != null && Modifier.isPublic(ppt.getWriteMethod().getModifiers())) {
-                            Method writer = ppt.getWriteMethod();
-                            writer.invoke(instance, new Object[]{value});
-                        }
+        Object context = data;
+        if (propertyAssignments != null && data != null) {
+            try {
+                context = JsonParser.parseString(data);
 
+            } catch (Exception e) {
+
+            }
+        }
+
+        final Object ctx = context;
+
+        if (propertyAssignments != null) {
+            Map<String, List<String>> paramMap = StringUtils.splitQuery(propertyAssignments);
+            paramMap.entrySet().forEach(e -> {
+                String propName = e.getKey();
+                PropertyDescriptor propDesc = null;
+                Field field = null;
+                Class<?> propType = null;
+
+                try {
+                    propDesc = PropertyUtils.getPropertyDescriptor(instance, e.getKey());
+                    propType = propDesc.getPropertyType();
+
+                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+                    field = ReflectUtils.findField(cls, propName);
+                    propType = field.getType();
+                }
+
+                if (propType != null) {
+                    Assignment assignment = new Assignment(e.getValue().get(0));
+                    Object value = evaluate(assignment, propType, ctx);
+
+                    if (propDesc != null && propDesc.getWriteMethod() != null) {
+                        try {
+                            propDesc.getWriteMethod().invoke(instance, propName, value);
+
+                        } catch (IllegalAccessException | InvocationTargetException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     } else {
-                        Field field = ReflectUtils.findField(cls, e.getKey());
-                        field.setAccessible(true);
-                        field.set(instance, gson.fromJson(e.getValue(), field.getType()));
+                        try {
+                            field.set(instance, value);
+
+                        } catch (IllegalAccessException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
-                } catch (Exception exception) {
-                    throw new RuntimeException(exception);
+
                 }
             });
         }

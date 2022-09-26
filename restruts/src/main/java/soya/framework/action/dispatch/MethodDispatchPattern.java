@@ -11,7 +11,5 @@ public @interface MethodDispatchPattern {
 
     String methodName();
 
-    Class<?>[] methodParameterTypes() default {};
-
-    ActionPropertyAssignment[] propertyAssignments() default {};
+    MethodParameterAssignment[] parameterAssignments() default {};
 }

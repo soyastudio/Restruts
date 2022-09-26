@@ -19,17 +19,6 @@ public abstract class DispatchClassGenerator extends Action<String> {
             displayOrder = 2)
     protected String className;
 
-    @Override
-    public String execute() throws Exception {
-        CodeBuilder builder = CodeBuilder.newInstance();
-        printPackage(packageName, builder);
-
-        classStatementStart(className, builder);
-
-        classStatementEnd(builder);
-
-        return builder.toString();
-    }
 
     protected void printPackage(String packageName, CodeBuilder builder) {
         builder.append("package ").append(packageName).appendLine(";");

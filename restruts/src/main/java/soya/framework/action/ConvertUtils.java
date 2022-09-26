@@ -3,6 +3,8 @@ package soya.framework.action;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
+import java.net.URI;
+
 public class ConvertUtils {
     private static final Gson GSON = new Gson();
 
@@ -17,8 +19,10 @@ public class ConvertUtils {
             return value;
 
         } else if ("java.lang.String".equals(type.getName())) {
-
             return value.toString();
+
+        } else if ("java.net.URI".equals(type.getName())) {
+            return URI.create(value.toString());
 
         } else if (value instanceof String) {
             String str = (String) value;

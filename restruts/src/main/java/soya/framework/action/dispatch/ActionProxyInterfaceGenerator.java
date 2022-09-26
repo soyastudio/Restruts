@@ -12,4 +12,8 @@ import soya.framework.action.MediaType;
         description = "Print as markdown format.")
 public class ActionProxyInterfaceGenerator extends DispatchClassGenerator {
 
+    @Override
+    public String execute() throws Exception {
+        return null;
+    }
 }

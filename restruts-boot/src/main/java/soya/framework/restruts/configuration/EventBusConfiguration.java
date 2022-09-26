@@ -4,8 +4,8 @@ import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import soya.framework.action.dispatch.EventSubscriber;
-import soya.framework.action.dispatch.eventbus.ActionEventBus;
-import soya.framework.action.dispatch.eventbus.Subscriber;
+import soya.framework.action.dispatch.workflow.ActionEventBus;
+import soya.framework.action.dispatch.workflow.Subscriber;
 
 import java.util.Set;
 

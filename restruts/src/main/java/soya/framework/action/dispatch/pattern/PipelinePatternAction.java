@@ -2,8 +2,8 @@ package soya.framework.action.dispatch.pattern;
 
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
-import soya.framework.action.dispatch.eventbus.PipelineAction;
-import soya.framework.action.dispatch.eventbus.PipelinePattern;
+import soya.framework.action.dispatch.workflow.PipelineAction;
+import soya.framework.action.dispatch.workflow.PipelinePattern;
 
 @ActionDefinition(domain = "pattern",
         name = "pipeline",

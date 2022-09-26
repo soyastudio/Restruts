@@ -12,14 +12,34 @@ public final class ActionDispatch {
 
     private final ActionName actionName;
     private final Map<String, Assignment> assignments;
+    private final String[] parameterNames;
 
     private ActionDispatch(ActionName actionName, Map<String, Assignment> assignments) {
         this.actionName = actionName;
         this.assignments = assignments;
+
+        List<String> params = new ArrayList<>();
+        assignments.entrySet().forEach(e -> {
+            if(e.getValue().getAssignmentMethod().equals(AssignmentMethod.PARAMETER)) {
+                params.add(e.getKey());
+            }
+        });
+        parameterNames = params.toArray(new String[params.size()]);
+    }
+
+    public ActionName getActionName() {
+        return actionName;
+    }
+
+    public String[] getParameterNames() {
+        return parameterNames;
+    }
+
+    public Assignment getAssignment(String propName) {
+        return assignments.get(propName);
     }
 
     public <T> ActionCallable create(T context, Evaluator<T> evaluator) {
-
         Class<? extends ActionCallable> actionType = null;
         if ("class".equals(actionName.getDomain())) {
             try {
