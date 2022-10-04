@@ -40,12 +40,22 @@ public class Resources {
         resourceTypes.put(schema, resourceType);
     }
 
-    public static String getResourceAsString(String uri) throws IOException {
-        return get(uri).getAsString(Charset.defaultCharset());
+    public static String getResourceAsString(String uri) throws ResourceException {
+        try {
+            return get(uri).getAsString(Charset.defaultCharset());
+
+        } catch (IOException e) {
+            throw new ResourceException(e);
+        }
     }
 
-    public static InputStream getResourceAsInputStream(String uri) throws IOException {
-        return get(uri).getAsInputStream();
+    public static InputStream getResourceAsInputStream(String uri) throws ResourceException {
+        try {
+            return get(uri).getAsInputStream();
+
+        } catch (IOException e) {
+            throw new ResourceException(e);
+        }
     }
 
     private static Resource get(String uri) {

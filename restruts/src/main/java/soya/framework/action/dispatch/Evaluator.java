@@ -1,5 +1,5 @@
 package soya.framework.action.dispatch;
 
-public interface Evaluator<T> {
-    Object evaluate(String expression, T context);
+public interface Evaluator {
+    Object evaluate(Assignment assignment, Object context, Class<?> type);
 }

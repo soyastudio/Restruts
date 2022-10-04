@@ -1,6 +1,5 @@
 package soya.framework.action.dispatch;
 
-import org.checkerframework.checker.units.qual.A;
 import soya.framework.action.ConvertUtils;
 import soya.framework.action.Resources;
 
@@ -27,21 +26,6 @@ public final class Assignment implements Serializable {
 
     public String getExpression() {
         return expression;
-    }
-
-    public <T> T evaluate(Object context, Evaluator evaluator, Class<T> type) throws IOException {
-        Object v = null;
-        if(AssignmentMethod.VALUE.equals(assignmentMethod)) {
-            v = expression;
-
-        } else if(AssignmentMethod.RESOURCE.equals(assignmentMethod)) {
-            v = Resources.getResourceAsString(expression);
-
-        } else {
-            v = evaluator.evaluate(expression, context);
-        }
-
-        return (T) ConvertUtils.convert(v, type);
     }
 
     @Override

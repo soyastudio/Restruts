@@ -24,6 +24,10 @@ public abstract class Action<T> implements ActionCallable {
 
     public abstract T execute() throws Exception;
 
+    protected ActionContext context() {
+        return ActionContext.getInstance();
+    }
+
     protected Logger logger() {
         return Logger.getLogger(getClass().getName());
     }

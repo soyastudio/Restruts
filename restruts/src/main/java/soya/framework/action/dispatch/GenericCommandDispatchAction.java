@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import org.apache.commons.beanutils.PropertyUtils;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
+import soya.framework.action.ActionResult;
 import soya.framework.action.MediaType;
 import soya.framework.common.util.ReflectUtils;
 import soya.framework.common.util.StringUtils;
@@ -117,6 +118,11 @@ public class GenericCommandDispatchAction extends GenericDispatchAction<Object> 
             });
         }
 
-        return method.invoke(instance, new Object[0]);
+        Object result = method.invoke(instance, new Object[0]);
+        if(result instanceof ActionResult) {
+            result = ((ActionResult)result).get();
+        }
+
+        return result;
     }
 }

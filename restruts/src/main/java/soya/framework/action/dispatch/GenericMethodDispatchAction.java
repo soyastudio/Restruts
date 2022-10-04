@@ -2,7 +2,6 @@ package soya.framework.action.dispatch;
 
 import com.google.gson.*;
 import soya.framework.action.*;
-import soya.framework.action.dispatch.evaluators.JsonPayloadEvaluator;
 import soya.framework.common.util.ReflectUtils;
 
 import java.lang.reflect.Method;
@@ -42,21 +41,21 @@ public class GenericMethodDispatchAction extends GenericDispatchAction<Object> {
         Class[] paramTypes = method.getParameterTypes();
         Object[] paramValues = new Object[paramTypes.length];
 
-        if(paramTypes.length == 1) {
+        if (paramTypes.length == 1) {
             paramValues[0] = ConvertUtils.convert(data, paramTypes[0]);
 
-        } else if(paramTypes.length > 1 && data != null) {
+        } else if (paramTypes.length > 1 && data != null) {
             JsonElement jsonElement = JsonParser.parseString(data);
-            if(!jsonElement.isJsonArray()) {
+            if (!jsonElement.isJsonArray()) {
                 throw new IllegalArgumentException("Json array is expected.");
             }
 
             JsonArray jsonArray = jsonElement.getAsJsonArray();
-            if(jsonArray.size() != paramTypes.length) {
+            if (jsonArray.size() != paramTypes.length) {
                 throw new IllegalArgumentException("The size of json array does not match the method parameter size.");
             }
 
-            for(int i = 0; i < paramTypes.length; i ++) {
+            for (int i = 0; i < paramTypes.length; i++) {
                 paramValues[i] = gson.fromJson(jsonArray.get(i), paramTypes[i]);
             }
         }
@@ -71,7 +70,7 @@ public class GenericMethodDispatchAction extends GenericDispatchAction<Object> {
             int sep = name.indexOf('(');
             String[] arr = name.substring(sep + 1, name.length() - 1).split(",");
             paramTypes = new Class[arr.length];
-            for(int i = 0; i < arr.length; i ++) {
+            for (int i = 0; i < arr.length; i++) {
                 paramTypes[i] = Class.forName(arr[i].trim());
             }
 
@@ -79,7 +78,7 @@ public class GenericMethodDispatchAction extends GenericDispatchAction<Object> {
 
         } else {
             Method[] methods = ReflectUtils.findMethods(cls, name);
-            if(methods.length == 1) {
+            if (methods.length == 1) {
                 return methods[0];
             }
         }

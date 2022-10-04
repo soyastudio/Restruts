@@ -1,6 +1,7 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.Action;
+import soya.framework.action.ActionResult;
 
 public abstract class CommandDispatchAction<T> extends Action<T> {
 
@@ -16,6 +17,10 @@ public abstract class CommandDispatchAction<T> extends Action<T> {
     }
 
     protected T convert(Object methodResult) {
+        if (methodResult instanceof ActionResult) {
+            return (T) ((ActionResult) methodResult).get();
+        }
+
         return (T) methodResult;
     }
 }

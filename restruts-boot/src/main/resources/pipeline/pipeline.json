@@ -1,0 +1,9 @@
+{
+  "parameters": {
+    "message": "java.lang.String"
+  },
+  "tasks": {
+    "task1": "about://about",
+    "task2": "pattern://action-dispatch-example?msg=ref(task1)"
+  }
+}

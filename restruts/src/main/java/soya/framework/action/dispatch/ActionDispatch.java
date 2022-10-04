@@ -9,6 +9,7 @@ import java.net.URI;
 import java.util.*;
 
 public final class ActionDispatch {
+    private static final Evaluator DEFAULT_EVALUATOR = new DefaultEvaluator();
 
     private final ActionName actionName;
     private final Map<String, Assignment> assignments;
@@ -39,7 +40,11 @@ public final class ActionDispatch {
         return assignments.get(propName);
     }
 
-    public <T> ActionCallable create(T context, Evaluator<T> evaluator) {
+    public ActionCallable create(Object context) {
+        return create(context, DEFAULT_EVALUATOR);
+    }
+
+    public ActionCallable create(Object context, Evaluator evaluator) {
         Class<? extends ActionCallable> actionType = null;
         if ("class".equals(actionName.getDomain())) {
             try {
@@ -58,30 +63,17 @@ public final class ActionDispatch {
             for (Field field : fields) {
                 if (assignments.containsKey(field.getName())) {
                     Assignment assignment = assignments.get(field.getName());
-                    AssignmentMethod assignmentMethod = assignment.getAssignmentMethod();
-                    String expression = assignment.getExpression();
-
-                    Object value = null;
-                    if (AssignmentMethod.VALUE.equals(assignmentMethod)) {
-                        value = expression;
-
-                    } else if (AssignmentMethod.RESOURCE.equals(assignmentMethod)) {
-                        value = Resources.getResourceAsString(expression);
-
-                    } else if (AssignmentMethod.REFERENCE.equals(assignmentMethod)) {
-                        value = ConvertUtils.convert(evaluator.evaluate(expression, context), field.getType());
-                    }
-
+                    Object value = evaluator.evaluate(assignment, context, field.getType());
                     if (value != null) {
                         field.setAccessible(true);
-                        field.set(action, ConvertUtils.convert(value, field.getType()));
+                        field.set(action, value);
                     }
                 }
             }
 
             return action;
 
-        } catch (InstantiationException | IllegalAccessException | IOException e) {
+        } catch (InstantiationException | IllegalAccessException  e) {
             throw new ActionDispatchException(e);
         }
 

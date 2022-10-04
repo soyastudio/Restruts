@@ -1,9 +1,15 @@
 package soya.framework.action.dispatch.workflow;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 import soya.framework.action.dispatch.ActionDispatch;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-pipeline-dispatch",
@@ -12,27 +18,34 @@ import soya.framework.action.dispatch.ActionDispatch;
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Pipeline Dispatch",
         description = "Generic pipeline dispatch action")
-public class GenericPipelineAction extends Action<String> {
+public class GenericPipelineAction extends Action<Object> {
+
+    @ActionProperty(description = {
+
+    },
+            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            contentType = MediaType.APPLICATION_JSON,
+            required = true,
+            option = "p")
+    private String pipeline;
 
     @Override
-    public String execute() throws Exception {
-        PipelinePattern annotation = getClass().getAnnotation(PipelinePattern.class);
-        Task[] tasks = annotation.tasks();
+    public Object execute() throws Exception {
 
-        for(Task task: tasks) {
-            ActionDispatch actionDispatch = ActionDispatch.fromAnnotation(task.dispatch());
+        Pipeline.PipelineModel model = new Gson().fromJson(pipeline, Pipeline.PipelineModel.class);
+        Pipeline.Builder builder = Pipeline.builder();
+        model.getPipeline().parameters().entrySet().forEach(e -> {
+            try {
+                builder.addParameter(e.getKey(), Class.forName(e.getValue()));
+            } catch (ClassNotFoundException ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
 
+        model.getPipeline().tasks().entrySet().forEach(e -> {
+            builder.addTask(e.getKey(), ActionDispatch.fromURI(e.getValue()));
+        });
 
-
-        }
-
-        return null;
-    }
-
-    static class Worker {
-        private String name;
-        private ActionDispatch actionDispatch;
-
-
+        return builder.create().execute(model.getData());
     }
 }

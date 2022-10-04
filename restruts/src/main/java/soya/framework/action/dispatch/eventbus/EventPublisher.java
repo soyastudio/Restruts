@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch;
+package soya.framework.action.dispatch.eventbus;
 
 import java.lang.annotation.*;
 
@@ -6,7 +6,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface EventPublisher {
-    String uri();
-
-    ActionDispatchPattern dispatch();
+    String value();
 }

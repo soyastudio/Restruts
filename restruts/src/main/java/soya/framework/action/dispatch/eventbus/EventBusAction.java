@@ -1,8 +1,7 @@
-package soya.framework.action.dispatch;
+package soya.framework.action.dispatch.eventbus;
 
 import soya.framework.action.*;
 
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 

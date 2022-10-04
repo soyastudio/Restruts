@@ -1,8 +1,7 @@
 package soya.framework.action.dispatch;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import soya.framework.action.ActionCallable;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
@@ -33,13 +32,25 @@ public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
 
     @Override
     public Object execute() throws Exception {
-        JsonObject jsonObject = data == null ? new JsonObject() : JsonParser.parseString(data).getAsJsonObject();
         ActionDispatch dispatch = ActionDispatch.fromURI(uri);
+        String[] params = dispatch.getParameterNames();
+        JsonElement jsonElement = jsonElement();
 
-        ActionCallable action = dispatch.create(jsonObject, (expression, context) -> {
-            return jsonObject.get(expression).getAsString();
-        });
+        JsonObject context = null;
+        if (data != null) {
+            if (params.length == 1) {
+                if (jsonElement.isJsonObject() && jsonElement.getAsJsonObject().get(params[0]) != null) {
+                    context = jsonElement.getAsJsonObject();
+                } else {
+                    context = new JsonObject();
+                    context.add(params[0], jsonElement);
+                }
+            } else if (params.length > 1) {
+                context = jsonElement.getAsJsonObject();
 
-        return action.call().get();
+            }
+        }
+
+        return dispatch.create(context).call().get();
     }
 }

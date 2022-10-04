@@ -24,7 +24,7 @@ public class ReflectUtils {
             parent = parent.getSuperclass();
         }
 
-        return null;
+        throw new IllegalArgumentException("Cannot find field '" + fieldName + "' for class: " + cls.getName());
     }
 
     public static Method[] findMethods(Class<?> cls, String methodName) {

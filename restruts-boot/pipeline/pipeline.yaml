@@ -1,0 +1,9 @@
+pipeline: MyPipeline
+
+parameters:
+  message: java.lang.String
+
+tasks:
+  task1: about://about
+
+  task2: encode://base64encode?message=ref(task1)
