@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import soya.framework.action.ActionContext;
 import soya.framework.action.dispatch.ActionProxyFactory;
-import soya.framework.action.dispatch.pattern.Workshop;
+import soya.framework.restruts.pattern.Workshop;
 
 import java.io.File;
 import java.net.URI;

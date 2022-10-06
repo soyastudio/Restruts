@@ -24,8 +24,25 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>soya.framework.restruts</groupId>
             <artifactId>restruts-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>soya.framework.restruts</groupId>
+            <artifactId>restruts-ant</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>soya.framework.restruts</groupId>
+            <artifactId>restruts-quartz</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.pattern;
+package soya.framework.restruts.pattern;
 
 import soya.framework.action.dispatch.*;
 

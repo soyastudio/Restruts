@@ -1,6 +1,5 @@
 package soya.framework.action.dispatch;
 
-import org.checkerframework.checker.units.qual.C;
 import soya.framework.action.ActionCallable;
 import soya.framework.action.ActionClass;
 import soya.framework.action.ConvertUtils;
@@ -48,21 +47,21 @@ public final class CommandDispatcher extends Dispatcher {
             } else if (assignment.getAssignmentMethod().equals(AssignmentMethod.RESOURCE)) {
                 value = Resources.getResourceAsString(assignment.getExpression());
 
-            } else if(assignment.getAssignmentMethod().equals(AssignmentMethod.PARAMETER)) {
+            } else if (assignment.getAssignmentMethod().equals(AssignmentMethod.PARAMETER)) {
                 Field actionField = actionClass.getActionField(assignment.getExpression());
                 actionField.setAccessible(true);
                 value = actionField.get(context);
 
-            } else if(assignment.getAssignmentMethod().equals(AssignmentMethod.REFERENCE)) {
+            } else if (assignment.getAssignmentMethod().equals(AssignmentMethod.REFERENCE)) {
                 throw new IllegalArgumentException("");
             }
 
-            if(value != null) {
-                if(propertyDescriptorMap.containsKey(propName) && propertyDescriptorMap.get(propName).getWriteMethod() != null) {
+            if (value != null) {
+                if (propertyDescriptorMap.containsKey(propName) && propertyDescriptorMap.get(propName).getWriteMethod() != null) {
                     PropertyDescriptor ppt = propertyDescriptorMap.get(propName);
-                    ppt.getWriteMethod().invoke(executor, new Object[] {ConvertUtils.convert(value, ppt.getPropertyType())});
+                    ppt.getWriteMethod().invoke(executor, new Object[]{ConvertUtils.convert(value, ppt.getPropertyType())});
 
-                } else if(ReflectUtils.findField(executeClass, propName) != null) {
+                } else if (ReflectUtils.findField(executeClass, propName) != null) {
                     Field field = ReflectUtils.findField(executeClass, propName);
                     field.setAccessible(true);
                     field.set(executor, ConvertUtils.convert(value, field.getType()));

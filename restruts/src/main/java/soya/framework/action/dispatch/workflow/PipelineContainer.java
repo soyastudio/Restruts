@@ -60,7 +60,6 @@ public class PipelineContainer {
     }
 
     public synchronized void scan() {
-        logger.info("scanning...");
         forUndeploy();
         try {
             forDeploy();
