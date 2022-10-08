@@ -7,7 +7,7 @@ import java.util.Base64;
 
 @ActionDefinition(domain = "text-util",
         name = "base64-decode",
-        path = "/text-util/base64-decode",
+        path = "/base64-decode",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Base64 Decode",

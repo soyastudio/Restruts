@@ -10,7 +10,7 @@ import java.util.zip.GZIPOutputStream;
 
 @ActionDefinition(domain = "text-util",
         name = "gzip",
-        path = "/text-util/gzip",
+        path = "/gzip",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "GZip",

@@ -8,7 +8,7 @@ import java.lang.management.ManagementFactory;
 
 @ActionDefinition(domain = "jmx",
         name = "jmx-domain",
-        path = "/jmx/domains",
+        path = "/domains",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "JMX Domains",

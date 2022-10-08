@@ -5,7 +5,7 @@ import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "text-util",
         name = "aes-encrypt",
-        path = "/text-util/aes-encrypt",
+        path = "/aes-encrypt",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "AES Encrypt",

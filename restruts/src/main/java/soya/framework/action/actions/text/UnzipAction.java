@@ -12,7 +12,7 @@ import java.util.zip.GZIPInputStream;
 
 @ActionDefinition(domain = "text-util",
         name = "unzip",
-        path = "/text-util/unzip",
+        path = "/unzip",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Unzip",

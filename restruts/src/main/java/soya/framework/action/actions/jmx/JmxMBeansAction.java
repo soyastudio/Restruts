@@ -15,7 +15,7 @@ import java.util.Set;
 
 @ActionDefinition(domain = "jmx",
         name = "jmx-mbeans",
-        path = "/jmx/mbeans",
+        path = "/mbeans",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "JMX MBeans",
