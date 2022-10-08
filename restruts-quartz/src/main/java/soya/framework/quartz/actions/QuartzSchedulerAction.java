@@ -10,14 +10,14 @@ import soya.framework.action.ActionContext;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
 
-@ActionDefinition(domain = "scheduler.quartz",
+@ActionDefinition(domain = "quartz-scheduler",
         name = "scheduler",
-        path = "/quartz-scheduler/scheduler",
+        path = "/scheduler",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Quartz Scheduler",
         description = "Quartz Scheduler")
-public class SchedulerAction extends Action<String> {
+public class QuartzSchedulerAction extends Action<String> {
 
     @Override
     public String execute() throws Exception {
@@ -36,7 +36,6 @@ public class SchedulerAction extends Action<String> {
                 ex.printStackTrace();
             }
         });
-
 
         return new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
     }

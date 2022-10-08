@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@ActionDefinition(domain = "azure-blob-storage",
+@ActionDefinition(
+        domain = "azure-blob-storage",
         name = "container-list",
-        path = "/azure-blob-storage/containers",
+        path = "/containers",
         method = ActionDefinition.HttpMethod.GET,
-        produces = MediaType.APPLICATION_JSON)
+        produces = MediaType.APPLICATION_JSON
+)
 public class AzureBlobContainerListAction extends AzureBlobAction<String[]> {
 
     @Override

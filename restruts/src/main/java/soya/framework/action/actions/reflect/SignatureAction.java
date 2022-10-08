@@ -5,7 +5,7 @@ import soya.framework.action.dispatch.ActionDispatch;
 
 import java.net.URI;
 
-@ActionDefinition(domain = "about",
+@ActionDefinition(domain = "reflect",
         name = "signature",
         path = "/signature",
         method = ActionDefinition.HttpMethod.GET,

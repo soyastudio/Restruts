@@ -6,9 +6,13 @@ import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 
-@ActionDefinition(domain = "azure-blob-storage", name = "delete-all-blobs", path = "/azure-blob-storage/delete-all-blobs",
+@ActionDefinition(
+        domain = "azure-blob-storage",
+        name = "delete-all-blobs",
+        path = "/delete-all-blobs",
         method = ActionDefinition.HttpMethod.DELETE,
-        produces = MediaType.APPLICATION_JSON)
+        produces = MediaType.APPLICATION_JSON
+)
 public class AzureBlobDeleteAllBlobsAction extends AzureBlobAction<Integer> {
 
     @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)

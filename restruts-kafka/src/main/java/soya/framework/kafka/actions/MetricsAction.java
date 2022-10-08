@@ -8,7 +8,7 @@ import java.util.Collection;
 
 @ActionDefinition(domain = "kafka",
         name = "admin-metrics",
-        path = "/kafka/admin/metrics",
+        path = "/admin/metrics",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON)
 public class MetricsAction extends KafkaAction<Metric[]> {

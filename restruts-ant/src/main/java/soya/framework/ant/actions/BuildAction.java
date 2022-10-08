@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@ActionDefinition(domain = "apache.ant",
+@ActionDefinition(domain = "ant",
         name = "build",
         path = "/apache-ant/build",
         method = ActionDefinition.HttpMethod.POST,

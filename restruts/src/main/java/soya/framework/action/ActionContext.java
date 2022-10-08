@@ -110,7 +110,10 @@ public final class ActionContext {
             for (String pk : pkg) {
                 Reflections reflections = new Reflections(pk.trim());
                 Set<Class<?>> set = reflections.getTypesAnnotatedWith(Domain.class);
-                set.forEach(c -> {
+                List<Class<?>> list = new ArrayList<>(set);
+                Collections.sort(list, new DomainClassComparator());
+
+                list.forEach(c -> {
                     Domain domain = c.getAnnotation(Domain.class);
                     actionMappings.domains.put(domain.name(), c);
                 });
@@ -138,16 +141,22 @@ public final class ActionContext {
         }
     }
 
+    static class DomainClassComparator implements Comparator<Class<?>> {
+
+        @Override
+        public int compare(Class<?> o1, Class<?> o2) {
+            return o1.getAnnotation(Domain.class).path().compareTo(o2.getAnnotation(Domain.class).path());
+        }
+    }
+
     static class DefaultActionMappings implements ActionMappings {
 
-        private Map<String, Class<?>> domains = new HashMap<>();
+        private Map<String, Class<?>> domains = new LinkedHashMap<>();
         private Map<ActionName, Class<? extends ActionCallable>> actions = new HashMap<>();
 
         @Override
         public String[] domains() {
-            List<String> list = new ArrayList<>(domains.keySet());
-            Collections.sort(list);
-            return list.toArray(new String[list.size()]);
+            return domains.keySet().toArray(new String[domains.size()]);
         }
 
         @Override

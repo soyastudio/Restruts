@@ -179,20 +179,24 @@ public class ActionServlet extends HttpServlet {
             builder.addTag(Swagger.TagObject.instance()
                     .name(domain.title().isEmpty() ? domain.name() : domain.title())
                     .description(domain.description()));
-        }
 
-        ActionName[] actionNames = actionMappings.actions(null);
-        for (ActionName actionName : actionNames) {
-            ActionClass actionClass = actionMappings.actionClass(actionName);
-            Class<? extends ActionCallable> cls = actionClass.getActionType();
-            ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
-            registry.put(new Registration(actionDefinition.method().name(), actionDefinition.path()), actionClass);
+            ActionName[] actionNames = actionMappings.actions(dm);
+            for (ActionName actionName : actionNames) {
+                ActionClass actionClass = actionMappings.actionClass(actionName);
+                Class<? extends ActionCallable> cls = actionClass.getActionType();
+                ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
+
+                String fullPath = domain.path() + actionDefinition.path();
+                registry.put(new Registration(actionDefinition.method().name(), fullPath), actionClass);
+            }
         }
 
         List<Registration> registrations = new ArrayList<>(registry.keySet());
         Collections.sort(registrations);
 
         registrations.forEach(e -> {
+            String fullPath = e.path;
+
             ActionClass actionClass = registry.get(e);
             Class<? extends ActionCallable> cls = actionClass.getActionType();
             ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
@@ -204,25 +208,25 @@ public class ActionServlet extends HttpServlet {
             ActionDefinition.HttpMethod httpMethod = actionDefinition.method();
             Swagger.PathBuilder pathBuilder = null;
             if (httpMethod.equals(ActionDefinition.HttpMethod.GET)) {
-                pathBuilder = builder.get(actionDefinition.path(), operationId);
+                pathBuilder = builder.get(fullPath, operationId);
 
             } else if (httpMethod.equals(ActionDefinition.HttpMethod.POST)) {
-                pathBuilder = builder.post(actionDefinition.path(), operationId);
+                pathBuilder = builder.post(fullPath, operationId);
 
             } else if (httpMethod.equals(ActionDefinition.HttpMethod.DELETE)) {
-                pathBuilder = builder.delete(actionDefinition.path(), operationId);
+                pathBuilder = builder.delete(fullPath, operationId);
 
             } else if (httpMethod.equals(ActionDefinition.HttpMethod.PUT)) {
-                pathBuilder = builder.put(actionDefinition.path(), operationId);
+                pathBuilder = builder.put(fullPath, operationId);
 
             } else if (httpMethod.equals(ActionDefinition.HttpMethod.HEAD)) {
-                pathBuilder = builder.head(actionDefinition.path(), operationId);
+                pathBuilder = builder.head(fullPath, operationId);
 
             } else if (httpMethod.equals(ActionDefinition.HttpMethod.OPTIONS)) {
-                pathBuilder = builder.options(actionDefinition.path(), operationId);
+                pathBuilder = builder.options(fullPath, operationId);
 
             } else if (httpMethod.equals(ActionDefinition.HttpMethod.PATCH)) {
-                pathBuilder = builder.patch(actionDefinition.path(), operationId);
+                pathBuilder = builder.patch(fullPath, operationId);
 
             }
 

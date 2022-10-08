@@ -5,7 +5,7 @@ import soya.framework.action.ActionDefinition;
 
 @ActionDefinition(domain = "kafka",
         name = "consume-seek-to-begin",
-        path = "/kafka/consume/seek-to-begin",
+        path = "/consume/seek-to-begin",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN)
 public class ConsumeSeekToBeginAction extends ConsumeAction<String>{

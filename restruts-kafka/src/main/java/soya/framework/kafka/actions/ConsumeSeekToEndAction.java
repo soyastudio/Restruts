@@ -5,7 +5,7 @@ import soya.framework.action.ActionDefinition;
 
 @ActionDefinition(domain = "kafka",
         name = "consume-seek-to-end",
-        path = "/kafka/consume/seek-to-end",
+        path = "/consume/seek-to-end",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN)
 public class ConsumeSeekToEndAction extends ConsumeAction<String> {

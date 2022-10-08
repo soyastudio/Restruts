@@ -14,7 +14,7 @@ import java.util.Map;
 
 @ActionDefinition(domain = "kafka",
         name = "consume-latest",
-        path = "/kafka/consume/latest",
+        path = "/consume/latest",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN)
 public class ConsumeLatestAction extends ConsumeAction<String> {

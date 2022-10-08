@@ -9,11 +9,13 @@ import soya.framework.common.util.StreamUtils;
 
 import java.io.InputStream;
 
-@ActionDefinition(domain = "azure-blob-storage",
+@ActionDefinition(
+        domain = "azure-blob-storage",
         name = "blob-download",
-        path = "/azure-blob-storage/blob/download",
+        path = "/blob/download",
         method = ActionDefinition.HttpMethod.GET,
-        produces = MediaType.APPLICATION_OCTET_STREAM)
+        produces = MediaType.APPLICATION_OCTET_STREAM
+)
 public class AzureBlobDownloadAction extends AzureBlobAction<byte[]> {
 
     @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)

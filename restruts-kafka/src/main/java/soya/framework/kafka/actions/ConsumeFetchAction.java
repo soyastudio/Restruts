@@ -14,7 +14,7 @@ import java.util.List;
 
 @ActionDefinition(domain = "kafka",
         name = "consume-fetch",
-        path = "/kafka/consume/fetch",
+        path = "/consume/fetch",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN)
 public class ConsumeFetchAction extends ConsumeAction<String> {

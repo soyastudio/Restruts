@@ -8,6 +8,8 @@ import java.lang.annotation.*;
 public @interface Domain {
     String name();
 
+    String path();
+
     String title() default "";
 
     String description() default "";

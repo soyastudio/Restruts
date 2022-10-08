@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@ActionDefinition(domain = "about",
+@ActionDefinition(domain = "reflect",
         name = "environment",
         path = "/about/environment",
         method = ActionDefinition.HttpMethod.GET,

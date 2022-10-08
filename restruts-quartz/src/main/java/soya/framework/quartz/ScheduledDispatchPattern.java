@@ -12,6 +12,4 @@ public @interface ScheduledDispatchPattern {
 
     String cronExpression();
 
-    boolean repeat() default true;
-
 }

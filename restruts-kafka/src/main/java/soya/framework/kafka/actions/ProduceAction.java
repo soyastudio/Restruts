@@ -12,7 +12,7 @@ import java.util.concurrent.TimeoutException;
 
 @ActionDefinition(domain = "kafka",
         name = "produce",
-        path = "/kafka/produce",
+        path = "/produce",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.APPLICATION_JSON)
 public class ProduceAction extends KafkaAction<RecordMetadata> {

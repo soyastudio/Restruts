@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@ActionDefinition(domain = "about",
+@ActionDefinition(domain = "reflect",
         name = "discovery",
         path = "/discovery",
         method = ActionDefinition.HttpMethod.GET,

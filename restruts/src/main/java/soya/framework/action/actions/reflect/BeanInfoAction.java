@@ -9,7 +9,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 
-@ActionDefinition(domain = "about",
+@ActionDefinition(domain = "reflect",
         name = "bean-info",
         path = "/bean-info",
         method = ActionDefinition.HttpMethod.GET,

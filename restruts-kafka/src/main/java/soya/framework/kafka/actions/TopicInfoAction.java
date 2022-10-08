@@ -11,7 +11,7 @@ import java.util.*;
 
 @ActionDefinition(domain = "kafka",
         name = "admin-topic-info",
-        path = "/kafka/admin/topic",
+        path = "/admin/topic",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON)
 public class TopicInfoAction extends KafkaAction<PartitionStatus[]> {

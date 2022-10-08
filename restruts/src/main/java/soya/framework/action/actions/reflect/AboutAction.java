@@ -7,7 +7,7 @@ import soya.framework.common.util.StringUtils;
 
 import java.lang.reflect.Field;
 
-@ActionDefinition(domain = "about",
+@ActionDefinition(domain = "reflect",
         name = "about",
         path = "/about",
         method = ActionDefinition.HttpMethod.GET,
