@@ -52,8 +52,25 @@ public class XlsxDynaClass implements DynaClass, Serializable {
 
                         Cell cell = currentRow.getCell(index);
                         if (cell != null) {
-                            String propValue = cell.getStringCellValue();
-                            bean.set(propName, propValue);
+                            CellType cellType = cell.getCellType();
+                            if(CellType.STRING.equals(cellType)) {
+                                bean.set(propName, cell.getStringCellValue());
+
+                            } else if (CellType.NUMERIC.equals(cellType)) {
+                                bean.set(propName, cell.getNumericCellValue());
+
+                            } else if (CellType.BOOLEAN.equals(cellType)) {
+                                bean.set(propName, cell.getBooleanCellValue());
+
+                            } else if (CellType.BLANK.equals(cellType)) {
+
+                            } else if(CellType.ERROR.equals(cellType)) {
+
+                            } else if (CellType.FORMULA.equals(cellType)) {
+
+                            } else if (CellType._NONE.equals(cellType)) {
+
+                            }
                         }
                     });
 
@@ -77,7 +94,7 @@ public class XlsxDynaClass implements DynaClass, Serializable {
                         }
 
                         for (String col : columnNames) {
-                            propertiesMap.put(col, new DynaProperty(col, String.class));
+                            propertiesMap.put(col, new DynaProperty(col, Object.class));
 
                         }
 

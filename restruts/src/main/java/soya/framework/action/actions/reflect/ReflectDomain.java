@@ -5,7 +5,7 @@ import soya.framework.action.Domain;
 @Domain(
         name = "reflect",
         path = "/action",
-        title = "About",
+        title = "Action",
         description = "About the services."
 )
 public interface ReflectDomain {

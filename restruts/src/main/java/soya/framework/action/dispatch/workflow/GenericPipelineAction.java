@@ -13,7 +13,7 @@ import java.util.Map;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-pipeline-dispatch",
-        path = "/dispatch/pipeline",
+        path = "/pipeline",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Pipeline Dispatch",

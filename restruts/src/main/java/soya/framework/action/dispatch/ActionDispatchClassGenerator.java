@@ -6,7 +6,7 @@ import soya.framework.common.util.CodeBuilder;
 
 @ActionDefinition(domain = "dispatch",
         name = "generator-dispatch-action-class",
-        path = "/dispatch/action/class",
+        path = "/generator/dispatch-action-class",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Dispatch Action Class Generator",

@@ -22,7 +22,7 @@ public final class ActionDispatch {
         List<String> params = new ArrayList<>();
         assignments.entrySet().forEach(e -> {
             if(e.getValue().getAssignmentMethod().equals(AssignmentMethod.PARAMETER)) {
-                params.add(e.getKey());
+                params.add(e.getValue().getExpression());
             }
         });
         parameterNames = params.toArray(new String[params.size()]);

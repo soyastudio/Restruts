@@ -230,7 +230,11 @@ public class ActionServlet extends HttpServlet {
 
             }
 
-            pathBuilder.description(StringUtils.merge(actionDefinition.description(), "\n"));
+            StringBuilder descBuilder = new StringBuilder(StringUtils.merge(actionDefinition.description(), "\n")).append("\n");
+            descBuilder.append("- Action name: ").append(actionDefinition.domain()).append("://").append(actionDefinition.name()).append("\n");
+            descBuilder.append("- Action class: ").append(cls.getName()).append("\n");
+
+            pathBuilder.description(descBuilder.toString());
 
             if (pathBuilder != null) {
                 for (Field f : actionClass.getActionFields()) {

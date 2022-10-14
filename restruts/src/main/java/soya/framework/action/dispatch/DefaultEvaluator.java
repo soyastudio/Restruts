@@ -1,11 +1,13 @@
 package soya.framework.action.dispatch;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.commons.beanutils.PropertyUtils;
 import soya.framework.action.ActionCallable;
 import soya.framework.action.ActionResult;
 import soya.framework.action.ConvertUtils;
 import soya.framework.action.Resources;
+import soya.framework.common.util.JsonUtils;
 import soya.framework.common.util.ReflectUtils;
 
 import java.io.InputStream;
@@ -75,6 +77,10 @@ public class DefaultEvaluator implements Evaluator {
             } else if (context instanceof ActionDispatchSession) {
                 ActionDispatchSession session = (ActionDispatchSession) context;
                 value = session.parameterValue(exp);
+
+            } else if (context instanceof JsonObject) {
+                JsonObject jsonObject = (JsonObject) context;
+                value = new Gson().fromJson(jsonObject.get(exp), type);
 
             } else {
                 try {

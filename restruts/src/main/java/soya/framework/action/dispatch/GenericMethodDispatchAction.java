@@ -9,7 +9,7 @@ import java.lang.reflect.Modifier;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-method-dispatch",
-        path = "/dispatch/method",
+        path = "/method-dispatch",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Method Dispatch",

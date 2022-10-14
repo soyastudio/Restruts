@@ -10,7 +10,7 @@ import java.net.URI;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-action-dispatch",
-        path = "/dispatch/action",
+        path = "/action-dispatch",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",
@@ -41,6 +41,7 @@ public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
             if (params.length == 1) {
                 if (jsonElement.isJsonObject() && jsonElement.getAsJsonObject().get(params[0]) != null) {
                     context = jsonElement.getAsJsonObject();
+
                 } else {
                     context = new JsonObject();
                     context.add(params[0], jsonElement);

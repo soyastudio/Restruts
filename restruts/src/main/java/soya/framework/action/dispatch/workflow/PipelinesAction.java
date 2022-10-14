@@ -5,7 +5,7 @@ import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "dispatch",
         name = "pipelines",
-        path = "/dispatch/pipelines",
+        path = "/pipelines",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Generic Pipeline Dispatch",

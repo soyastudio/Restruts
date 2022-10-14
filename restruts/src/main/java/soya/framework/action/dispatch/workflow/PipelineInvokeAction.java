@@ -8,7 +8,7 @@ import java.util.Locale;
 
 @ActionDefinition(domain = "dispatch",
         name = "pipeline-invoker",
-        path = "/dispatch/pipeline/invoke",
+        path = "/pipeline/invoke",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Pipeline Dispatch",

@@ -4,7 +4,7 @@ import soya.framework.action.Domain;
 
 @Domain(
         name = "text-util",
-        path = "/action/util/text",
+        path = "/actions/util/text",
         title = "Text Utility",
         description = "Text utility services."
 )

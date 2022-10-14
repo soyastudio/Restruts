@@ -4,7 +4,7 @@ import soya.framework.action.Domain;
 
 @Domain(
         name = "jdbc",
-        path = "/action/jdbc",
+        path = "/actions/jdbc",
         title = "JDBC",
         description = "JDBC utility services."
 )

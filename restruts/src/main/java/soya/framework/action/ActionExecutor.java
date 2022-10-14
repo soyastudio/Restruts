@@ -1,11 +1,9 @@
 package soya.framework.action;
 
-import org.checkerframework.checker.units.qual.A;
 import soya.framework.common.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -36,11 +34,11 @@ public final class ActionExecutor {
         }
     }
 
-    public static ActionExecutor executor(String[] args)  {
+    public static ActionExecutor executor(String[] args) {
         URI uri = StringUtils.toURI(args);
 
         final ActionClass actionClass;
-        if(uri.getScheme().equals("class")) {
+        if (uri.getScheme().equals("class")) {
             try {
                 actionClass = ActionClass.get((Class<? extends ActionCallable>) Class.forName(uri.getHost()));
             } catch (Exception e) {
@@ -50,15 +48,15 @@ public final class ActionExecutor {
             actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
         }
 
-        if(actionClass == null) {
+        if (actionClass == null) {
             throw new IllegalArgumentException("Cannot find action class from uri: " + uri);
         }
 
         ActionExecutor executor = new ActionExecutor(actionClass.getActionType());
         StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
             Field field = actionClass.getActionField(e.getKey());
-            if(field != null) {
-                executor.setProperty(field.getName(),ConvertUtils.convert(e.getValue().get(0), field.getType()));
+            if (field != null) {
+                executor.setProperty(field.getName(), ConvertUtils.convert(e.getValue().get(0), field.getType()));
             }
 
         });
@@ -138,7 +136,7 @@ public final class ActionExecutor {
 
     public static void main(String[] args) throws Exception {
 
-        String[] cmd = new String[] {
+        String[] cmd = new String[]{
                 "class://soya.framework.action.TestAction",
                 "-m",
                 "XYZ"

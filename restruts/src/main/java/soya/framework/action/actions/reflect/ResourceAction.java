@@ -1,10 +1,10 @@
-package soya.framework.action.dispatch;
+package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
 
-@ActionDefinition(domain = "dispatch",
+@ActionDefinition(domain = "reflect",
         name = "resource",
-        path = "/dispatch/resource",
+        path = "/resource",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Resource",

@@ -7,7 +7,7 @@ import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "dispatch",
         name = "find-dispatch-methods",
-        path = "/dispatch/dispatch-methods",
+        path = "/dispatch-methods",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Method Dispatch Template",

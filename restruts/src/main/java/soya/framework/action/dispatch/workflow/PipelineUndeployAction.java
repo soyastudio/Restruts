@@ -4,7 +4,7 @@ import soya.framework.action.*;
 
 @ActionDefinition(domain = "dispatch",
         name = "pipeline-undeploy",
-        path = "/dispatch/pipeline",
+        path = "/pipeline",
         method = ActionDefinition.HttpMethod.DELETE,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Generic Pipeline Dispatch",

@@ -12,7 +12,7 @@ import java.util.Map;
 
 @ActionDefinition(domain = "reflect",
         name = "environment",
-        path = "/about/environment",
+        path = "/environment",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Environment",

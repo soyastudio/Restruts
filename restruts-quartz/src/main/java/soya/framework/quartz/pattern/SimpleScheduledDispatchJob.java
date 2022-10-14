@@ -9,4 +9,5 @@ import soya.framework.quartz.ScheduledDispatchPattern;
         cronExpression = "*/10 * * ? * *"
 )
 public class SimpleScheduledDispatchJob extends ScheduledDispatchJob {
+
 }

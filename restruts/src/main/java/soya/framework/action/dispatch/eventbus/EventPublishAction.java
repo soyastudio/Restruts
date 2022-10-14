@@ -7,7 +7,7 @@ import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "dispatch",
         name = "event-publisher",
-        path = "/dispatch/eventbus/publisher",
+        path = "/eventbus/publisher",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Pipeline Dispatch",

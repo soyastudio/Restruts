@@ -253,11 +253,17 @@
         <module>restruts</module>
         <module>restruts-starter</module>
 
-        <module>restruts-ant</module>
+        <!-- command design pattern based -->
         <module>restruts-quartz</module>
+        <module>restruts-ant</module>
+        <module>restruts-git</module>
+
         <module>restruts-document</module>
+
         <module>restruts-kafka</module>
+
         <module>restruts-azure</module>
+
         <module>restruts-workshop</module>
 
         <module>restruts-boot</module>

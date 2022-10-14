@@ -10,18 +10,6 @@ import java.net.URI;
 
 public abstract class DocumentAction<T> extends Action<T> {
 
-    public static final String SCHEMA_SYSTEM = "system";
-
-    public static final String SCHEMA_BASE64 = "base64";
-
-    public static final String SCHEMA_GZIP = "gzip";
-
-    public static final String SCHEMA_CLASSPATH = "classpath";
-
-    public static final String SCHEMA_HOME = "home";
-
-    public static final String SCHEMA_USER_HOME = "user-home";
-
     protected InputStream getResourceAsInputStream(String uri) throws IOException {
         return URI.create(uri).toURL().openStream();
     }
