@@ -12,7 +12,7 @@ import soya.framework.action.Resources;
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",
         description = "Overview of action dispatch patterns")
-public class AboutDispatch extends Action<String> {
+public class AboutDispatchAction extends Action<String> {
     private static final String uri = "classpath://META-INF/soya/framework/action/dispatch/dispatch.md";
 
     @Override

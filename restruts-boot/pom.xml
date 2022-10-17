@@ -36,6 +36,12 @@
 
         <dependency>
             <groupId>soya.framework.restruts</groupId>
+            <artifactId>restruts-about</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>soya.framework.restruts</groupId>
             <artifactId>restruts-ant</artifactId>
             <version>${project.version}</version>
         </dependency>

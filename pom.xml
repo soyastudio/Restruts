@@ -251,6 +251,7 @@
 
     <modules>
         <module>restruts</module>
+        <module>restruts-about</module>
         <module>restruts-starter</module>
 
         <!-- command design pattern based -->
