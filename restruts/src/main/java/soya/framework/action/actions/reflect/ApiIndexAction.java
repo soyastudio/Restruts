@@ -5,7 +5,7 @@ import soya.framework.common.util.CodeBuilder;
 
 @ActionDefinition(domain = "reflect",
         name = "api-index",
-        path = "/api/index",
+        path = "/api",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "API Index",
