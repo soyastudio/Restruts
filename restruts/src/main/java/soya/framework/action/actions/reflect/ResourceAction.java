@@ -11,7 +11,18 @@ import soya.framework.action.*;
         description = "Extract resource through resource uri.")
 public class ResourceAction extends Action<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            description = {
+                    "Resource uri, examples:",
+                    "- env://<property_name>: from environment property",
+                    "- classpath://<resource_path>: from classpath resource",
+                    "- base64://<base64_encoded_string>: ",
+                    "- gzip://<gzip_compressed_base64_encoded_string>",
+                    "- action://<domain_name>/<action_name>?<query_string>"
+            }
+    )
     private String uri;
 
     @Override

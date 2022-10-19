@@ -10,7 +10,9 @@ public abstract class Action<T> implements ActionCallable {
     @Override
     public ActionResult call() {
         logger().fine("start executing...");
+
         try {
+            checkRequiredProperties();
             T t = execute();
             ActionResult result = new DefaultActionResult(this, t);
             logger().fine("executed successfully");
@@ -23,6 +25,26 @@ public abstract class Action<T> implements ActionCallable {
     }
 
     public abstract T execute() throws Exception;
+
+    protected void checkRequiredProperties() throws Exception{
+        Field[] fields = ActionClass.get(getClass()).getActionFields();
+        for (Field field : fields) {
+            ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
+            if (actionProperty.required()) {
+                field.setAccessible(true);
+                try {
+                    if (field.get(this) == null) {
+                        throw new IllegalStateException("Required field '"
+                                + field.getName() + "' is not set for action: "
+                                + getClass().getName());
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+
+                }
+            }
+        }
+    }
 
     protected ActionContext context() {
         return ActionContext.getInstance();
