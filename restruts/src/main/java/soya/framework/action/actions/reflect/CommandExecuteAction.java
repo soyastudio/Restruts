@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 @ActionDefinition(domain = "reflect",
         name = "CommandExecution",
-        path = "/cmd",
+        path = "/util/command",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Command Execution",

@@ -14,7 +14,7 @@ import java.util.List;
 
 @ActionDefinition(domain = "reflect",
         name = "discovery",
-        path = "/discovery",
+        path = "/runtime/discovery",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "About",

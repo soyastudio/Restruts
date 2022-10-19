@@ -4,8 +4,8 @@ import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "dispatch",
-        name = "/generator-action-proxy-interface-template",
-        path = "/dispatch/generator/action-proxy-interface",
+        name = "generator-action-proxy-interface-template",
+        path = "/generator/action-proxy-interface",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Pipeline Action Class Generator",

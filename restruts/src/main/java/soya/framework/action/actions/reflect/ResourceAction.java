@@ -4,7 +4,7 @@ import soya.framework.action.*;
 
 @ActionDefinition(domain = "reflect",
         name = "resource",
-        path = "/resource",
+        path = "/util/resource",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Resource",

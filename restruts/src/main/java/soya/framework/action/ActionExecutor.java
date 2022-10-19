@@ -1,5 +1,6 @@
 package soya.framework.action;
 
+import soya.framework.action.actions.reflect.EchoAction;
 import soya.framework.common.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -136,13 +137,20 @@ public final class ActionExecutor {
 
     public static void main(String[] args) throws Exception {
 
-        String[] cmd = new String[]{
-                "class://soya.framework.action.TestAction",
-                "-m",
-                "XYZ"
-        };
+        Object result = ActionExecutor
+                .executor(EchoAction.class)
+                .setProperty("message", "Hello World!")
+                .execute();
 
-        Object result = ActionExecutor.executor(cmd).execute();
-        System.out.println("---------------------- " + result);
+        System.out.println(
+                ActionExecutor
+                        .executor(EchoAction.class)
+                        .setProperty("message", "Hello World!")
+                        .execute()
+        );
+
+        System.exit(0);
+
+
     }
 }

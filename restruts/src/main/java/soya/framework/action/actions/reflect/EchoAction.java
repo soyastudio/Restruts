@@ -7,19 +7,18 @@ import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "reflect",
         name = "echo",
-        path = "/echo",
+        path = "/util/echo",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Echo",
-        description = "Print as markdown format.")
+        description = "Print input message directly.")
 public class EchoAction extends Action<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD, required = true, option = "t")
+    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD, required = true, option = "m")
     protected String message;
 
     @Override
     public String execute() throws Exception {
-        System.out.println("--------------- " + message);
         return message;
     }
 }
