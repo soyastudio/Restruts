@@ -26,11 +26,13 @@ public class ApiIndexAction extends Action<String> {
                 Class<? extends ActionCallable> cls = actionClass.getActionType();
 
                 String name = actionClass.getActionName().getName();
-                int indents = (50 - name.length())/4;
-                if((50 - name.length())%4 == 0) {
-                    indents = indents - 1;
+                int spaces = (60 - name.length());
+                if(spaces > 0) {
+                    builder.append("- ", 1).append(name).appendToken(' ', spaces).append("# class://").appendLine(cls.getName());
+
+                } else {
+                    builder.append("- ", 1).append(name).append("# class://", 2).appendLine(cls.getName());
                 }
-                builder.append("- ", 1).append(name).append("# class://", indents).appendLine(cls.getName());
             }
 
             builder.appendLine();

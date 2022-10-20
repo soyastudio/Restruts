@@ -17,7 +17,7 @@ import java.util.Map;
         produces = MediaType.TEXT_PLAIN,
         displayName = "Environment",
         description = "Print environment properties.")
-public class EnvironmentAction extends Action<String> {
+public class RuntimeEnvironmentAction extends Action<String> {
 
     @Override
     public String execute() throws Exception {

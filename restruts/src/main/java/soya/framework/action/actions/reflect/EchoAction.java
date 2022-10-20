@@ -14,7 +14,13 @@ import soya.framework.action.MediaType;
         description = "Print input message directly.")
 public class EchoAction extends Action<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD, required = true, option = "m")
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            required = true,
+            option = "m",
+            description = "Message for echoing."
+
+    )
     protected String message;
 
     @Override

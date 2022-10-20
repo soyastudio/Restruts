@@ -130,6 +130,13 @@ public class CodeBuilder {
         return this;
     }
 
+    public CodeBuilder appendToken(char token, int count) {
+        for(int i = 0; i < count; i ++) {
+            builder.append(token);
+        }
+        return this;
+    }
+
     //
     public CodeBuilder append(Object o, int indent) {
         if (indent > 0) {

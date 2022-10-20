@@ -17,6 +17,7 @@ import soya.framework.action.servlet.ActionServlet;
 import soya.framework.action.servlet.StateMachineServlet;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.StreamSupport;
 
@@ -51,6 +52,11 @@ public class ActionContextAutoConfiguration {
         return ActionContext.builder()
                 .serviceLocator(new ServiceLocator() {
                     @Override
+                    public String[] serviceNames() {
+                        return applicationContext.getBeanDefinitionNames();
+                    }
+
+                    @Override
                     public Object getService(String name) {
                         return applicationContext.getBean(name);
                     }
@@ -63,6 +69,11 @@ public class ActionContextAutoConfiguration {
                     @Override
                     public <T> T getService(String name, Class<T> type) {
                         return applicationContext.getBean(name, type);
+                    }
+
+                    @Override
+                    public <T> Map<String, T> getServices(Class<T> type) {
+                        return applicationContext.getBeansOfType(type);
                     }
                 })
                 .setProperties(properties)

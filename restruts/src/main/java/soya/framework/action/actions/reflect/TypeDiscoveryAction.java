@@ -21,13 +21,27 @@ import java.util.List;
         description = "Print as markdown format.")
 public class TypeDiscoveryAction extends Action<String[]> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true, option = "t")
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "t",
+            description = "Class name for search."
+    )
     private String type;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true, option = "p")
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            option = "p",
+            description = "Package name under which to search."
+    )
     protected String packageName;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, option = "a", displayOrder = 6)
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            option = "a",
+            displayOrder = 6,
+            description = "If abstract classes are included."
+    )
     protected boolean includeAbstract;
 
     @Override
@@ -36,17 +50,17 @@ public class TypeDiscoveryAction extends Action<String[]> {
         List<String> list = new ArrayList<>();
         Class<?> cls = Class.forName(type);
 
-        Reflections reflections = packageName == null? new Reflections() : new Reflections(packageName);
-        if(cls.isAnnotation()) {
+        Reflections reflections = packageName == null ? new Reflections() : new Reflections(packageName);
+        if (cls.isAnnotation()) {
             reflections.getTypesAnnotatedWith((Class<? extends Annotation>) cls).forEach(e -> {
-                if(!Modifier.isAbstract(e.getModifiers()) || includeAbstract) {
+                if (!Modifier.isAbstract(e.getModifiers()) || includeAbstract) {
                     list.add(e.getName());
                 }
             });
 
         } else {
             reflections.getSubTypesOf(cls).forEach(e -> {
-                if(!Modifier.isAbstract(e.getModifiers()) || includeAbstract) {
+                if (!Modifier.isAbstract(e.getModifiers()) || includeAbstract) {
                     list.add(e.getName());
                 }
             });

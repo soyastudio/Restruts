@@ -61,12 +61,24 @@ public final class ActionContext {
         return executorService;
     }
 
+    public String[] serviceNames() {
+        return serviceLocator.serviceNames();
+    }
+
+    public Object getService(String name) {
+        return serviceLocator.getService(name);
+    }
+
     public <T> T getService(Class<T> type) {
         return serviceLocator.getService(type);
     }
 
     public <T> T getService(String name, Class<T> type) {
         return serviceLocator.getService(name, type);
+    }
+
+    public <T> Map<String, T> getServices(Class<T> type) {
+        return serviceLocator.getServices(type);
     }
 
     public ActionMappings getActionMappings() {

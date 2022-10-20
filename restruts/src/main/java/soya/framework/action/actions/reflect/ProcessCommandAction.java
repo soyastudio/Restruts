@@ -19,21 +19,36 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @ActionDefinition(domain = "reflect",
-        name = "CommandExecution",
-        path = "/util/command",
+        name = "process-command",
+        path = "/util/process-command",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
-        displayName = "Command Execution",
-        description = "Print as markdown format.")
-public class CommandExecuteAction extends Action<String> {
+        displayName = "Process System Command",
+        description = "Process System Command, cmd for windows and shell for linux.")
+public class ProcessCommandAction extends Action<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "c",
+            description = "Command for executing. The command is system specified."
+    )
     private String command;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "d",
+            description = "Directory under which the command is executed. If not specified, 'user.home' is used."
+    )
     private String directory;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, defaultValue = "10")
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            defaultValue = "10",
+            option = "t",
+            description = "Execution timeout in second."
+    )
     private Integer timeoutInSecond = 10;
 
     @Override

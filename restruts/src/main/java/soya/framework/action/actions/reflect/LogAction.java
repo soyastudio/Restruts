@@ -13,13 +13,31 @@ import java.util.Locale;
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Log",
-        description = "Log input message.")
+        description = "Log input message, using JUL as default logging system.")
 public class LogAction extends Action<Void> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true, defaultValue = "INFO", option = "l")
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            defaultValue = "INFO",
+            option = "l",
+            description = {
+                    "Logger level:",
+                    "- finest: ALL, TRACE, FINEST;",
+                    "- fine: DEBUG, FINER, FINE",
+                    "- warn: WARN",
+                    "- error: ERROR, FATAL, OFF",
+                    "- info: default and for other not specified."
+            }
+    )
     protected String level = "INFO";
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD, required = true, option = "m")
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            required = true,
+            option = "m",
+            description = "Log message."
+    )
     protected String message;
 
     @Override

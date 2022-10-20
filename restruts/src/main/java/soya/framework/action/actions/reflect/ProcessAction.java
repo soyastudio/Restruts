@@ -20,31 +20,37 @@ import java.util.function.Consumer;
         path = "/util/process",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
-        displayName = "Process",
-        description = "Print as markdown format.")
+        displayName = "Process System Command",
+        description = "Process System Command, using java.lang.Process.")
 public class ProcessAction extends Action<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "c",
+            description = "Command for executing. The command is system specified."
+    )
     private String command;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "d",
+            description = "Directory under which the command is executed. If not specified, 'user.home' is used."
+    )
     private String directory;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, defaultValue = "10")
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            defaultValue = "10",
+            option = "t",
+            description = "Execution timeout in second."
+    )
     private Integer timeoutInSecond = 10;
 
     @Override
     public String execute() throws Exception {
-        boolean isWindows = System.getProperty("os.name")
-                .toLowerCase().startsWith("windows");
-
         List<String> list = new ArrayList<>();
-        /*if (isWindows) {
-            list.add("cmd.exe");
-        } else {
-            list.add("sh");
-        }*/
-
         StringTokenizer tokenizer = new StringTokenizer(command);
         while (tokenizer.hasMoreTokens()) {
             list.add(tokenizer.nextToken());
