@@ -3,8 +3,8 @@ package soya.framework.action.actions.reflect;
 import soya.framework.action.*;
 
 @ActionDefinition(domain = "reflect",
-        name = "service-details",
-        path = "/runtime/service-details",
+        name = "runtime-service-details",
+        path = "/runtime-service-details",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Service Details",

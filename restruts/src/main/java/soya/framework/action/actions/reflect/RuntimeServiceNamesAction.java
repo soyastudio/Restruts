@@ -6,8 +6,8 @@ import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "reflect",
-        name = "service-names",
-        path = "/runtime/service-names",
+        name = "runtime-service-names",
+        path = "/runtime-service-names",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Service Names",

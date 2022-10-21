@@ -3,8 +3,8 @@ package soya.framework.action.actions.reflect;
 import soya.framework.action.*;
 
 @ActionDefinition(domain = "reflect",
-        name = "resource",
-        path = "/util/resource",
+        name = "util-resource",
+        path = "/util-resource",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Resource",

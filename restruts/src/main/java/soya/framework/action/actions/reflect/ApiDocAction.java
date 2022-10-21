@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 
 @ActionDefinition(domain = "reflect",
         name = "api-doc",
-        path = "/api/doc",
+        path = "/api-doc",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "API",

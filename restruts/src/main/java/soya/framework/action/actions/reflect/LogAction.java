@@ -8,8 +8,8 @@ import soya.framework.action.MediaType;
 import java.util.Locale;
 
 @ActionDefinition(domain = "reflect",
-        name = "log",
-        path = "/util/log",
+        name = "util-log",
+        path = "/util-log",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Log",

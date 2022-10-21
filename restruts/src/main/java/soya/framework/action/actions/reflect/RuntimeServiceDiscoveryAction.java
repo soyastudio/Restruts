@@ -5,14 +5,14 @@ import soya.framework.action.*;
 import java.util.*;
 
 @ActionDefinition(domain = "reflect",
-        name = "services",
-        path = "/runtime/services",
+        name = "runtime-service-discovery",
+        path = "/runtime-service-discovery",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Runtime Services",
         description = "Print runtime services information of special type.")
 
-public class RuntimeServicesAction extends Action<ServiceInfo[]> {
+public class RuntimeServiceDiscoveryAction extends Action<ServiceInfo[]> {
 
     @ActionProperty(
             parameterType = ActionProperty.PropertyType.HEADER_PARAM,

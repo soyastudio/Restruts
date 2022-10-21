@@ -7,7 +7,7 @@ import java.net.URI;
 
 @ActionDefinition(domain = "reflect",
         name = "api-details",
-        path = "/api/details",
+        path = "/api-details",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "API Details",

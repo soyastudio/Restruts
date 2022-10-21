@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @ActionDefinition(domain = "reflect",
-        name = "process",
-        path = "/util/process",
+        name = "util-process",
+        path = "/util-process",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Process System Command",

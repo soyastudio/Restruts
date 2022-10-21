@@ -6,8 +6,8 @@ import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "reflect",
-        name = "echo",
-        path = "/util/echo",
+        name = "util-echo",
+        path = "/util-echo",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Echo",
