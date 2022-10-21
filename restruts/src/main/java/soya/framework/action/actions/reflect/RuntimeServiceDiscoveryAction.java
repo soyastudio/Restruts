@@ -29,19 +29,7 @@ public class RuntimeServiceDiscoveryAction extends Action<ServiceInfo[]> {
         ActionContext.getInstance().getServices(Class.forName(serviceType)).entrySet().forEach(e -> {
 
             Object o = e.getValue();
-            ServiceInfo info = new ServiceInfo(e.getKey(), o.getClass().getName());
-
-            Set<Class<?>> interfaces = new LinkedHashSet<>();
-            Class<?> cls = o.getClass();
-            while(!cls.getName().equals("java.lang.Object")) {
-                interfaces.addAll(Arrays.asList(cls.getInterfaces()));
-                cls = cls.getSuperclass();
-                info.getSuperClasses().add(0, cls.getName());
-            }
-
-            for(Class<?> c: interfaces) {
-                info.getInterfaces().add(c.getName());
-            }
+            ServiceInfo info = new ServiceInfo(e.getKey(), o);
 
             list.add(info);
         });

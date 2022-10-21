@@ -13,6 +13,9 @@ public abstract class ApiAction extends Action<String> {
         Class<? extends ActionCallable> cls = actionClass.getActionType();
         ActionDefinition operation = cls.getAnnotation(ActionDefinition.class);
 
+        Class<?> domainType = ActionContext.getInstance().getActionMappings().domainType(operation.domain());
+        String domainPath = domainType == null ? "" : domainType.getAnnotation(Domain.class).path();
+
         builder.append("## ACTION: ").appendLine(operation.displayName().isEmpty() ? operation.name() : operation.displayName());
         builder.appendLine(StringUtils.merge(operation.description(), "\n"));
 
@@ -20,12 +23,13 @@ public abstract class ApiAction extends Action<String> {
         builder.append("- class: ").appendLine(actionClass.getActionType().getName());
         builder.append("- domain: ").appendLine(operation.domain());
         builder.append("- name: ").appendLine(operation.name());
-        builder.append("- path: ").appendLine(operation.path());
+        builder.append("- path: ").appendLine(domainPath + operation.path());
         builder.append("- http method: ").appendLine(operation.method().name());
         builder.append("- produce: ").appendLine(operation.produces()[0]);
+        builder.appendLine();
 
-        Field[] fields = actionClass.getActionFields();
         builder.appendLine("### 2. Action Properties");
+        Field[] fields = actionClass.getActionFields();
         if (fields.length == 0) {
             builder.appendLine("No annotated field.");
 
@@ -38,7 +42,7 @@ public abstract class ApiAction extends Action<String> {
                     builder.append("-- Property Type: ").appendLine(field.getType().getName());
                     builder.append("-- HTTP Input Type: ").appendLine(actionProperty.parameterType().name());
                     builder.append("-- Required: ").appendLine("" + actionProperty.required());
-                    builder.append("-- Default Value: ").appendLine(actionProperty.defaultValue().isEmpty()? "" : actionProperty.defaultValue());
+                    builder.append("-- Default Value: ").appendLine(actionProperty.defaultValue().isEmpty() ? "" : actionProperty.defaultValue());
 
                 }
 
@@ -73,7 +77,7 @@ public abstract class ApiAction extends Action<String> {
         for (Field field : fields) {
             if (field.getAnnotation(ActionProperty.class) != null) {
                 ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
-                if(actionProperty.option().isEmpty()) {
+                if (actionProperty.option().isEmpty()) {
                     builder.append(" --").append(field.getName()).append(" <").append(field.getName()).append(">");
 
                 } else {

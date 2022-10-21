@@ -9,7 +9,7 @@ import soya.framework.action.*;
         produces = MediaType.APPLICATION_JSON,
         displayName = "Service Details",
         description = "Print runtime service detail information.")
-public class RuntimeServiceDetailsAction extends Action<String> {
+public class RuntimeServiceDetailsAction extends Action<ServiceInfo> {
 
     @ActionProperty(
             parameterType = ActionProperty.PropertyType.HEADER_PARAM,
@@ -20,7 +20,7 @@ public class RuntimeServiceDetailsAction extends Action<String> {
     private String service;
 
     @Override
-    public String execute() throws Exception {
+    public ServiceInfo execute() throws Exception {
         Object serviceInstance = null;
         try {
             serviceInstance = ActionContext.getInstance().getService(service);
@@ -33,6 +33,6 @@ public class RuntimeServiceDetailsAction extends Action<String> {
             serviceInstance = ActionContext.getInstance().getService(Class.forName(service));
         }
 
-        return serviceInstance.getClass().getName();
+        return new ServiceInfo(service, serviceInstance);
     }
 }
