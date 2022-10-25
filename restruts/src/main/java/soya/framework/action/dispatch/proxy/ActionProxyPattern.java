@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch;
+package soya.framework.action.dispatch.proxy;
 
 import java.lang.annotation.*;
 

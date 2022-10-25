@@ -26,7 +26,7 @@ public abstract class Action<T> implements ActionCallable {
 
     public abstract T execute() throws Exception;
 
-    protected void checkRequiredProperties() throws Exception{
+    protected void checkRequiredProperties() throws Exception {
         Field[] fields = ActionClass.get(getClass()).getActionFields();
         for (Field field : fields) {
             ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);

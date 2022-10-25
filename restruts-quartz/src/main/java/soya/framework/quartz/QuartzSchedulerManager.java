@@ -48,10 +48,6 @@ public class QuartzSchedulerManager {
         return scheduler.getMetaData();
     }
 
-
-
-
-
     public void standby() {
         try {
             scheduler.standby();

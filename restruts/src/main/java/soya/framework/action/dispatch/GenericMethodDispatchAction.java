@@ -9,7 +9,7 @@ import java.lang.reflect.Modifier;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-method-dispatch",
-        path = "/method-dispatch",
+        path = "/dispatch-to-method",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Method Dispatch",
@@ -19,20 +19,31 @@ import java.lang.reflect.Modifier;
 public class GenericMethodDispatchAction extends GenericDispatchAction<Object> {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    @ActionProperty(description = "Class name.",
+    @ActionProperty(
             parameterType = ActionProperty.PropertyType.HEADER_PARAM,
             required = true,
-            option = "c")
+            option = "c",
+            description = "Class name or service name."
+    )
     private String className;
 
-    @ActionProperty(description = "Method name or signature. If only name provided, it means the class has only one method of this name or method parameter number is zero. Examples are 'toString', 'myMethod()', 'anotherMethod(java.lang.String, java.util.Date)'.",
+    @ActionProperty(
             parameterType = ActionProperty.PropertyType.HEADER_PARAM,
             required = true,
-            option = "m")
+            option = "m",
+            description = {
+                    "Method name or signature. If only name provided, it means the class has only one public method of this name or the method parameter number is zero. Otherwise, method signature need provided. Examples are:",
+                    "- toString",
+                    "- myMethod()",
+                    "- anotherMethod(java.lang.String, java.util.Date)"
+            }
+
+    )
     private String method;
 
     @Override
     public Object execute() throws Exception {
+
         Class<?> cls = Class.forName(className);
         Method method = getMethod(cls, this.method);
 

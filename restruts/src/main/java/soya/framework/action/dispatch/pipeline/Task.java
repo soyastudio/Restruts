@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.workflow;
+package soya.framework.action.dispatch.pipeline;
 
 import soya.framework.action.dispatch.ActionDispatchPattern;
 

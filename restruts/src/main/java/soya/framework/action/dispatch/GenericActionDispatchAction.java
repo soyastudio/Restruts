@@ -10,7 +10,7 @@ import java.net.URI;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-action-dispatch",
-        path = "/action-dispatch",
+        path = "/dispatch-to-action",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",

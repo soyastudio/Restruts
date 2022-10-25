@@ -15,7 +15,6 @@ public abstract class GenericDispatchAction<T> extends Action<T> {
     },
             parameterType = ActionProperty.PropertyType.PAYLOAD,
             contentType = MediaType.TEXT_PLAIN,
-            required = true,
             option = "p")
     protected String data;
 

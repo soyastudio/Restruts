@@ -7,8 +7,8 @@ public class ServiceInfo {
     private String serviceType;
 
 
-    private String[] interfaces;
     private String[] superClasses;
+    private String[] interfaces;
 
     public ServiceInfo(String name, Object serviceInstance) {
         this.name = name;
@@ -29,6 +29,8 @@ public class ServiceInfo {
 
         this.interfaces = interfaces.toArray(new String[interfaces.size()]);
         this.superClasses = superClasses.toArray(new String[superClasses.size()]);
+
+
     }
 
     public String getName() {

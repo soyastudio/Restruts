@@ -1,5 +1,6 @@
 package soya.framework.action.springboot.starter;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -12,7 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import soya.framework.action.ActionContext;
 import soya.framework.action.ServiceLocator;
-import soya.framework.action.dispatch.ActionProxyFactory;
+import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.action.servlet.ActionServlet;
 import soya.framework.action.servlet.StateMachineServlet;
 
@@ -58,22 +59,44 @@ public class ActionContextAutoConfiguration {
 
                     @Override
                     public Object getService(String name) {
-                        return applicationContext.getBean(name);
+                        try {
+                            return applicationContext.getBean(name);
+
+                        } catch (BeansException e) {
+                            return null;
+                        }
                     }
 
                     @Override
                     public <T> T getService(Class<T> type) {
-                        return applicationContext.getBean(type);
+                        try {
+                            return applicationContext.getBean(type);
+
+                        } catch (BeansException e) {
+                            return null;
+                        }
+
                     }
 
                     @Override
                     public <T> T getService(String name, Class<T> type) {
-                        return applicationContext.getBean(name, type);
+                        try {
+                            return applicationContext.getBean(name, type);
+
+                        } catch (BeansException e) {
+                            return null;
+                        }
                     }
 
                     @Override
                     public <T> Map<String, T> getServices(Class<T> type) {
-                        return applicationContext.getBeansOfType(type);
+                        try {
+                            return applicationContext.getBeansOfType(type);
+
+                        } catch (BeansException e) {
+                            return null;
+                        }
+
                     }
                 })
                 .setProperties(properties)

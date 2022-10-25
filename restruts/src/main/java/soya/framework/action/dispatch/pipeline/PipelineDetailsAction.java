@@ -1,17 +1,15 @@
-package soya.framework.action.dispatch.workflow;
+package soya.framework.action.dispatch.pipeline;
 
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 @ActionDefinition(domain = "dispatch",
-        name = "pipeline-schema",
-        path = "/pipeline/schema",
+        name = "pipeline-details",
+        path = "/pipeline",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Generic Pipeline Dispatch",
         description = "Generic pipeline dispatch action")
-public class PipelineSchemaAction extends PipelineAdminAction<String> {
+public class PipelineDetailsAction extends Action<String> {
 
     @ActionProperty(description = {
 
@@ -23,9 +21,7 @@ public class PipelineSchemaAction extends PipelineAdminAction<String> {
 
     @Override
     public String execute() throws Exception {
-
-
-
-        return null;
+        PipelineContainer container = ActionContext.getInstance().getService(PipelineContainer.class);
+        return container.pipelineDetails(pipeline);
     }
 }

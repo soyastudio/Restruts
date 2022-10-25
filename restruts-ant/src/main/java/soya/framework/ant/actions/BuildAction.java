@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 
 @ActionDefinition(domain = "ant",
         name = "build",
-        path = "/apache-ant/build",
+        path = "/build",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Ant Build",

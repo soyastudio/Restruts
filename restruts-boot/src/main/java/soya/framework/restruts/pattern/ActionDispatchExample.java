@@ -21,10 +21,11 @@ import soya.framework.action.dispatch.AssignmentMethod;
         })
 public class ActionDispatchExample extends ActionDispatchAction<String> {
 
-        @ActionProperty(
-                description = "Execution method. The method must take no arguments.",
-                parameterType = ActionProperty.PropertyType.PAYLOAD,
-                required = true,
-                option = "m")
-        private String msg;
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            required = true,
+            option = "m",
+            description = "Execution method. The method must take no arguments."
+    )
+    private String msg;
 }

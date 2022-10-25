@@ -34,7 +34,6 @@ public class ProcessAction extends Action<String> {
 
     @ActionProperty(
             parameterType = ActionProperty.PropertyType.HEADER_PARAM,
-            required = true,
             option = "d",
             description = "Directory under which the command is executed. If not specified, 'user.home' is used."
     )

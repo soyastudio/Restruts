@@ -1,6 +1,7 @@
 package soya.framework.restruts.pattern;
 
 import soya.framework.action.dispatch.*;
+import soya.framework.action.dispatch.proxy.ActionProxyPattern;
 
 @ActionProxyPattern
 public interface Workshop {

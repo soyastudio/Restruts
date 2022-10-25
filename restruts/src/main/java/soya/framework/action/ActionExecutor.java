@@ -35,9 +35,42 @@ public final class ActionExecutor {
         }
     }
 
-    public static ActionExecutor executor(String[] args) {
-        URI uri = StringUtils.toURI(args);
+    public static ActionExecutor executor(String cmd) {
+        final ActionClass actionClass;
+        URI uri;
+        try {
+            uri = URI.create(cmd);
+        } catch (Exception e) {
+            uri = StringUtils.toURI(cmd);
+        }
 
+        if (uri.getScheme().equals("class")) {
+            try {
+                actionClass = ActionClass.get((Class<? extends ActionCallable>) Class.forName(uri.getHost()));
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        } else {
+            actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
+        }
+
+        if (actionClass == null) {
+            throw new IllegalArgumentException("Cannot find action class from uri: " + uri);
+        }
+
+        ActionExecutor executor = new ActionExecutor(actionClass.getActionType());
+        StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
+            Field field = actionClass.getActionField(e.getKey());
+            if (field != null) {
+                executor.setProperty(field.getName(), ConvertUtils.convert(e.getValue().get(0), field.getType()));
+            }
+
+        });
+
+        return executor;
+    }
+
+    public static ActionExecutor executor(URI uri) {
         final ActionClass actionClass;
         if (uri.getScheme().equals("class")) {
             try {
@@ -63,7 +96,10 @@ public final class ActionExecutor {
         });
 
         return executor;
+    }
 
+    public static ActionExecutor executor(String[] args) {
+        return executor(StringUtils.toURI(args));
     }
 
     public static ActionExecutor executor(Class<? extends ActionCallable> actionType) {

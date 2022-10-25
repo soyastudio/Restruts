@@ -1,16 +1,15 @@
-package soya.framework.action.dispatch.workflow;
+package soya.framework.action.dispatch.pipeline;
 
 import soya.framework.action.*;
 
 @ActionDefinition(domain = "dispatch",
-        name = "pipeline-details",
+        name = "pipeline-undeploy",
         path = "/pipeline",
-        method = ActionDefinition.HttpMethod.GET,
+        method = ActionDefinition.HttpMethod.DELETE,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Generic Pipeline Dispatch",
         description = "Generic pipeline dispatch action")
-public class PipelineDetailsAction extends Action<String> {
-
+public class PipelineUndeployAction extends PipelineAdminAction<Boolean> {
     @ActionProperty(description = {
 
     },
@@ -20,8 +19,8 @@ public class PipelineDetailsAction extends Action<String> {
     private String pipeline;
 
     @Override
-    public String execute() throws Exception {
-        PipelineContainer container = ActionContext.getInstance().getService(PipelineContainer.class);
-        return container.pipelineDetails(pipeline);
+    public Boolean execute() throws Exception {
+        container().undeploy(pipeline);
+        return true;
     }
 }

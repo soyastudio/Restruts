@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.workflow;
+package soya.framework.action.dispatch.pipeline;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

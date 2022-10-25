@@ -1,7 +1,9 @@
 package soya.framework.action;
 
 public class ActionCreationException extends RuntimeException {
+
     public ActionCreationException() {
+
     }
 
     public ActionCreationException(String message) {

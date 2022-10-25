@@ -6,7 +6,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import soya.framework.action.ActionContext;
-import soya.framework.action.dispatch.ActionProxyFactory;
+import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.restruts.pattern.Workshop;
 
 import java.io.File;

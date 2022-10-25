@@ -1,10 +1,8 @@
-package soya.framework.action.dispatch.workflow;
+package soya.framework.action.dispatch.pipeline;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import soya.framework.action.*;
-
-import java.util.Locale;
 
 @ActionDefinition(domain = "dispatch",
         name = "pipeline-invoker",

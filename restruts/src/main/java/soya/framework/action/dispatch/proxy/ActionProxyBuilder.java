@@ -1,8 +1,12 @@
-package soya.framework.action.dispatch;
+package soya.framework.action.dispatch.proxy;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import soya.framework.action.*;
+import soya.framework.action.dispatch.ActionDispatchPattern;
+import soya.framework.action.dispatch.ActionPropertyAssignment;
+import soya.framework.action.dispatch.AssignmentMethod;
+import soya.framework.action.dispatch.ParamName;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -17,7 +21,6 @@ public final class ActionProxyBuilder<T> {
 
     public ActionProxyBuilder(Class<T> proxyInterface) {
         this.proxyInterface = proxyInterface;
-
     }
 
     public T create() throws ActionProxyBuildException {

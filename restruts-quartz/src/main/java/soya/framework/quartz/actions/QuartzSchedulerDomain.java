@@ -9,4 +9,5 @@ import soya.framework.action.Domain;
         description = "Quartz Scheduler extensions and services."
 )
 public interface QuartzSchedulerDomain {
+
 }

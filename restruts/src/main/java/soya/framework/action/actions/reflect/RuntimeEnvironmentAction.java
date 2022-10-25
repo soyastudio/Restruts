@@ -1,9 +1,6 @@
 package soya.framework.action.actions.reflect;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionContext;
-import soya.framework.action.MediaType;
-import soya.framework.action.ActionDefinition;
+import soya.framework.action.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +16,14 @@ import java.util.Map;
         description = "Print environment properties.")
 public class RuntimeEnvironmentAction extends Action<String> {
 
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            option = "p",
+            description = "Prefix for filtering."
+
+    )
+    private String prefix;
+
     @Override
     public String execute() throws Exception {
         Map<String, String> properties = ActionContext.getInstance().properties();
@@ -27,7 +32,8 @@ public class RuntimeEnvironmentAction extends Action<String> {
         Collections.sort(propNames);
 
         propNames.forEach(e -> {
-            builder.append(e).append("=").append(properties.get(e)).append("\n");
+            if (prefix == null || e.startsWith(prefix))
+                builder.append(e).append("=").append(properties.get(e)).append("\n");
         });
 
         return builder.toString();

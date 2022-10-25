@@ -1,15 +1,11 @@
-package soya.framework.action.dispatch.workflow;
+package soya.framework.action.dispatch.pipeline;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 import soya.framework.action.dispatch.ActionDispatch;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-pipeline-dispatch",

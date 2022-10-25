@@ -2,8 +2,8 @@ package soya.framework.restruts.pattern;
 
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
-import soya.framework.action.dispatch.workflow.PipelineAction;
-import soya.framework.action.dispatch.workflow.PipelinePattern;
+import soya.framework.action.dispatch.pipeline.PipelineAction;
+import soya.framework.action.dispatch.pipeline.PipelinePattern;
 
 @ActionDefinition(domain = "pattern",
         name = "pipeline",
