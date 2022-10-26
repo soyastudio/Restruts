@@ -248,6 +248,7 @@ public class Pipeline {
         }
 
         ActionResult execute(Session session) throws Exception {
+
             ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionDispatch.getActionName());
             ActionCallable action = actionDispatch.create(session, new DefaultEvaluator());
 
@@ -305,6 +306,28 @@ public class Pipeline {
         public Map<String, String> tasks() {
             return tasks;
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        ActionContext.builder()
+                .scan("soya.framework")
+                .create();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("msg", "Hello World");
+
+        Object result = Pipeline.builder()
+                .name("Pipeline")
+                .addParameter("msg", String.class)
+                .addTask("echo", "class://soya.framework.action.actions.reflect.EchoAction?message=val(xyz%201234%20abc)")
+                .addTask("encode", "text-util://base64-encode?text=ref(echo)")
+                .addTask("decode", "text-util://base64-decode?text=ref(encode)")
+                .create()
+                .execute(data);
+
+        System.out.println(result);
+
+        System.exit(0);
     }
 
 }

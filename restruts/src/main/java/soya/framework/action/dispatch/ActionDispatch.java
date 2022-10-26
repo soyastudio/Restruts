@@ -3,10 +3,12 @@ package soya.framework.action.dispatch;
 import soya.framework.action.*;
 import soya.framework.common.util.StringUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class ActionDispatch {
     private static final Evaluator DEFAULT_EVALUATOR = new DefaultEvaluator();
@@ -21,7 +23,7 @@ public final class ActionDispatch {
 
         List<String> params = new ArrayList<>();
         assignments.entrySet().forEach(e -> {
-            if(e.getValue().getAssignmentMethod().equals(AssignmentMethod.PARAMETER)) {
+            if (e.getValue().getAssignmentMethod().equals(AssignmentMethod.PARAMETER)) {
                 params.add(e.getValue().getExpression());
             }
         });
@@ -49,6 +51,7 @@ public final class ActionDispatch {
         if ("class".equals(actionName.getDomain())) {
             try {
                 actionType = (Class<? extends ActionCallable>) Class.forName(actionName.getName());
+
             } catch (ClassNotFoundException e) {
                 throw new ActionDispatchException(e);
             }
@@ -73,7 +76,7 @@ public final class ActionDispatch {
 
             return action;
 
-        } catch (InstantiationException | IllegalAccessException  e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new ActionDispatchException(e);
         }
 
@@ -93,7 +96,7 @@ public final class ActionDispatch {
 
     public static ActionDispatch fromAnnotation(ActionDispatchPattern pattern) {
         ActionDispatch.Builder builder = builder(ActionName.fromURI(URI.create(pattern.uri())));
-        for(ActionPropertyAssignment assignment: pattern.propertyAssignments()) {
+        for (ActionPropertyAssignment assignment : pattern.propertyAssignments()) {
             builder.addAssignment(assignment.name(), assignment.assignmentMethod(), assignment.expression());
         }
 
@@ -105,7 +108,21 @@ public final class ActionDispatch {
     }
 
     public static ActionDispatch fromURI(URI uri) {
-        Builder builder = builder(ActionName.create(uri.getScheme(), uri.getHost()));
+        Builder builder;
+        if ("class".equals(uri.getScheme())) {
+            try {
+                Class<? extends ActionCallable> cls = (Class<? extends ActionCallable>) Class.forName(uri.getHost());
+                ActionDefinition definition = cls.getAnnotation(ActionDefinition.class);
+                builder = builder(ActionName.create(definition.domain(), definition.name()));
+
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Cannot create action dispatch from uri: " + uri.toString());
+            }
+
+        } else {
+            builder = builder(ActionName.create(uri.getScheme(), uri.getHost()));
+        }
+
         if (uri.getQuery() != null) {
             StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
                 String name = e.getKey();
