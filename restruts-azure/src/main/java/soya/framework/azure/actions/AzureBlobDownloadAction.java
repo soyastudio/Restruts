@@ -5,7 +5,7 @@ import com.azure.storage.blob.specialized.BlockBlobClient;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
-import soya.framework.common.util.StreamUtils;
+import soya.framework.commons.util.StreamUtils;
 
 import java.io.InputStream;
 

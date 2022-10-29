@@ -2,7 +2,7 @@ package soya.framework.action.dispatch;
 
 import com.google.gson.*;
 import soya.framework.action.*;
-import soya.framework.common.util.ReflectUtils;
+import soya.framework.commons.util.ReflectUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

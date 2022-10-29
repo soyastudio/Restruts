@@ -1,6 +1,6 @@
 package soya.framework.action.dispatch.pipeline;
 
-import soya.framework.common.util.StreamUtils;
+import soya.framework.commons.util.StreamUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +48,8 @@ public class PipelineContainer {
         if (!pipelines.containsKey(name)) {
             throw new IllegalArgumentException("Pipeline is not found: " + name);
         }
-        return pipelines.get(name).pipeline.toJson();
+
+        return pipelines.get(name).pipeline.toString();
     }
 
     public synchronized void undeploy(String name) throws IOException {

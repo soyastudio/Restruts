@@ -1,9 +1,9 @@
 package soya.framework.document.actions.xmlbeans;
 
 import org.apache.xmlbeans.SchemaTypeSystem;
-import soya.framework.common.knowledge.KnowledgeTree;
-import soya.framework.common.knowledge.KnowledgeTreeNode;
-import soya.framework.common.util.CodeBuilder;
+import soya.framework.commons.knowledge.KnowledgeTree;
+import soya.framework.commons.knowledge.KnowledgeTreeNode;
+import soya.framework.commons.util.CodeBuilder;
 import soya.framework.document.actions.xmlbeans.xs.XsNode;
 import soya.framework.document.actions.xmlbeans.xs.XsUtils;
 import soya.framework.action.MediaType;

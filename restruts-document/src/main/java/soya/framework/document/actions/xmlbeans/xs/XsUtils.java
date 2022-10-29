@@ -2,8 +2,8 @@ package soya.framework.document.actions.xmlbeans.xs;
 
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.SchemaTypeSystem;
-import soya.framework.common.knowledge.KnowledgeBuildException;
-import soya.framework.common.knowledge.KnowledgeTree;
+import soya.framework.commons.knowledge.KnowledgeBuildException;
+import soya.framework.commons.knowledge.KnowledgeTree;
 
 import java.io.File;
 

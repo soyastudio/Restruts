@@ -1,8 +1,8 @@
 package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
-import soya.framework.common.util.CodeBuilder;
-import soya.framework.common.util.StringUtils;
+import soya.framework.commons.util.CodeBuilder;
+import soya.framework.commons.util.StringUtils;
 
 import java.lang.reflect.Field;
 

@@ -4,7 +4,7 @@ import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.common.util.CodeBuilder;
+import soya.framework.commons.util.CodeBuilder;
 
 @ActionDefinition(domain = "albertsons",
         name = "edm-create-view",

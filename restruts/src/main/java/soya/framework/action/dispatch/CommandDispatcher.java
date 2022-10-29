@@ -4,7 +4,7 @@ import soya.framework.action.ActionCallable;
 import soya.framework.action.ActionClass;
 import soya.framework.action.ConvertUtils;
 import soya.framework.action.Resources;
-import soya.framework.common.util.ReflectUtils;
+import soya.framework.commons.util.ReflectUtils;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;

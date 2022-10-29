@@ -3,7 +3,7 @@ package soya.framework.albertsons.actions.iib;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.common.util.StreamUtils;
+import soya.framework.commons.util.StreamUtils;
 
 import java.io.File;
 import java.io.FileInputStream;

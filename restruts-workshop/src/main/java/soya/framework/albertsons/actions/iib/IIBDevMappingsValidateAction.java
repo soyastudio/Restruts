@@ -1,7 +1,7 @@
 package soya.framework.albertsons.actions.iib;
 
 import org.apache.commons.beanutils.DynaBean;
-import soya.framework.common.util.CodeBuilder;
+import soya.framework.commons.util.CodeBuilder;
 import soya.framework.action.ActionExecutor;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;

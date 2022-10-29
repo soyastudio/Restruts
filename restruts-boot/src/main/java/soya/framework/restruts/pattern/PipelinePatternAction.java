@@ -1,9 +1,11 @@
 package soya.framework.restruts.pattern;
 
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.dispatch.pipeline.PipelineAction;
+import soya.framework.action.dispatch.pipeline.AnnotatedPipelineAction;
 import soya.framework.action.dispatch.pipeline.PipelinePattern;
+import soya.framework.action.dispatch.pipeline.TaskDefinition;
 
 @ActionDefinition(domain = "pattern",
         name = "pipeline",
@@ -12,8 +14,15 @@ import soya.framework.action.dispatch.pipeline.PipelinePattern;
         produces = MediaType.TEXT_PLAIN,
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")
-@PipelinePattern(tasks = {
-})
-public class PipelinePatternAction extends PipelineAction<String> {
+@PipelinePattern(
+        tasks = {
+                @TaskDefinition(name = "extract", dispatch = "class://soya.framework.action.actions.reflect.EchoAction?message=param(message)"),
+                @TaskDefinition(name = "transform", dispatch = "text-util://base64-encode?text=ref(extract)"),
+                @TaskDefinition(name = "load", dispatch = "text-util://base64-decode?text=ref(transform)")
+        }
+)
+public class PipelinePatternAction extends AnnotatedPipelineAction<String> {
 
+    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD)
+    private String message;
 }

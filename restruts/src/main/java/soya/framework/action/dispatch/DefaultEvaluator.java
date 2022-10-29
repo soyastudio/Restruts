@@ -7,8 +7,7 @@ import soya.framework.action.ActionCallable;
 import soya.framework.action.ActionResult;
 import soya.framework.action.ConvertUtils;
 import soya.framework.action.Resources;
-import soya.framework.common.util.JsonUtils;
-import soya.framework.common.util.ReflectUtils;
+import soya.framework.commons.util.ReflectUtils;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;

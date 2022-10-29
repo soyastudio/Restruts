@@ -1,7 +1,7 @@
 package soya.framework.action;
 
-import soya.framework.common.util.StreamUtils;
-import soya.framework.common.util.StringUtils;
+import soya.framework.commons.util.StreamUtils;
+import soya.framework.commons.util.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.Constructor;

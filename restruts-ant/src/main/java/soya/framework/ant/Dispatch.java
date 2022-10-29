@@ -2,11 +2,6 @@ package soya.framework.ant;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
-import soya.framework.action.ActionClass;
-import soya.framework.common.util.StringUtils;
-
-import java.util.List;
-import java.util.Map;
 
 public class Dispatch extends AntTaskExtension {
 

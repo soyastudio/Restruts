@@ -1,7 +1,7 @@
 package soya.framework.document.actions.xmlbeans;
 
 import org.apache.xmlbeans.SchemaTypeSystem;
-import soya.framework.common.knowledge.KnowledgeTree;
+import soya.framework.commons.knowledge.KnowledgeTree;
 import soya.framework.document.actions.xmlbeans.xs.XsKnowledgeSystem;
 import soya.framework.document.actions.xmlbeans.xs.XsNode;
 import soya.framework.document.actions.DocumentAction;

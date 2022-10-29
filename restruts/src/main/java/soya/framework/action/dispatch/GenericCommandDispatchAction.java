@@ -3,8 +3,8 @@ package soya.framework.action.dispatch;
 import com.google.gson.*;
 import org.apache.commons.beanutils.PropertyUtils;
 import soya.framework.action.*;
-import soya.framework.common.util.ReflectUtils;
-import soya.framework.common.util.StringUtils;
+import soya.framework.commons.util.ReflectUtils;
+import soya.framework.commons.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;

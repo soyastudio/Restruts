@@ -1,7 +1,7 @@
 package soya.framework.action;
 
 import soya.framework.action.actions.reflect.EchoAction;
-import soya.framework.common.util.StringUtils;
+import soya.framework.commons.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.net.URI;

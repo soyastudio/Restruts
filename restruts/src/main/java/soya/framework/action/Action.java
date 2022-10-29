@@ -13,6 +13,9 @@ public abstract class Action<T> implements ActionCallable {
 
         try {
             checkRequiredProperties();
+
+            prepare();
+
             T t = execute();
             ActionResult result = new DefaultActionResult(this, t);
             logger().fine("executed successfully");
@@ -25,6 +28,9 @@ public abstract class Action<T> implements ActionCallable {
     }
 
     public abstract T execute() throws Exception;
+
+    protected void prepare() throws Exception {
+    }
 
     protected void checkRequiredProperties() throws Exception {
         Field[] fields = ActionClass.get(getClass()).getActionFields();

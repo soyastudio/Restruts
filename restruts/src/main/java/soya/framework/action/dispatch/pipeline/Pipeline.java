@@ -5,11 +5,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.beanutils.PropertyUtils;
-import soya.framework.action.*;
+import soya.framework.action.ActionCallable;
+import soya.framework.action.ActionClass;
+import soya.framework.action.ActionContext;
+import soya.framework.action.ConvertUtils;
 import soya.framework.action.dispatch.ActionDispatch;
 import soya.framework.action.dispatch.ActionDispatchSession;
 import soya.framework.action.dispatch.DefaultEvaluator;
-import soya.framework.common.util.ReflectUtils;
+import soya.framework.commons.util.ReflectUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,20 +39,6 @@ public class Pipeline {
 
     public Object execute(Object data) throws Exception {
         return new PipelineExecutor(this).execute(data);
-    }
-
-    public String toJson() {
-        PipelineDefinition definition = new PipelineDefinition();
-        definition.name = name;
-        parameters.entrySet().forEach(e -> {
-            definition.parameters.put(e.getKey(), e.getValue().getName());
-        });
-
-        tasks.forEach(e -> {
-            definition.tasks.put(e.name, e.actionDispatch.toURI());
-        });
-
-        return gson.toJson(definition);
     }
 
     public static Pipeline fromYaml(String yaml) throws IOException {
@@ -149,13 +138,18 @@ public class Pipeline {
             return this;
         }
 
+        public Builder addTask(String name, Task task) {
+            pipeline.tasks.add(new TaskNode(name, task));
+            return this;
+        }
+
         public Builder addTask(String name, String uri) {
-            pipeline.tasks.add(new TaskNode(name, ActionDispatch.fromURI(uri)));
+            pipeline.tasks.add(new TaskNode(name, new ActionDispatchTask(ActionDispatch.fromURI(uri))));
             return this;
         }
 
         public Builder addTask(String name, ActionDispatch actionDispatch) {
-            pipeline.tasks.add(new TaskNode(name, actionDispatch));
+            pipeline.tasks.add(new TaskNode(name, new ActionDispatchTask(actionDispatch)));
             return this;
         }
 
@@ -170,23 +164,19 @@ public class Pipeline {
 
     private static class TaskNode {
         private final String name;
-        private final ActionDispatch actionDispatch;
+        private final Task task;
 
-        public TaskNode(String name, ActionDispatch actionDispatch) {
+        public TaskNode(String name, Task task) {
             this.name = name;
-            this.actionDispatch = actionDispatch;
+            this.task = task;
         }
     }
 
     private static class PipelineExecutor {
         private final Pipeline pipeline;
-        private Queue<Worker> queue = new ConcurrentLinkedQueue<>();
 
         PipelineExecutor(Pipeline pipeline) {
             this.pipeline = pipeline;
-            pipeline.tasks.forEach(e -> {
-                queue.add(new Worker(this, e));
-            });
         }
 
         public Object execute(Object data) throws Exception {
@@ -201,17 +191,22 @@ public class Pipeline {
                 }
             });
 
-            Worker worker = queue.poll();
-            ActionResult result = null;
+            Queue<TaskNode> queue = new ConcurrentLinkedQueue<>();
+            pipeline.tasks.forEach(e -> {
+                queue.add(e);
+            });
+
+            TaskNode worker = queue.poll();
+            Object result = null;
             while (worker != null) {
-                result = worker.execute(session);
-                session.results.put(worker.name, result.get());
+                result = worker.task.execute(session);
+                session.results.put(worker.name, result);
 
                 worker = queue.poll();
 
             }
 
-            return result.get();
+            return result;
         }
 
         private Object evaluate(String name, Class<?> type, Object context) throws Exception {
@@ -237,24 +232,20 @@ public class Pipeline {
         }
     }
 
-    private static class Worker {
-        private PipelineExecutor executor;
-        private String name;
+    private static class ActionDispatchTask<T> implements Task<T> {
         private ActionDispatch actionDispatch;
 
-        public Worker(PipelineExecutor executor, TaskNode task) {
-            this.name = task.name;
-            this.actionDispatch = task.actionDispatch;
+        private ActionDispatchTask(ActionDispatch actionDispatch) {
+            this.actionDispatch = actionDispatch;
         }
 
-        ActionResult execute(Session session) throws Exception {
-
+        @Override
+        public T execute(ActionDispatchSession session) {
             ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionDispatch.getActionName());
             ActionCallable action = actionDispatch.create(session, new DefaultEvaluator());
 
-            return action.call();
+            return (T) action.call().get();
         }
-
     }
 
     static class Session implements ActionDispatchSession {
@@ -272,7 +263,7 @@ public class Pipeline {
         }
 
         @Override
-        public Object data() {
+        public Map<String, Object> data() {
             return results;
         }
     }

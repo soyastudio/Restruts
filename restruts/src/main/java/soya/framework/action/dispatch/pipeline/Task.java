@@ -1,16 +1,7 @@
 package soya.framework.action.dispatch.pipeline;
 
-import soya.framework.action.dispatch.ActionDispatchPattern;
+import soya.framework.action.dispatch.ActionDispatchSession;
 
-import java.lang.annotation.*;
-
-@Target({ElementType.ANNOTATION_TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Task {
-
-    String name();
-
-    ActionDispatchPattern dispatch();
-
+public interface Task<T> {
+    T execute(ActionDispatchSession session);
 }

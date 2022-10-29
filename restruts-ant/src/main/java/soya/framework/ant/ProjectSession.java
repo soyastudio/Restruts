@@ -7,7 +7,7 @@ import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import soya.framework.common.util.CodeBuilder;
+import soya.framework.commons.util.CodeBuilder;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

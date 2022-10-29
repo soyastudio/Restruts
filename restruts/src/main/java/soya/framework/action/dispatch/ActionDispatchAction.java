@@ -1,7 +1,7 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
-import soya.framework.common.util.ReflectUtils;
+import soya.framework.commons.util.ReflectUtils;
 
 import java.lang.reflect.Field;
 import java.net.URI;

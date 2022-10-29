@@ -3,7 +3,7 @@ package soya.framework.action.servlet;
 import org.reflections.Reflections;
 import soya.framework.action.*;
 import soya.framework.action.servlet.api.Swagger;
-import soya.framework.common.util.StringUtils;
+import soya.framework.commons.util.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;

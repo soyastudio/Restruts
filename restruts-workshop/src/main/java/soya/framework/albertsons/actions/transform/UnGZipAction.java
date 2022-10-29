@@ -1,6 +1,6 @@
 package soya.framework.albertsons.actions.transform;
 
-import soya.framework.common.util.StreamUtils;
+import soya.framework.commons.util.StreamUtils;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 
