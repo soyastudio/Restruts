@@ -27,6 +27,7 @@ public class Orchestration<T> {
     protected Map<String, TaskNode> tasks = null;
 
     private final OrchestrationExecutor<T> executor;
+    private Task resultHandler;
 
     private Orchestration(OrchestrationExecutor<T> executor) {
         this.executor = executor;
@@ -55,7 +56,13 @@ public class Orchestration<T> {
                 throw new RuntimeException(ex);
             }
         });
-        return executor.execute(this, session);
+        executor.execute(this, session);
+
+        if(resultHandler != null) {
+            return resultHandler.execute(session);
+        } else {
+            return null;
+        }
     }
 
     public OrchestrationBuilder builder() {
@@ -131,9 +138,12 @@ public class Orchestration<T> {
     }
 
     public final static class OrchestrationBuilder {
+
         private String name;
         private Map<String, Class<?>> parameters = new LinkedHashMap<>();
         private Map<String, TaskNode> tasks = new LinkedHashMap();
+
+        private Task resultHandler;
 
         private OrchestrationBuilder() {
         }
@@ -163,6 +173,11 @@ public class Orchestration<T> {
             return this;
         }
 
+        public OrchestrationBuilder resultHandler(Task<?> resultHandler) {
+            this.resultHandler = resultHandler;
+            return this;
+        }
+
         public <T> Orchestration<T> create(OrchestrationExecutor<T> executor) {
             if (executor == null) {
                 throw new IllegalArgumentException("OrchestrationExecutor is required.");
@@ -174,11 +189,44 @@ public class Orchestration<T> {
 
             Orchestration<T> orchestration = new Orchestration<>(executor);
             orchestration.name = name;
-            this.parameters = parameters;
-            this.tasks = tasks;
+            orchestration.parameters = parameters;
+            orchestration.tasks = tasks;
+            orchestration.resultHandler = resultHandler;
 
             return orchestration;
         }
 
+        public <T> Orchestration<T> sequentialOrchestration() {
+            return create(new SequentialExecutor<>());
+        }
+
+        public <T> Orchestration<T> parallelOrchestration() {
+            return create(new ParallelExecutor<>());
+        }
+
+    }
+
+    private static class SequentialExecutor<T> implements OrchestrationExecutor<T> {
+
+        @Override
+        public T execute(Orchestration orchestration, ActionDispatchSession session) {
+            Object result = null;
+            for (String taskName : orchestration.tasks()) {
+                result = orchestration.task(taskName).execute(session);
+
+            }
+
+            return (T) result;
+        }
+    }
+
+    private static class ParallelExecutor<T> implements OrchestrationExecutor<T> {
+
+        @Override
+        public T execute(Orchestration orchestration, ActionDispatchSession session) {
+
+
+            return null;
+        }
     }
 }
