@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.pipeline;
+package soya.framework.action.orchestration.pipeline;
 
 import com.google.gson.Gson;
 import soya.framework.action.Action;

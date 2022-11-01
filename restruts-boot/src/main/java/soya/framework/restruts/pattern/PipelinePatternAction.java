@@ -3,9 +3,9 @@ package soya.framework.restruts.pattern;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.dispatch.pipeline.AnnotatedPipelineAction;
-import soya.framework.action.dispatch.pipeline.PipelinePattern;
-import soya.framework.action.dispatch.pipeline.TaskDefinition;
+import soya.framework.action.orchestration.pipeline.AnnotatedPipelineAction;
+import soya.framework.action.orchestration.pipeline.PipelinePattern;
+import soya.framework.action.orchestration.pipeline.TaskDefinition;
 
 @ActionDefinition(domain = "pattern",
         name = "pipeline",

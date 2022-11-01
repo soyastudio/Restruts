@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import soya.framework.action.dispatch.eventbus.ActionEventBus;
 import soya.framework.action.dispatch.eventbus.Event;
 import soya.framework.action.dispatch.eventbus.Subscriber;
-import soya.framework.action.dispatch.pipeline.PipelineContainer;
+import soya.framework.action.orchestration.pipeline.PipelineContainer;
 
 import javax.annotation.PostConstruct;
 import java.io.File;

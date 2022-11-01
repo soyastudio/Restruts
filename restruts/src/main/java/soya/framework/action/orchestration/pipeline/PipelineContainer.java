@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.pipeline;
+package soya.framework.action.orchestration.pipeline;
 
 import soya.framework.commons.util.StreamUtils;
 

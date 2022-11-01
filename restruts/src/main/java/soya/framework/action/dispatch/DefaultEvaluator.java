@@ -16,15 +16,15 @@ import java.util.Map;
 
 public class DefaultEvaluator implements Evaluator {
 
-    private Evaluator referenceEvaluator = new DefaultReferenceEvaluator();
     private Evaluator parameterEvaluator = new DefaultParameterEvaluator();
+    private Evaluator referenceEvaluator = new DefaultReferenceEvaluator();
 
     public DefaultEvaluator() {
     }
 
-    public DefaultEvaluator(Evaluator referenceEvaluator, Evaluator parameterEvaluator) {
-        this.referenceEvaluator = referenceEvaluator;
+    public DefaultEvaluator(Evaluator parameterEvaluator, Evaluator referenceEvaluator) {
         this.parameterEvaluator = parameterEvaluator;
+        this.referenceEvaluator = referenceEvaluator;
     }
 
     @Override
