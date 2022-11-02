@@ -1,4 +1,5 @@
 {
+  "domain": "pipeline",
   "name": "XYZ",
   "parameters": {
     "message": "java.lang.String"

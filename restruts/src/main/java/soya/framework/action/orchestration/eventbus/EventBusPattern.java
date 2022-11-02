@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.eventbus;
+package soya.framework.action.orchestration.eventbus;
 
 import java.lang.annotation.*;
 

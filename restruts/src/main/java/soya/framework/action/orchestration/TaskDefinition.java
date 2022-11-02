@@ -1,4 +1,4 @@
-package soya.framework.action.orchestration.pipeline;
+package soya.framework.action.orchestration;
 
 import java.lang.annotation.*;
 

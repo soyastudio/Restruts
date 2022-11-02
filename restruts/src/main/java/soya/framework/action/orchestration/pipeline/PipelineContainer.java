@@ -1,5 +1,6 @@
 package soya.framework.action.orchestration.pipeline;
 
+import soya.framework.action.orchestration.Pipeline;
 import soya.framework.commons.util.StreamUtils;
 
 import java.io.File;
@@ -7,7 +8,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -87,9 +89,9 @@ public class PipelineContainer {
     private void forDeploy() throws IOException {
         Files.walk(Paths.get(home)).forEach(path -> {
             File file = path.toFile();
-            if(file.isFile()) {
+            if (file.isFile()) {
                 URI uri = file.toURI();
-                if(!deployments.containsKey(uri)) {
+                if (!deployments.containsKey(uri)) {
                     logger.info("Deploying file " + file.getPath());
                     Deployment deployment = new Deployment(file);
                     deployments.put(deployment.uri, deployment);
@@ -122,19 +124,13 @@ public class PipelineContainer {
                 inputStream.close();
 
                 try {
-                    pipeline = Pipeline.fromJson(contents);
-
+                    pipeline = PipelineParser.fromJson(contents);
                 } catch (Exception e) {
 
                 }
 
                 if (pipeline == null) {
-                    try {
-                        pipeline = Pipeline.fromYaml(contents);
-
-                    } catch (IOException e) {
-
-                    }
+                    pipeline = PipelineParser.fromJson(contents);
                 }
 
             } catch (IOException e) {
@@ -143,5 +139,5 @@ public class PipelineContainer {
 
         }
     }
-}
 
+}

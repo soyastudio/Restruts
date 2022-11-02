@@ -1,11 +1,15 @@
 package soya.framework.action.orchestration;
 
-public class Pipeline {
+public final class Pipeline {
 
     private Orchestration orchestration;
 
     private Pipeline(Orchestration orchestration) {
         this.orchestration = orchestration;
+    }
+
+    public String getName() {
+        return orchestration.getName();
     }
 
     public Object execute(Object input) throws ProcessException {
@@ -53,11 +57,11 @@ public class Pipeline {
             return this;
         }
 
-        public Orchestration create() {
-            return orchestrationBuilder
+        public Pipeline create() {
+            return new Pipeline(orchestrationBuilder
                     .executor(new SequentialTaskFlowExecutor())
                     .resultHandler(session -> session.get(result))
-                    .create();
+                    .create());
         }
     }
 }

@@ -2,13 +2,10 @@ package soya.framework.restruts.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import soya.framework.action.dispatch.eventbus.ActionEventBus;
-import soya.framework.action.dispatch.eventbus.Event;
-import soya.framework.action.dispatch.eventbus.Subscriber;
-import soya.framework.action.orchestration.pipeline.PipelineContainer;
+import soya.framework.action.orchestration.eventbus.ActionEventBus;
+import soya.framework.action.orchestration.eventbus.Event;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -20,25 +17,6 @@ public class ServerConfiguration {
     @Bean
     ActionEventBus actionEventBus() {
         return new DefaultActionEventBus();
-    }
-
-    @Bean
-    PipelineContainer pipelineContainer(ActionEventBus eventBus) {
-        File workspace = new File(System.getProperty("workspace.home"));
-        File home = new File(workspace, "pipeline");
-        PipelineContainer container = new PipelineContainer(home);
-
-        eventBus.register(HEARTBEAT_EVENT_ADDRESS, new Subscriber() {
-            @Override
-            public void onEvent(Event event) {
-                Heartbeat heartbeat = (Heartbeat) event.getSource();
-                if(heartbeat.beat % 5 == 1) {
-                    container.scan();
-                }
-            }
-        });
-
-        return container;
     }
 
     static class DefaultActionEventBus extends ActionEventBus {

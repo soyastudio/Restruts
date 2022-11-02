@@ -1,4 +1,4 @@
-package soya.framework.action.dispatch.eventbus;
+package soya.framework.action.orchestration.eventbus;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import soya.framework.action.ActionContext;

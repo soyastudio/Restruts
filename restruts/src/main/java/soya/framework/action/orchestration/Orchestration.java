@@ -27,6 +27,10 @@ public class Orchestration {
         this.taskFlow = taskFlow;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Object execute(Object input) throws ProcessException {
         Session session = new Session(name);
         parameterTypes.entrySet().forEach(e -> {
@@ -115,6 +119,10 @@ public class Orchestration {
         public Builder resultHandler(String uri) {
             taskFlowBuilder.resultHandler(uri);
             return this;
+        }
+
+        public TaskFlow.Builder getTaskFlowBuilder() {
+            return taskFlowBuilder;
         }
 
         public TaskFlowExecutor getExecutor() {
