@@ -1,7 +1,9 @@
 package soya.framework.restruts.configuration;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import soya.framework.action.dispatch.DispatchScheduler;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
 import soya.framework.action.orchestration.eventbus.Event;
 
@@ -27,6 +29,8 @@ public class ServerConfiguration {
         @PostConstruct
         protected void init() {
             super.init();
+
+            DispatchScheduler.getInstance();
 
             new Timer().schedule(new TimerTask() {
                                      @Override

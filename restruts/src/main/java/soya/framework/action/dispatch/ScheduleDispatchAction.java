@@ -1,21 +1,29 @@
 package soya.framework.action.dispatch;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 
-import java.net.URI;
-
 @ActionDefinition(domain = "dispatch",
-        name = "generic-action-dispatch",
-        path = "/dispatch-to-action",
+        name = "schedule-dispatch-task",
+        path = "/schedule-dispatch-task",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",
         description = "Generic action dispatch action.")
-public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
+public class ScheduleDispatchAction extends Action<Void> {
+
+    @ActionProperty(
+            description = {
+                    "Task name"
+            },
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "n",
+            displayOrder = 4
+    )
+    private String name;
 
     @ActionProperty(description = {
             "Action dispatch uri for identifying action with uri format 'domain://name' and assigning action property with query string format such as 'prop1=assign1(exp1)&prop2=assign2(exp2)'.",
@@ -27,31 +35,33 @@ public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
     },
             parameterType = ActionProperty.PropertyType.HEADER_PARAM,
             required = true,
-            option = "d")
-    protected URI uri;
+            option = "t",
+            displayOrder = 5)
+    private String dispatch;
+
+    @ActionProperty(
+            description = {
+                    "Period in milliseconds."
+            },
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "p",
+            displayOrder = 6)
+    private long period;
+
+    @ActionProperty(
+            description = {
+                    "Delay in milliseconds."
+            },
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "d",
+            displayOrder = 7)
+    private long delay;
 
     @Override
-    public Object execute() throws Exception {
-        ActionDispatch dispatch = ActionDispatch.fromURI(uri);
-        String[] params = dispatch.getParameterNames();
-        JsonElement jsonElement = jsonElement();
-
-        JsonObject context = null;
-        if (data != null) {
-            if (params.length == 1) {
-                if (jsonElement.isJsonObject() && jsonElement.getAsJsonObject().get(params[0]) != null) {
-                    context = jsonElement.getAsJsonObject();
-
-                } else {
-                    context = new JsonObject();
-                    context.add(params[0], jsonElement);
-                }
-            } else if (params.length > 1) {
-                context = jsonElement.getAsJsonObject();
-
-            }
-        }
-
-        return dispatch.create(context).call().get();
+    public Void execute() throws Exception {
+        DispatchScheduler.getInstance().schedule(name, dispatch, delay, period);
+        return null;
     }
 }

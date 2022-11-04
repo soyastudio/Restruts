@@ -136,7 +136,6 @@ public class PipelineContainer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
