@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 public class ActionEventBus implements EventBus {
+
     private ExecutorService executorService;
 
     private Set<Registration> subscribers = new HashSet<>();
