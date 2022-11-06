@@ -99,6 +99,11 @@ public class Condition implements Serializable {
         return Objects.hash(left, right, operator);
     }
 
+    public static Condition create(String expression) {
+        // TODO:
+        throw new UnsupportedOperationException("TODO");
+    }
+
     public static Builder builder() {
         return new Builder();
     }

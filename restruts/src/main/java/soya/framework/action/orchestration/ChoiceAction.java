@@ -1,10 +1,13 @@
 package soya.framework.action.orchestration;
 
-public class ChoiceAction<T> extends CompositeTaskAction<T> {
-    private Choice choice;
+public abstract class ChoiceAction<T> extends CompositeTaskAction<Choice<T>, T> {
 
     @Override
-    public T execute() throws Exception {
-        return (T) choice.execute(newSession());
+    protected Choice<T> build() {
+        Choice.Builder builder = Choice.builder();
+
+        return builder.create();
     }
+
+    protected abstract void buildChoice(Choice.Builder builder);
 }
