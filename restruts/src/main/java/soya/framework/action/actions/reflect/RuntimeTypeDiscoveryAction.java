@@ -14,10 +14,10 @@ import java.util.List;
 
 @ActionDefinition(domain = "reflect",
         name = "runtime-type-discovery",
-        path = "/runtime-type-discovery",
+        path = "/runtime/type-discovery",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
-        displayName = "About",
+        displayName = "Discovery Runtime Types",
         description = "Scan classpath to find specified types.")
 public class RuntimeTypeDiscoveryAction extends Action<String[]> {
 

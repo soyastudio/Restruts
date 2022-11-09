@@ -3,8 +3,14 @@ package soya.framework.action;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public final class ActionClass implements Serializable {
+
+    private static Map<Class<? extends ActionCallable>, ActionClass> ACTION_CLASSES = new ConcurrentHashMap<>();
+    private static Map<ActionName, AtomicLong> COUNTS = new ConcurrentHashMap<>();
+    private static final AtomicLong TOTAL_COUNT = new AtomicLong();
 
     private final transient Class<? extends ActionCallable> actionType;
     private transient Map<String, Field> actionFields = new LinkedHashMap<>();
@@ -16,22 +22,27 @@ public final class ActionClass implements Serializable {
     private ActionClass(Class<? extends ActionCallable> actionType) {
 
         ActionDefinition mapping = actionType.getAnnotation(ActionDefinition.class);
-        if (mapping == null) {
-            throw new IllegalArgumentException("Class is not annotated as 'OperationMapping': " + actionType.getName());
+        Objects.requireNonNull(mapping, "Class is not annotated as 'OperationMapping': " + actionType.getName());
+
+        ActionName actionName = ActionName.create(mapping.domain(), mapping.name());
+        if (COUNTS.containsKey(actionName)) {
+            throw new IllegalArgumentException("Action name '" + actionName + "' already exists.");
         }
 
+        this.actionName = actionName;
         this.actionType = actionType;
         for (Field field : findActionFields()) {
             ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
 
             actionFields.put(field.getName(), field);
-            if(!actionProperty.option().isEmpty()) {
+            if (!actionProperty.option().isEmpty()) {
                 options.put(actionProperty.option(), field);
             }
         }
-
-        this.actionName = ActionName.create(mapping.domain(), mapping.name());
         this.produce = mapping.produces()[0];
+
+        ACTION_CLASSES.put(actionType, this);
+        COUNTS.put(actionName, new AtomicLong());
 
     }
 
@@ -48,7 +59,7 @@ public final class ActionClass implements Serializable {
     }
 
     public Field getActionField(String name) {
-        if(name.length() == 1) {
+        if (name.length() == 1) {
             return options.get(name);
         } else {
             return actionFields.get(name);
@@ -90,11 +101,36 @@ public final class ActionClass implements Serializable {
                     }
                 }
             });
-
             return action;
+
         } catch (Exception e) {
             throw new ActionCreationException(e);
         }
+    }
+
+    ActionResult createResult(ActionCallable action, Object result) {
+        ActionClass actionClass = ACTION_CLASSES.get(action.getClass());
+
+        Map<String, Object> params = new LinkedHashMap<>();
+        for (Field field : actionClass.getActionFields()) {
+            field.setAccessible(true);
+            Object fieldValue = null;
+            try {
+                fieldValue = field.get(action);
+
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (fieldValue != null) {
+                params.put(field.getName(), fieldValue);
+            }
+        }
+
+        ActionResult actionResult = new DefaultActionResult(actionClass.getActionName(), COUNTS.get(actionName).getAndIncrement(), params, result);
+        TOTAL_COUNT.getAndIncrement();
+
+        return actionResult;
     }
 
     private Field[] findActionFields() {
@@ -121,7 +157,11 @@ public final class ActionClass implements Serializable {
     }
 
     public static ActionClass get(Class<? extends ActionCallable> actionType) {
-        return new ActionClass(actionType);
+        if (!ACTION_CLASSES.containsKey(actionType)) {
+            new ActionClass(actionType);
+        }
+
+        return ACTION_CLASSES.get(actionType);
     }
 
     private final class ParameterFieldComparator implements Comparator<Field> {
@@ -145,6 +185,41 @@ public final class ActionClass implements Serializable {
             }
 
             return o1.getName().compareTo(o2.getName());
+        }
+    }
+
+    private static final class DefaultActionResult implements ActionResult {
+
+        private final ActionName actionName;
+        private final long timestamp;
+        private final long sequence;
+
+        private final Map<String, Object> parameters;
+        private final Object value;
+
+        private DefaultActionResult(ActionName actionName, long sequence, Map<String, Object> parameters, Object value) {
+            this.timestamp = System.currentTimeMillis();
+            this.actionName = actionName;
+            this.sequence = sequence;
+            this.parameters = parameters;
+            this.value = value;
+
+        }
+
+        public ActionName actionName() {
+            return actionName;
+        }
+
+        public Object get() {
+            return value;
+        }
+
+        public boolean success() {
+            return !(value instanceof Throwable);
+        }
+
+        public boolean empty() {
+            return value == null;
         }
     }
 

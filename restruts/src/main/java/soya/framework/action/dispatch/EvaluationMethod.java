@@ -1,6 +1,6 @@
 package soya.framework.action.dispatch;
 
-public enum AssignmentMethod {
+public enum EvaluationMethod {
     VALUE("val"),
     PARAMETER("param"),
     RESOURCE("res"),
@@ -8,7 +8,7 @@ public enum AssignmentMethod {
 
     private final String function;
 
-    AssignmentMethod(String function) {
+    EvaluationMethod(String function) {
         this.function = function;
     }
 
@@ -16,7 +16,7 @@ public enum AssignmentMethod {
         return function + "(" + expression + ")";
     }
 
-    public static AssignmentMethod getAssignmentMethod(String expression) {
+    public static EvaluationMethod getAssignmentMethod(String expression) {
         String token = expression.trim();
         if(token.indexOf('(') > 0 && token.endsWith(")")) {
             token = token.substring(0, token.indexOf('('));

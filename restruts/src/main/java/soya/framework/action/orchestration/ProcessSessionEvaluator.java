@@ -2,25 +2,25 @@ package soya.framework.action.orchestration;
 
 import soya.framework.action.ConvertUtils;
 import soya.framework.action.Resources;
-import soya.framework.action.dispatch.Assignment;
-import soya.framework.action.dispatch.AssignmentMethod;
+import soya.framework.action.dispatch.Evaluation;
+import soya.framework.action.dispatch.EvaluationMethod;
 import soya.framework.action.dispatch.Evaluator;
 
 import java.io.InputStream;
 
 public class ProcessSessionEvaluator implements Evaluator {
     @Override
-    public Object evaluate(Assignment assignment, Object context, Class<?> type) {
+    public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
         ProcessSession session = (ProcessSession) context;
 
         Object value = null;
 
-        AssignmentMethod assignmentMethod = assignment.getAssignmentMethod();
-        String expression = assignment.getExpression();
-        if (AssignmentMethod.VALUE.equals(assignmentMethod)) {
+        EvaluationMethod evaluationMethod = evaluation.getAssignmentMethod();
+        String expression = evaluation.getExpression();
+        if (EvaluationMethod.VALUE.equals(evaluationMethod)) {
             value = ConvertUtils.convert(expression, type);
 
-        } else if (AssignmentMethod.RESOURCE.equals(assignmentMethod)) {
+        } else if (EvaluationMethod.RESOURCE.equals(evaluationMethod)) {
             if (InputStream.class.isAssignableFrom(type)) {
                 value = Resources.getResourceAsInputStream(expression);
 
@@ -29,11 +29,11 @@ public class ProcessSessionEvaluator implements Evaluator {
 
             }
 
-        } else if (AssignmentMethod.REFERENCE.equals(assignmentMethod)) {
-            value = ConvertUtils.convert(session.parameterValue(assignment.getExpression()), type);
+        } else if (EvaluationMethod.REFERENCE.equals(evaluationMethod)) {
+            value = ConvertUtils.convert(session.parameterValue(evaluation.getExpression()), type);
 
-        } else if (AssignmentMethod.PARAMETER.equals(assignmentMethod)) {
-            value = ConvertUtils.convert(session.get(assignment.getExpression()), type);
+        } else if (EvaluationMethod.PARAMETER.equals(evaluationMethod)) {
+            value = ConvertUtils.convert(session.get(evaluation.getExpression()), type);
         }
 
         return value;

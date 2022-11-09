@@ -1,11 +1,16 @@
-package soya.framework.action.orchestration;
+package soya.framework.action.orchestration.choice;
 
 import soya.framework.action.dispatch.ActionDispatch;
+import soya.framework.action.orchestration.ActionDispatchTask;
+import soya.framework.action.orchestration.ProcessException;
+import soya.framework.action.orchestration.ProcessSession;
+import soya.framework.action.orchestration.Task;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Choice<T> implements Task<T> {
+
     private Map<Condition, Task> tasks;
     private Task otherwise;
 
@@ -17,14 +22,14 @@ public class Choice<T> implements Task<T> {
     @Override
     public T execute(ProcessSession session) throws ProcessException {
         Task task = otherwise;
-        for (Condition condition : tasks.keySet()) {
-            if (condition.evaluate(session)) {
-                task = tasks.get(condition);
-                break;
+        for (Map.Entry<Condition, Task> entry : tasks.entrySet()) {
+
+            if (entry.getKey().execute(session)) {
+                return (T) entry.getValue().execute(session);
             }
         }
 
-        return task == null ? null : (T) task.execute(session);
+        return (T) task.execute(session);
     }
 
     public static Builder builder() {

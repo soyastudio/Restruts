@@ -44,7 +44,7 @@ public class Resources {
         try {
             return get(uri).getAsString(Charset.defaultCharset());
 
-        } catch (IOException e) {
+        } catch (ResourceException e) {
             throw new ResourceException(e);
         }
     }
@@ -53,7 +53,7 @@ public class Resources {
         try {
             return get(uri).getAsInputStream();
 
-        } catch (IOException e) {
+        } catch (ResourceException e) {
             throw new ResourceException(e);
         }
     }
@@ -92,7 +92,7 @@ public class Resources {
         }
 
         @Override
-        public String getAsString(Charset encoding) throws IOException {
+        public String getAsString(Charset encoding) throws ResourceException {
             try {
                 return ActionContext.getInstance().getProperty(uri.getHost());
 
@@ -102,7 +102,7 @@ public class Resources {
         }
 
         @Override
-        public InputStream getAsInputStream() throws IOException {
+        public InputStream getAsInputStream() throws ResourceException {
             try {
                 return new ByteArrayInputStream(getAsString(Charset.defaultCharset()).getBytes());
 
@@ -119,12 +119,17 @@ public class Resources {
         }
 
         @Override
-        public String getAsString(Charset encoding) throws IOException {
-            return new String(StreamUtils.copyToByteArray(getAsInputStream()), encoding);
+        public String getAsString(Charset encoding) throws ResourceException {
+            try {
+                return new String(StreamUtils.copyToByteArray(getAsInputStream()), encoding);
+
+            } catch (IOException e) {
+                throw new ResourceException(e);
+            }
         }
 
         @Override
-        public InputStream getAsInputStream() throws IOException {
+        public InputStream getAsInputStream() throws ResourceException {
             String res = uri.getPath() != null ? uri.getHost() + uri.getPath() : uri.getHost();
             return getClassLoader().getResourceAsStream(res);
         }
@@ -149,7 +154,7 @@ public class Resources {
         }
 
         @Override
-        public String getAsString(Charset encoding) throws IOException {
+        public String getAsString(Charset encoding) throws ResourceException {
             byte[] compressed = Base64.getDecoder().decode(data);
             try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(compressed)) {
                 try (GZIPInputStream gzipInputStream = new GZIPInputStream(byteArrayInputStream)) {
@@ -164,15 +169,19 @@ public class Resources {
                         }
                     }
                 }
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to unzip content", e);
+            } catch (Exception e) {
+                throw new ResourceException(e);
             }
         }
 
         @Override
-        public InputStream getAsInputStream() throws IOException {
+        public InputStream getAsInputStream() throws ResourceException {
             byte[] compressed = Base64.getDecoder().decode(data);
-            return new GZIPInputStream(new ByteArrayInputStream(compressed));
+            try {
+                return new GZIPInputStream(new ByteArrayInputStream(compressed));
+            } catch (IOException e) {
+                throw new ResourceException(e);
+            }
         }
     }
 
@@ -186,12 +195,12 @@ public class Resources {
         }
 
         @Override
-        public String getAsString(Charset encoding) throws IOException {
+        public String getAsString(Charset encoding) throws ResourceException {
             return new String(getAsByteArray(), encoding);
         }
 
         @Override
-        public InputStream getAsInputStream() throws IOException {
+        public InputStream getAsInputStream() throws ResourceException {
             return new ByteArrayInputStream(getAsByteArray());
         }
 
@@ -206,14 +215,22 @@ public class Resources {
         }
 
         @Override
-        public String getAsString(Charset encoding) throws IOException {
-            byte[] data = StreamUtils.copyToByteArray(getAsInputStream());
-            return new String(data, encoding);
+        public String getAsString(Charset encoding) throws ResourceException {
+            try {
+                byte[] data = StreamUtils.copyToByteArray(getAsInputStream());
+                return new String(data, encoding);
+            } catch (IOException e) {
+                throw new ResourceException(e);
+            }
         }
 
         @Override
-        public InputStream getAsInputStream() throws IOException {
-            return uri.toURL().openStream();
+        public InputStream getAsInputStream() throws ResourceException {
+            try {
+                return uri.toURL().openStream();
+            } catch (IOException e) {
+                throw new ResourceException(e);
+            }
         }
     }
 
@@ -242,7 +259,7 @@ public class Resources {
         }
 
         @Override
-        public String getAsString(Charset encoding) throws IOException {
+        public String getAsString(Charset encoding) throws ResourceException {
             Object result = extract();
             if (result instanceof String) {
                 return (String) result;
@@ -252,7 +269,7 @@ public class Resources {
         }
 
         @Override
-        public InputStream getAsInputStream() throws IOException {
+        public InputStream getAsInputStream() throws ResourceException {
             return null;
         }
 

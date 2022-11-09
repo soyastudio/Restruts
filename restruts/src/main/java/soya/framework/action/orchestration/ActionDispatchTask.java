@@ -4,7 +4,7 @@ import soya.framework.action.ActionCallable;
 import soya.framework.action.ActionClass;
 import soya.framework.action.ActionContext;
 import soya.framework.action.dispatch.ActionDispatch;
-import soya.framework.action.dispatch.Assignment;
+import soya.framework.action.dispatch.Evaluation;
 import soya.framework.action.dispatch.DefaultEvaluator;
 import soya.framework.action.dispatch.Evaluator;
 
@@ -26,18 +26,18 @@ public final class ActionDispatchTask<T> implements Task<T> {
     private static class ParameterEvaluator implements Evaluator {
 
         @Override
-        public Object evaluate(Assignment assignment, Object context, Class<?> type) {
+        public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
             ProcessSession session = (ProcessSession) context;
-            return session.parameterValue(assignment.getExpression());
+            return session.parameterValue(evaluation.getExpression());
         }
     }
 
     private static class ReferenceEvaluator implements Evaluator {
 
         @Override
-        public Object evaluate(Assignment assignment, Object context, Class<?> type) {
+        public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
             ProcessSession session = (ProcessSession) context;
-            return session.get(assignment.getExpression());
+            return session.get(evaluation.getExpression());
         }
     }
 }

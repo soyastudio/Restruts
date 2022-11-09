@@ -10,6 +10,7 @@ public final class ActionName implements Comparable<ActionName>, Serializable {
     private final String name;
 
     private ActionName(String domain, String name) {
+
         this.domain = domain;
         this.name = name;
 

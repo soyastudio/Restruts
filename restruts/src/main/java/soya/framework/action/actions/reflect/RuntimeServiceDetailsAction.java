@@ -4,7 +4,7 @@ import soya.framework.action.*;
 
 @ActionDefinition(domain = "reflect",
         name = "runtime-service-details",
-        path = "/runtime-service-details",
+        path = "/runtime/service-details",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Service Details",

@@ -6,7 +6,7 @@ import java.util.*;
 
 @ActionDefinition(domain = "reflect",
         name = "runtime-service-discovery",
-        path = "/runtime-service-discovery",
+        path = "/runtime/service-discovery",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Runtime Services",

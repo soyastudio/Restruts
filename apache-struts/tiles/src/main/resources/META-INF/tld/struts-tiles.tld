@@ -394,7 +394,7 @@
          <description>
          <![CDATA[
          <p>Attribute value. Could be a String or an Object.
-         Value can come from a direct assignment (value="aValue") or from a bean.
+         Value can come from a direct evaluation (value="aValue") or from a bean.
          One of 'value' 'content' or 'beanName' must be present.</p>
          ]]>
          </description>
@@ -525,7 +525,7 @@
           
       <p>Add an element to the surrounding list.
       This tag can only be used inside putList tag.
-      Value can come from a direct assignment (value="aValue") or from a bean.
+      Value can come from a direct evaluation (value="aValue") or from a bean.
       One of 'value' or 'beanName' must be present.</p>
       ]]>
       </description>

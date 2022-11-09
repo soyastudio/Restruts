@@ -51,9 +51,5 @@ public class RestrutsApplication {
         System.out.println("-------------------- workspace.home = " + ActionContext.getInstance().getProperty("workspace.home"));
         System.out.println("---------------------- encoded: " + encoded);
         System.out.println("---------------------- decoded: " + decoded);
-
-        Thread.getAllStackTraces().keySet().forEach(e -> {
-            System.out.println("================= " + e.getName() + ": " + e.getClass().getName());
-        });
     }
 }

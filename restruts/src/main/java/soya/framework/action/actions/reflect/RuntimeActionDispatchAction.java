@@ -12,7 +12,7 @@ import java.util.Locale;
 
 @ActionDefinition(domain = "reflect",
         name = "runtime-action-execution",
-        path = "/runtime-action-execution",
+        path = "/runtime/action-execution",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Runtime Action Execution",

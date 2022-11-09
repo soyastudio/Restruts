@@ -31,8 +31,8 @@ public abstract class GenericDispatchAction<T> extends Action<T> {
         }
     }
 
-    protected Object evaluate(Assignment assignment, Class<?> type, Object context) {
-        return evaluator.evaluate(assignment, context, type);
+    protected Object evaluate(Evaluation evaluation, Class<?> type, Object context) {
+        return evaluator.evaluate(evaluation, context, type);
     }
 
 }

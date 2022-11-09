@@ -655,7 +655,7 @@
       <p>Fully qualified Java class name of the element to be exposed through
       the JSP bean named from the <code>id</code> attribute.  If not present,
       no type conversions will be performed.  NOTE:  The actual elements of
-      the collection must be assignment-compatible with this class, or a
+      the collection must be evaluation-compatible with this class, or a
       request time ClassCastException will occur.</p>
       ]]>
             </description>

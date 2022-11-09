@@ -14,16 +14,16 @@ public final class ActionDispatch {
     private static final Evaluator DEFAULT_EVALUATOR = new DefaultEvaluator();
 
     private final ActionName actionName;
-    private final Map<String, Assignment> assignments;
+    private final Map<String, Evaluation> assignments;
     private final String[] parameterNames;
 
-    private ActionDispatch(ActionName actionName, Map<String, Assignment> assignments) {
+    private ActionDispatch(ActionName actionName, Map<String, Evaluation> assignments) {
         this.actionName = actionName;
         this.assignments = assignments;
 
         List<String> params = new ArrayList<>();
         assignments.entrySet().forEach(e -> {
-            if (e.getValue().getAssignmentMethod().equals(AssignmentMethod.PARAMETER)) {
+            if (e.getValue().getAssignmentMethod().equals(EvaluationMethod.PARAMETER)) {
                 params.add(e.getValue().getExpression());
             }
         });
@@ -38,7 +38,7 @@ public final class ActionDispatch {
         return parameterNames;
     }
 
-    public Assignment getAssignment(String propName) {
+    public Evaluation getAssignment(String propName) {
         return assignments.get(propName);
     }
 
@@ -65,8 +65,8 @@ public final class ActionDispatch {
             Field[] fields = actionClass.getActionFields();
             for (Field field : fields) {
                 if (assignments.containsKey(field.getName())) {
-                    Assignment assignment = assignments.get(field.getName());
-                    Object value = evaluator.evaluate(assignment, context, field.getType());
+                    Evaluation evaluation = assignments.get(field.getName());
+                    Object value = evaluator.evaluate(evaluation, context, field.getType());
                     if (value != null) {
                         field.setAccessible(true);
                         field.set(action, value);
@@ -142,19 +142,19 @@ public final class ActionDispatch {
 
     public static class Builder {
         private final ActionName actionName;
-        private final Map<String, Assignment> params = new LinkedHashMap<>();
+        private final Map<String, Evaluation> params = new LinkedHashMap<>();
 
         private Builder(ActionName actionName) {
             this.actionName = actionName;
         }
 
         public Builder addAssignment(String name, String assignment) {
-            params.put(name, new Assignment(assignment));
+            params.put(name, new Evaluation(assignment));
             return this;
         }
 
-        public Builder addAssignment(String name, AssignmentMethod assignmentMethod, String expression) {
-            params.put(name, new Assignment(assignmentMethod, expression));
+        public Builder addAssignment(String name, EvaluationMethod evaluationMethod, String expression) {
+            params.put(name, new Evaluation(evaluationMethod, expression));
             return this;
         }
 

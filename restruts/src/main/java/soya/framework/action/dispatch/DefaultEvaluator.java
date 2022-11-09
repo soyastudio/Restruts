@@ -28,15 +28,15 @@ public class DefaultEvaluator implements Evaluator {
     }
 
     @Override
-    public Object evaluate(Assignment assignment, Object context, Class<?> type) {
+    public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
         Object value = null;
 
-        AssignmentMethod assignmentMethod = assignment.getAssignmentMethod();
-        String expression = assignment.getExpression();
-        if (AssignmentMethod.VALUE.equals(assignmentMethod)) {
+        EvaluationMethod evaluationMethod = evaluation.getAssignmentMethod();
+        String expression = evaluation.getExpression();
+        if (EvaluationMethod.VALUE.equals(evaluationMethod)) {
             value = ConvertUtils.convert(expression, type);
 
-        } else if (AssignmentMethod.RESOURCE.equals(assignmentMethod)) {
+        } else if (EvaluationMethod.RESOURCE.equals(evaluationMethod)) {
             if (InputStream.class.isAssignableFrom(type)) {
                 value = Resources.getResourceAsInputStream(expression);
 
@@ -45,11 +45,11 @@ public class DefaultEvaluator implements Evaluator {
 
             }
 
-        } else if (AssignmentMethod.REFERENCE.equals(assignmentMethod)) {
-            value = referenceEvaluator.evaluate(assignment, context, type);
+        } else if (EvaluationMethod.REFERENCE.equals(evaluationMethod)) {
+            value = referenceEvaluator.evaluate(evaluation, context, type);
 
-        } else if (AssignmentMethod.PARAMETER.equals(assignmentMethod)) {
-            value = parameterEvaluator.evaluate(assignment, context, type);
+        } else if (EvaluationMethod.PARAMETER.equals(evaluationMethod)) {
+            value = parameterEvaluator.evaluate(evaluation, context, type);
         }
 
         return value;
@@ -58,8 +58,8 @@ public class DefaultEvaluator implements Evaluator {
     static class DefaultParameterEvaluator implements Evaluator {
 
         @Override
-        public Object evaluate(Assignment assignment, Object context, Class<?> type) {
-            String exp = assignment.getExpression();
+        public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
+            String exp = evaluation.getExpression();
             Object value = null;
             if (context instanceof ActionCallable) {
                 Field field = ReflectUtils.findField(context.getClass(), exp);
@@ -97,13 +97,13 @@ public class DefaultEvaluator implements Evaluator {
     static class DefaultReferenceEvaluator implements Evaluator {
 
         @Override
-        public Object evaluate(Assignment assignment, Object context, Class<?> type) {
+        public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
             if (context instanceof ActionDispatchSession) {
                 ActionDispatchSession session = (ActionDispatchSession) context;
-                return evaluate(assignment, session.data(), type);
+                return evaluate(evaluation, session.data(), type);
 
             } else {
-                String expression = assignment.getExpression();
+                String expression = evaluation.getExpression();
                 String[] arr = expression.split("\\.");
                 Object value = context;
                 for (String exp : arr) {

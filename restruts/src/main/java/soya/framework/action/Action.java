@@ -1,8 +1,6 @@
 package soya.framework.action;
 
 import java.lang.reflect.Field;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public abstract class Action<T> implements ActionCallable {
@@ -13,26 +11,38 @@ public abstract class Action<T> implements ActionCallable {
 
         try {
             checkRequiredProperties();
-
             prepare();
-
             T t = execute();
-            ActionResult result = new DefaultActionResult(this, t);
-            logger().fine("executed successfully");
+            ActionResult result = getActionClass().createResult(this, t);
+
+            logger().fine("executed successfully.");
             return result;
 
         } catch (Exception e) {
-            logger().severe(e.getMessage());
-            return new DefaultActionResult(this, e);
+            logger().severe(new StringBuilder()
+                    .append(e.getClass().getName())
+                    .append("[")
+                    .append(e.getMessage())
+                    .append("]")
+                    .toString());
+
+            return getActionClass().createResult(this, e);
         }
     }
 
     public abstract T execute() throws Exception;
 
+    protected ActionClass getActionClass() {
+        return ActionClass.get(getClass());
+    }
+
     protected void prepare() throws Exception {
     }
 
-    protected void checkRequiredProperties() throws Exception {
+    protected void checkRequiredServices() {
+    }
+
+    protected void checkRequiredProperties() {
         Field[] fields = ActionClass.get(getClass()).getActionFields();
         for (Field field : fields) {
             ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
@@ -41,8 +51,8 @@ public abstract class Action<T> implements ActionCallable {
                 try {
                     if (field.get(this) == null) {
                         throw new IllegalStateException("Required field '"
-                                + field.getName() + "' is not set for action: "
-                                + getClass().getName());
+                                + field.getName() + "' is not set for action '"
+                                + getClass().getName() + "'.");
                     }
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
@@ -60,68 +70,15 @@ public abstract class Action<T> implements ActionCallable {
         return Logger.getLogger(getClass().getName());
     }
 
-    private static final class DefaultActionResult implements ActionResult {
+    protected Object getService(String name) throws ServiceNotAvailableException {
+        return ActionContext.getInstance().getService(name);
+    }
 
-        private final String uri;
-        private final long timestamp;
-        private final Object value;
+    protected <T> T getService(Class<T> type) throws ServiceNotAvailableException {
+        return ActionContext.getInstance().getService(type);
+    }
 
-        private DefaultActionResult(ActionCallable action, Object value) {
-            this.value = value;
-            this.timestamp = System.currentTimeMillis();
-
-            ActionClass actionClass = ActionClass.get(action.getClass());
-            StringBuilder builder = new StringBuilder(actionClass.getActionName().toString());
-            Field[] fields = actionClass.getActionFields();
-            Map<String, Object> values = new LinkedHashMap<>();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                Object fieldValue = null;
-                try {
-                    fieldValue = field.get(action);
-
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-
-                if (fieldValue != null) {
-                    values.put(field.getName(), fieldValue);
-                }
-            }
-
-            if (values.size() > 0) {
-                builder.append("?");
-                values.entrySet().forEach(e -> {
-                    builder.append(e.getKey())
-                            .append("=")
-                            .append(e.getValue())
-                            .append("&");
-                });
-                builder.deleteCharAt(builder.length() - 1);
-            }
-
-            this.uri = builder.toString();
-
-        }
-
-        public static ActionResult create(ActionCallable action, Object value) {
-            return new DefaultActionResult(action, value);
-        }
-
-        public String uri() {
-            return uri;
-        }
-
-        public Object get() {
-            return value;
-        }
-
-        public boolean success() {
-            return !(value instanceof Throwable);
-        }
-
-        public boolean empty() {
-            return value == null;
-        }
+    protected <T> T getService(String name, Class<T> type) throws ServiceNotAvailableException {
+        return ActionContext.getInstance().getService(name, type);
     }
 }

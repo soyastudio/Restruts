@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 @ActionDefinition(domain = "reflect",
         name = "util-process-command",
-        path = "/util-process-command",
+        path = "/util/process-command",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Process System Command",

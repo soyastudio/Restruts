@@ -8,7 +8,7 @@ import java.util.List;
 
 @ActionDefinition(domain = "reflect",
         name = "runtime-service-names",
-        path = "/runtime-service-names",
+        path = "/runtime/service-names",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Service Names",

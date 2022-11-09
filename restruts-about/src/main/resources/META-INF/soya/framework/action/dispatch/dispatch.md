@@ -19,10 +19,10 @@ or
 ### Action Property Assignment
 Action Parameter Assignment at runtime is expressed as a function like expression:
 ```
-    property_name=<assignment-function>(expression)
+    property_name=<evaluation-function>(expression)
 
 ```
-here the <assignment-function>(expression) function is one of val(expression), res(expression), param(expression) or ref(expression).
+here the <evaluation-function>(expression) function is one of val(expression), res(expression), param(expression) or ref(expression).
 
 - val(expression): assign directly from a string value;
 - res(expression): assign from resource, expression should be in uri format such as "classpath://contents/index.html"

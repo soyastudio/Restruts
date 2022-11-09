@@ -1,8 +1,6 @@
 package soya.framework.action.orchestration;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionCallable;
-import soya.framework.action.ActionClass;
+import soya.framework.action.*;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -13,6 +11,12 @@ import java.util.UUID;
 public abstract class CompositeTaskAction<P extends Task<T>, T> extends Action<T> {
 
     private P task;
+
+    @ActionProperty(
+            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            contentType = MediaType.APPLICATION_JSON
+    )
+    protected String data;
 
     @Override
     public final T execute() throws Exception {
@@ -28,7 +32,7 @@ public abstract class CompositeTaskAction<P extends Task<T>, T> extends Action<T
     protected abstract P build();
 
     protected ProcessSession newSession() {
-        return new ChoiceAction.Session(this);
+        return new Session(this);
     }
 
     protected static class Session implements ProcessSession {

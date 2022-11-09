@@ -4,7 +4,7 @@ import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 import soya.framework.action.dispatch.ActionPropertyAssignment;
-import soya.framework.action.dispatch.AssignmentMethod;
+import soya.framework.action.dispatch.EvaluationMethod;
 import soya.framework.action.dispatch.CommandDispatchAction;
 import soya.framework.action.dispatch.CommandDispatchPattern;
 
@@ -19,7 +19,7 @@ import soya.framework.action.dispatch.CommandDispatchPattern;
         commandType = MethodDispatchExample.class,
         methodName = "call",
         propertyAssignments = {
-                @ActionPropertyAssignment(name = "msg", assignmentMethod = AssignmentMethod.PARAMETER, expression = "message")
+                @ActionPropertyAssignment(name = "msg", assignmentMethod = EvaluationMethod.PARAMETER, expression = "message")
         })
 public class CommandDispatchExample extends CommandDispatchAction<String> {
 

@@ -9,7 +9,7 @@ import java.util.Map;
 
 @ActionDefinition(domain = "reflect",
         name = "runtime-environment",
-        path = "/runtime-environment",
+        path = "/runtime/environment",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Environment",

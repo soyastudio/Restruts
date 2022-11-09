@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 public @interface MethodParameterAssignment {
     Class<?> type();
 
-    AssignmentMethod assignmentMethod();
+    EvaluationMethod assignmentMethod();
 
     String expression();
 }

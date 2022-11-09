@@ -13,6 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import soya.framework.action.ActionContext;
 import soya.framework.action.ServiceLocator;
+import soya.framework.action.ServiceNotAvailableException;
 import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.action.servlet.ActionServlet;
 import soya.framework.action.servlet.StateMachineServlet;
@@ -58,12 +59,12 @@ public class ActionContextAutoConfiguration {
                     }
 
                     @Override
-                    public Object getService(String name) {
+                    public Object getService(String name) throws ServiceNotAvailableException {
                         try {
                             return applicationContext.getBean(name);
 
                         } catch (BeansException e) {
-                            return null;
+                            throw new ServiceNotAvailableException("Service not available for name: " + name + ".", e);
                         }
                     }
 
@@ -73,7 +74,7 @@ public class ActionContextAutoConfiguration {
                             return applicationContext.getBean(type);
 
                         } catch (BeansException e) {
-                            return null;
+                            throw new ServiceNotAvailableException("Service not available for type: " + type.getName() + ".", e);
                         }
 
                     }
@@ -84,7 +85,7 @@ public class ActionContextAutoConfiguration {
                             return applicationContext.getBean(name, type);
 
                         } catch (BeansException e) {
-                            return null;
+                            throw new ServiceNotAvailableException("Service not available for type: " + type.getName() + " with name: " + name + ".", e);
                         }
                     }
 
@@ -94,7 +95,7 @@ public class ActionContextAutoConfiguration {
                             return applicationContext.getBeansOfType(type);
 
                         } catch (BeansException e) {
-                            return null;
+                            throw new ServiceNotAvailableException("Service not available for type: " + type.getName() + ".", e);
                         }
 
                     }

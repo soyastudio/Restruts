@@ -9,7 +9,7 @@ import java.util.Locale;
 
 @ActionDefinition(domain = "reflect",
         name = "util-log",
-        path = "/util-log",
+        path = "/util/log",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Log",

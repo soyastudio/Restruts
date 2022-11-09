@@ -97,22 +97,22 @@ public class GenericCommandDispatchAction extends GenericDispatchAction<Object> 
                 Class<?> propType = getPropertyType(propName, instance);
                 Object propValue = null;
 
-                Assignment assignment = new Assignment(e.getValue().get(0));
+                Evaluation evaluation = new Evaluation(e.getValue().get(0));
 
-                if (AssignmentMethod.VALUE.equals(assignment.getAssignmentMethod())) {
-                    propValue = ConvertUtils.convert(assignment.getExpression(), propType);
+                if (EvaluationMethod.VALUE.equals(evaluation.getAssignmentMethod())) {
+                    propValue = ConvertUtils.convert(evaluation.getExpression(), propType);
 
-                } else if (AssignmentMethod.RESOURCE.equals(assignment.getAssignmentMethod())) {
-                    propValue = ConvertUtils.convert(Resources.getResourceAsString(assignment.getExpression()), propType);
+                } else if (EvaluationMethod.RESOURCE.equals(evaluation.getAssignmentMethod())) {
+                    propValue = ConvertUtils.convert(Resources.getResourceAsString(evaluation.getExpression()), propType);
 
-                } else if (AssignmentMethod.PARAMETER.equals(assignment.getAssignmentMethod())) {
+                } else if (EvaluationMethod.PARAMETER.equals(evaluation.getAssignmentMethod())) {
                     if (jsonObject != null) {
-                        JsonElement jsonElement = jsonObject.get(assignment.getExpression());
+                        JsonElement jsonElement = jsonObject.get(evaluation.getExpression());
                         propValue = gson.fromJson(jsonElement, propType);
                     }
 
                 } else {
-                    throw new IllegalArgumentException(assignment.getAssignmentMethod() + " is not supported for command dispatch.");
+                    throw new IllegalArgumentException(evaluation.getAssignmentMethod() + " is not supported for command dispatch.");
                 }
 
                 if (propValue != null) {

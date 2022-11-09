@@ -17,6 +17,9 @@ public final class ActionContext {
     protected ActionMappings actionMappings;
 
     protected ActionContext(ServiceLocator serviceLocator, ActionMappings actionMappings) {
+        Objects.requireNonNull(serviceLocator, "ServiceLocator is required.");
+        Objects.requireNonNull("ActionMappings is required.");
+
         this.serviceLocator = serviceLocator;
         this.actionMappings = actionMappings;
         this.executorService = createExecutorService();
@@ -65,19 +68,19 @@ public final class ActionContext {
         return serviceLocator.serviceNames();
     }
 
-    public Object getService(String name) {
+    public Object getService(String name) throws ServiceNotAvailableException {
         return serviceLocator.getService(name);
     }
 
-    public <T> T getService(Class<T> type) {
+    public <T> T getService(Class<T> type) throws ServiceNotAvailableException {
         return serviceLocator.getService(type);
     }
 
-    public <T> T getService(String name, Class<T> type) {
+    public <T> T getService(String name, Class<T> type) throws ServiceNotAvailableException {
         return serviceLocator.getService(name, type);
     }
 
-    public <T> Map<String, T> getServices(Class<T> type) {
+    public <T> Map<String, T> getServices(Class<T> type) throws ServiceNotAvailableException {
         return serviceLocator.getServices(type);
     }
 
@@ -186,9 +189,7 @@ public final class ActionContext {
                     if (e.getDomain().equals(domain)) {
                         list.add(e);
                     }
-
                 });
-
             }
 
             Collections.sort(list);

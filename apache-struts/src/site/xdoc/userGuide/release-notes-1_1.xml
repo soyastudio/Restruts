@@ -430,7 +430,7 @@
                         attribute bug
                     </li>
                     <li>
-                        Fixed #20877 - MessagesTag has incorrect assignment in
+                        Fixed #20877 - MessagesTag has incorrect evaluation in
                         release()
                     </li>
                     <li>

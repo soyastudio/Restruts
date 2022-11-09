@@ -1,19 +1,21 @@
-package soya.framework.action.orchestration;
+package soya.framework.action.orchestration.choice;
 
-import soya.framework.action.dispatch.Assignment;
+import soya.framework.action.dispatch.Evaluation;
 import soya.framework.action.dispatch.Evaluator;
+import soya.framework.action.orchestration.ProcessSession;
+import soya.framework.action.orchestration.ProcessSessionEvaluator;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Condition implements Serializable {
+public class ConditionBuilder implements Serializable {
     private static final Evaluator evaluator = new ProcessSessionEvaluator();
 
-    private final Assignment left;
-    private final Assignment right;
+    private final Evaluation left;
+    private final Evaluation right;
     private final Operator operator;
 
-    private Condition(Assignment left, Assignment right, Operator operator) {
+    private ConditionBuilder(Evaluation left, Evaluation right, Operator operator) {
         this.left = left;
         this.right = right;
         this.operator = operator;
@@ -89,8 +91,8 @@ public class Condition implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Condition)) return false;
-        Condition condition = (Condition) o;
+        if (!(o instanceof ConditionBuilder)) return false;
+        ConditionBuilder condition = (ConditionBuilder) o;
         return Objects.equals(left, condition.left) && Objects.equals(right, condition.right) && operator == condition.operator;
     }
 
@@ -99,7 +101,7 @@ public class Condition implements Serializable {
         return Objects.hash(left, right, operator);
     }
 
-    public static Condition create(String expression) {
+    public static ConditionBuilder create(String expression) {
         // TODO:
         throw new UnsupportedOperationException("TODO");
     }
@@ -109,20 +111,20 @@ public class Condition implements Serializable {
     }
 
     public static class Builder {
-        private Assignment left;
-        private Assignment right;
+        private Evaluation left;
+        private Evaluation right;
         private Operator operator;
 
         private Builder() {
         }
 
-        public Builder left(Assignment assignment) {
-            this.left = assignment;
+        public Builder left(Evaluation evaluation) {
+            this.left = evaluation;
             return this;
         }
 
-        public Builder right(Assignment assignment) {
-            this.right = assignment;
+        public Builder right(Evaluation evaluation) {
+            this.right = evaluation;
             return this;
         }
 
@@ -186,7 +188,7 @@ public class Condition implements Serializable {
             return this;
         }
 
-        public Condition create() {
+        public ConditionBuilder create() {
             if (left == null) {
                 throw new IllegalArgumentException("Left assignment is not set.");
             }
@@ -200,7 +202,7 @@ public class Condition implements Serializable {
                 throw new IllegalArgumentException("Operator is not set.");
             }
 
-            return new Condition(left, right, operator);
+            return new ConditionBuilder(left, right, operator);
         }
     }
 

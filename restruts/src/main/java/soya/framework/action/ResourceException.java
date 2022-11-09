@@ -1,6 +1,7 @@
 package soya.framework.action;
 
 public class ResourceException extends RuntimeException {
+
     public ResourceException() {
     }
 

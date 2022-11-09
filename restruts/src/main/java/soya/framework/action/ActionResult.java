@@ -4,11 +4,12 @@ import java.io.Serializable;
 
 public interface ActionResult extends Serializable {
 
-    String uri();
+    ActionName actionName();
 
     Object get();
 
     boolean success();
 
     boolean empty();
+
 }
