@@ -310,7 +310,8 @@ public class ActionServlet extends HttpServlet {
         ActionCallable create(ActionRequestEvent event) throws Exception {
             ActionClass actionClass = get(event.registration);
             Class<? extends ActionCallable> actionType = actionClass.getActionType();
-            ActionCallable action = actionType.newInstance();
+            ActionCallable action = actionClass.newInstance();
+
             HttpServletRequest httpServletRequest = (HttpServletRequest) event.getSource();
 
             Field[] fields = actionClass.getActionFields();

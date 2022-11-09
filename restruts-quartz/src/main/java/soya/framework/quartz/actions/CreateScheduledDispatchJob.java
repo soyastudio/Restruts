@@ -31,6 +31,6 @@ public class CreateScheduledDispatchJob extends QuartzSchedulerAction<String> {
 
     @Override
     public String execute() throws Exception {
-        return quartzSchedulerManager().createScheduledJob(jobId, triggerId, cronExpression, actionDispatch).toString();
+        return schedulerManager.createScheduledJob(jobId, triggerId, cronExpression, actionDispatch).toString();
     }
 }

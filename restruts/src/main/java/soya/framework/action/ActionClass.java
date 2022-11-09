@@ -13,8 +13,10 @@ public final class ActionClass implements Serializable {
     private static final AtomicLong TOTAL_COUNT = new AtomicLong();
 
     private final transient Class<? extends ActionCallable> actionType;
+    private transient List<Field> serviceFields = new ArrayList<>();
     private transient Map<String, Field> actionFields = new LinkedHashMap<>();
     private transient Map<String, Field> options = new LinkedHashMap<>();
+
 
     private final ActionName actionName;
     private final String produce;
@@ -31,12 +33,17 @@ public final class ActionClass implements Serializable {
 
         this.actionName = actionName;
         this.actionType = actionType;
-        for (Field field : findActionFields()) {
-            ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
 
-            actionFields.put(field.getName(), field);
-            if (!actionProperty.option().isEmpty()) {
-                options.put(actionProperty.option(), field);
+        for (Field field : findActionFields()) {
+            if (field.getAnnotation(ActionProperty.class) != null) {
+                ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
+                actionFields.put(field.getName(), field);
+                if (!actionProperty.option().isEmpty()) {
+                    options.put(actionProperty.option(), field);
+                }
+
+            } else if (field.getAnnotation(ServiceWired.class) != null) {
+                serviceFields.add(field);
             }
         }
         this.produce = mapping.produces()[0];
@@ -86,6 +93,22 @@ public final class ActionClass implements Serializable {
     public ActionCallable newInstance() throws ActionCreationException {
         try {
             ActionCallable action = actionType.newInstance();
+
+            serviceFields.forEach(e -> {
+                ServiceWired serviceWired = e.getAnnotation(ServiceWired.class);
+                Class<?> type = e.getType();
+                Object service = serviceWired.name().isEmpty() ? ActionContext.getInstance().getService(type)
+                        : ActionContext.getInstance().getService(serviceWired.name(), type);
+
+                e.setAccessible(true);
+                try {
+                    e.set(action, service);
+                } catch (IllegalAccessException ex) {
+                    throw new ActionCreationException(ex);
+                }
+
+            });
+
             actionFields.values().forEach(field -> {
                 ActionProperty property = field.getAnnotation(ActionProperty.class);
                 if (property.required() && !property.defaultValue().isEmpty()) {
@@ -101,6 +124,7 @@ public final class ActionClass implements Serializable {
                     }
                 }
             });
+
             return action;
 
         } catch (Exception e) {
@@ -138,13 +162,16 @@ public final class ActionClass implements Serializable {
         Set<String> fieldNames = new HashSet<>();
         Class<?> cls = actionType;
         while (!cls.getName().equals("java.lang.Object")) {
-
             for (Field field : cls.getDeclaredFields()) {
                 if (field.getAnnotation(ActionProperty.class) != null
                         && !fieldNames.contains(field.getName())) {
 
                     fields.add(field);
                     fieldNames.add(field.getName());
+
+                } else if (field.getAnnotation(ServiceWired.class) != null) {
+                    fields.add(field);
+
                 }
             }
 
@@ -154,6 +181,22 @@ public final class ActionClass implements Serializable {
         Collections.sort(fields, new ParameterFieldComparator());
 
         return fields.toArray(new Field[fields.size()]);
+    }
+
+    static ActionName[] actionNames() {
+        List<ActionName> actionNames = new ArrayList<>(COUNTS.keySet());
+        Collections.sort(actionNames);
+        return actionNames.toArray(new ActionName[actionNames.size()]);
+    }
+
+    static long totalCount() {
+        return TOTAL_COUNT.get();
+    }
+
+    static long actionCount(ActionName actionName) {
+        AtomicLong count = COUNTS.get(actionName);
+        Objects.requireNonNull(count, "Action '" + actionName + "' is not defined.");
+        return count.get();
     }
 
     public static ActionClass get(Class<? extends ActionCallable> actionType) {

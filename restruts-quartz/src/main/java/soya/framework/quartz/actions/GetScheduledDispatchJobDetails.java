@@ -19,6 +19,6 @@ public class GetScheduledDispatchJobDetails extends QuartzSchedulerAction<String
 
     @Override
     public String execute() throws Exception {
-        return quartzSchedulerManager().getDispatchJobDetails(jobId);
+        return schedulerManager.getDispatchJobDetails(jobId);
     }
 }

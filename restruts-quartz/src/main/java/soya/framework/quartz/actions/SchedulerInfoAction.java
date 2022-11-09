@@ -14,6 +14,6 @@ public class SchedulerInfoAction extends QuartzSchedulerAction<String> {
 
     @Override
     public String execute() throws Exception {
-        return quartzSchedulerManager().schedulerMetaData().getSummary();
+        return schedulerManager.schedulerMetaData().getSummary();
     }
 }

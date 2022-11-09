@@ -17,7 +17,7 @@ import java.util.List;
 public class ListTriggerKeysAction extends QuartzSchedulerAction<TriggerKey[]>{
     @Override
     public TriggerKey[] execute() throws Exception {
-        List<TriggerKey> triggerKeyList = quartzSchedulerManager().scheduledJobs();
+        List<TriggerKey> triggerKeyList = schedulerManager.scheduledJobs();
         Collections.sort(triggerKeyList);
         return triggerKeyList.toArray(new TriggerKey[triggerKeyList.size()]);
     }

@@ -9,7 +9,7 @@ import java.util.Date;
 
 @ActionDefinition(domain = "reflect",
         name = "current-timestamp",
-        path = "/current-timestamp",
+        path = "/runtime/current-timestamp",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Echo",

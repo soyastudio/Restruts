@@ -11,7 +11,7 @@ import java.util.Date;
 
 @ActionDefinition(domain = "reflect",
         name = "current-time",
-        path = "/current-time",
+        path = "/runtime/current-time",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Current Time",
