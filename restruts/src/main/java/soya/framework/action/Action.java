@@ -10,8 +10,12 @@ public abstract class Action<T> implements ActionCallable {
         logger().fine("start executing...");
 
         try {
+            // Check if all required fields were set.
             checkRequiredProperties();
+
+            // Prepare
             prepare();
+
             T t = execute();
             ActionResult result = getActionClass().createResult(this, t);
 
@@ -36,13 +40,10 @@ public abstract class Action<T> implements ActionCallable {
         return ActionClass.get(getClass());
     }
 
-    protected void prepare() throws Exception {
+    protected void prepare() throws ActionException {
     }
 
-    protected void checkRequiredServices() {
-    }
-
-    protected void checkRequiredProperties() {
+    protected void checkRequiredProperties() throws ActionException {
         Field[] fields = ActionClass.get(getClass()).getActionFields();
         for (Field field : fields) {
             ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
@@ -55,7 +56,7 @@ public abstract class Action<T> implements ActionCallable {
                                 + getClass().getName() + "'.");
                     }
                 } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
+                    throw new ActionException(e);
 
                 }
             }
@@ -68,17 +69,5 @@ public abstract class Action<T> implements ActionCallable {
 
     protected Logger logger() {
         return Logger.getLogger(getClass().getName());
-    }
-
-    protected Object getService(String name) throws ServiceNotAvailableException {
-        return ActionContext.getInstance().getService(name);
-    }
-
-    protected <T> T getService(Class<T> type) throws ServiceNotAvailableException {
-        return ActionContext.getInstance().getService(type);
-    }
-
-    protected <T> T getService(String name, Class<T> type) throws ServiceNotAvailableException {
-        return ActionContext.getInstance().getService(name, type);
     }
 }

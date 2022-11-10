@@ -24,7 +24,7 @@ public abstract class CompositeTaskAction<P extends Task<T>, T> extends Action<T
     }
 
     @Override
-    protected void prepare() throws Exception {
+    protected void prepare() throws ActionException {
         super.prepare();
         this.task = build();
     }
@@ -61,7 +61,6 @@ public abstract class CompositeTaskAction<P extends Task<T>, T> extends Action<T
                     throw new RuntimeException(e);
                 }
             }
-
         }
 
         @Override

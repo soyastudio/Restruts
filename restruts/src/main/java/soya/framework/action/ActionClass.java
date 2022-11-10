@@ -10,13 +10,14 @@ public final class ActionClass implements Serializable {
 
     private static Map<Class<? extends ActionCallable>, ActionClass> ACTION_CLASSES = new ConcurrentHashMap<>();
     private static Map<ActionName, AtomicLong> COUNTS = new ConcurrentHashMap<>();
-    private static final AtomicLong TOTAL_COUNT = new AtomicLong();
+
+    private static final AtomicLong TOTAL_ACTION_COUNT = new AtomicLong();
+    // private static final AtomicLong TOTAL_PRIMITIVE_ACTION_COUNT = new AtomicLong();
 
     private final transient Class<? extends ActionCallable> actionType;
     private transient List<Field> serviceFields = new ArrayList<>();
     private transient Map<String, Field> actionFields = new LinkedHashMap<>();
     private transient Map<String, Field> options = new LinkedHashMap<>();
-
 
     private final ActionName actionName;
     private final String produce;
@@ -46,6 +47,8 @@ public final class ActionClass implements Serializable {
                 serviceFields.add(field);
             }
         }
+
+
         this.produce = mapping.produces()[0];
 
         ACTION_CLASSES.put(actionType, this);
@@ -152,7 +155,7 @@ public final class ActionClass implements Serializable {
         }
 
         ActionResult actionResult = new DefaultActionResult(actionClass.getActionName(), COUNTS.get(actionName).getAndIncrement(), params, result);
-        TOTAL_COUNT.getAndIncrement();
+        TOTAL_ACTION_COUNT.getAndIncrement();
 
         return actionResult;
     }
@@ -190,7 +193,7 @@ public final class ActionClass implements Serializable {
     }
 
     static long totalCount() {
-        return TOTAL_COUNT.get();
+        return TOTAL_ACTION_COUNT.get();
     }
 
     static long actionCount(ActionName actionName) {
