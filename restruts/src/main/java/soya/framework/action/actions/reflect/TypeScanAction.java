@@ -13,13 +13,13 @@ import java.util.Collections;
 import java.util.List;
 
 @ActionDefinition(domain = "reflect",
-        name = "runtime-type-discovery",
-        path = "/runtime/type-discovery",
+        name = "type-scan",
+        path = "/util/type-scan",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Discovery Runtime Types",
-        description = "Scan classpath to find specified types.")
-public class RuntimeTypeDiscoveryAction extends Action<String[]> {
+        description = "Scan classpath for specified types.")
+public class TypeScanAction extends Action<String[]> {
 
     @ActionProperty(
             parameterType = ActionProperty.PropertyType.HEADER_PARAM,
