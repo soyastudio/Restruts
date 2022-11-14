@@ -10,4 +10,6 @@ public interface ActionMappings {
 
     ActionClass actionClass(ActionName actionName);
 
+    ActionClass actionClass(Class<? extends ActionCallable> actionType);
+
 }

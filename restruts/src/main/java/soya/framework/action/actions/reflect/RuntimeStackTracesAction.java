@@ -7,13 +7,15 @@ import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "runtime-stack-traces",
         path = "/runtime/stack-traces",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Runtime Stack Traces",
-        description = "List runtime stack traces.")
+        description = "List runtime stack traces."
+)
 public class RuntimeStackTracesAction extends Action<String> {
 
     @Override

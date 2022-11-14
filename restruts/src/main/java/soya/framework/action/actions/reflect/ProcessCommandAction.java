@@ -18,13 +18,15 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "util-process-command",
         path = "/util/process-command",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Process System Command",
-        description = "Process System Command, cmd for windows and shell for linux.")
+        description = "Process System Command, cmd for windows and shell for linux."
+)
 public class ProcessCommandAction extends Action<String> {
 
     @ActionProperty(
@@ -68,7 +70,7 @@ public class ProcessCommandAction extends Action<String> {
             list.add(tokenizer.nextToken());
         }
 
-        File dir = directory == null? new File(System.getProperty("user.home")) : new File(URI.create(directory).toURL().getFile());
+        File dir = directory == null ? new File(System.getProperty("user.home")) : new File(URI.create(directory).toURL().getFile());
         Process process = new ProcessBuilder()
                 .command(list)
                 .directory(dir)

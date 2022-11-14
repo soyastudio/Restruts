@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class TaskFlow<T> implements Task<T> {
 
-    private Map<String, Task> tasks = new LinkedHashMap<>();
+    private Map<String, Task> tasks;
     private TaskFlowExecutor executor;
     private Task<T> resultHandler;
 

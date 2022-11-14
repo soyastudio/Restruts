@@ -73,55 +73,53 @@ public class DispatchScheduler {
         private final long period;
         private final long delay;
 
-        private transient ActionExecutor executor;
-
         DispatchTask(String name, String dispatch, long period, long delay) {
             this.name = name;
             this.dispatch = dispatch;
             this.period = Math.max(1000l, period);
             this.delay = Math.max(delay, 0);
-
-            URI uri = URI.create(dispatch);
-            final ActionClass actionClass;
-            if (uri.getScheme().equals("class")) {
-                try {
-                    actionClass = ActionClass.get((Class<? extends ActionCallable>) Class.forName(uri.getHost()));
-                } catch (Exception e) {
-                    throw new IllegalArgumentException(e);
-                }
-            } else {
-                actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
-            }
-
-            if (actionClass == null) {
-                throw new IllegalArgumentException("Cannot find action class from uri: " + uri);
-            }
-
-            this.executor = ActionExecutor.executor(actionClass.getActionType());
-            StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
-                Field field = actionClass.getActionField(e.getKey());
-                if (field != null) {
-                    String exp = e.getValue().get(0);
-                    String value = exp;
-                    if(exp.contains("(") && exp.endsWith(")")) {
-                        Evaluation evaluation = new Evaluation(exp);
-                        if(EvaluationMethod.VALUE.equals(evaluation.getAssignmentMethod())) {
-                            value = evaluation.getExpression();
-
-                        } else if(EvaluationMethod.PARAMETER.equals(evaluation.getAssignmentMethod())) {
-                            value = Resources.getResourceAsString(evaluation.getExpression());
-                        }
-                    }
-
-                    executor.setProperty(field.getName(), ConvertUtils.convert(value, field.getType()));
-                }
-
-            });
         }
 
         @Override
         public void run() {
             try {
+                URI uri = URI.create(dispatch);
+                final ActionClass actionClass;
+                if (uri.getScheme().equals("class")) {
+                    try {
+                        actionClass = ActionClass.get((Class<? extends ActionCallable>) Class.forName(uri.getHost()));
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                } else {
+                    actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
+                }
+
+                if (actionClass == null) {
+                    throw new IllegalArgumentException("Cannot find action class from uri: " + uri);
+                }
+
+
+                ActionExecutor executor = ActionExecutor.executor(actionClass.getActionType());
+                StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
+                    Field field = actionClass.getActionField(e.getKey());
+                    if (field != null) {
+                        String exp = e.getValue().get(0);
+                        String value = exp;
+                        if(exp.contains("(") && exp.endsWith(")")) {
+                            Evaluation evaluation = new Evaluation(exp);
+                            if(EvaluationMethod.VALUE.equals(evaluation.getAssignmentMethod())) {
+                                value = evaluation.getExpression();
+
+                            } else if(EvaluationMethod.RESOURCE.equals(evaluation.getAssignmentMethod())) {
+                                value = Resources.getResourceAsString(evaluation.getExpression());
+                            }
+                        }
+
+                        executor.setProperty(field.getName(), ConvertUtils.convert(value, field.getType()));
+                    }
+
+                });
                 executor.execute();
 
             } catch (Exception e) {

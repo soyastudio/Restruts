@@ -5,13 +5,15 @@ import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "util-echo",
         path = "/util/echo",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Echo",
-        description = "Print input message directly.")
+        description = "Print input message directly."
+)
 public class EchoAction extends Action<String> {
 
     @ActionProperty(

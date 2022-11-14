@@ -2,16 +2,18 @@ package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "runtime-service-discovery",
         path = "/runtime/service-discovery",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Runtime Services",
-        description = "Print runtime services information of special type.")
-
+        description = "Print runtime services information of special type."
+)
 public class RuntimeServiceDiscoveryAction extends Action<ServiceInfo[]> {
 
     @ActionProperty(

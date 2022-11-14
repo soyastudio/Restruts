@@ -5,6 +5,6 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ServiceWired {
+public @interface WiredService {
     String name() default "";
 }

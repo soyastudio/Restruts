@@ -7,7 +7,7 @@ import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "dispatch",
         name = "schedule-dispatch-task",
-        path = "/schedule-dispatch-task",
+        path = "/schedule/dispatch-task",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",

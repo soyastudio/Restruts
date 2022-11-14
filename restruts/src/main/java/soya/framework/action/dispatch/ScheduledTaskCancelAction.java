@@ -7,7 +7,7 @@ import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "dispatch",
         name = "scheduled-task-cancellation",
-        path = "/scheduled-task-cancellation",
+        path = "/schedule/task-cancellation",
         method = ActionDefinition.HttpMethod.DELETE,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Scheduled Task Cancellation",

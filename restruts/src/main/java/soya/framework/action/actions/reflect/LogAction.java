@@ -7,13 +7,15 @@ import soya.framework.action.MediaType;
 
 import java.util.Locale;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "util-log",
         path = "/util/log",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Log",
-        description = "Log input message, using JUL as default logging system.")
+        description = "Log input message, using JUL as default logging system."
+)
 public class LogAction extends Action<Void> {
 
     @ActionProperty(

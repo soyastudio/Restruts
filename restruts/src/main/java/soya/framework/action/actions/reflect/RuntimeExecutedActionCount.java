@@ -4,13 +4,15 @@ import soya.framework.action.*;
 
 import java.net.URI;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "executed-action-count",
         path = "/runtime/executed-action-count",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Threads",
-        description = "List runtime threads.")
+        description = "List runtime threads."
+)
 public class RuntimeExecutedActionCount extends Action<Long> {
 
     @ActionProperty(
@@ -24,6 +26,6 @@ public class RuntimeExecutedActionCount extends Action<Long> {
 
     @Override
     public Long execute() throws Exception {
-        return ActionClasses.getExecutedActionCount(ActionName.fromURI(URI.create(actionName)));
+        return ActionClass.getExecutedActionCount(ActionName.fromURI(URI.create(actionName)));
     }
 }

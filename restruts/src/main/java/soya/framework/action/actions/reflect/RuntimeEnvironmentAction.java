@@ -7,13 +7,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "runtime-environment",
         path = "/runtime/environment",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Environment",
-        description = "Print environment properties.")
+        description = "Print environment properties."
+)
 public class RuntimeEnvironmentAction extends Action<String> {
 
     @ActionProperty(

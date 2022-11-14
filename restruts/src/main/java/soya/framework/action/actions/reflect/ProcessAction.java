@@ -5,7 +5,10 @@ import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +18,15 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "util-process",
         path = "/util/process",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Process System Command",
-        description = "Process System Command, using java.lang.Process.")
+        description = "Process System Command, using java.lang.Process."
+)
 public class ProcessAction extends Action<String> {
 
     @ActionProperty(
@@ -55,7 +60,7 @@ public class ProcessAction extends Action<String> {
             list.add(tokenizer.nextToken());
         }
 
-        File dir = directory == null? new File(System.getProperty("user.home")) : new File(URI.create(directory).toURL().getFile());
+        File dir = directory == null ? new File(System.getProperty("user.home")) : new File(URI.create(directory).toURL().getFile());
         Process process = new ProcessBuilder()
                 .command(list)
                 .directory(dir)

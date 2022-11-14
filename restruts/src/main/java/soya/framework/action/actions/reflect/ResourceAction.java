@@ -2,13 +2,15 @@ package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "util-resource",
         path = "/util/resource",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Resource",
-        description = "Extract resource through resource uri.")
+        description = "Extract resource through resource uri."
+)
 public class ResourceAction extends Action<String> {
 
     @ActionProperty(

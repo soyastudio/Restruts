@@ -8,21 +8,20 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public final class ActionClass implements Serializable {
 
-    private static Map<Class<? extends ActionCallable>, ActionClass> ACTION_CLASSES = new ConcurrentHashMap<>();
     private static Map<ActionName, AtomicLong> COUNTS = new ConcurrentHashMap<>();
-
     private static final AtomicLong TOTAL_ACTION_COUNT = new AtomicLong();
     // private static final AtomicLong TOTAL_PRIMITIVE_ACTION_COUNT = new AtomicLong();
 
     private final transient Class<? extends ActionCallable> actionType;
-    private transient List<Field> serviceFields = new ArrayList<>();
+    private transient List<Field> wiredFields = new ArrayList<>();
+
     private transient Map<String, Field> actionFields = new LinkedHashMap<>();
     private transient Map<String, Field> options = new LinkedHashMap<>();
 
     private final ActionName actionName;
-    private final String produce;
+    private final String resultFormat;
 
-    private ActionClass(Class<? extends ActionCallable> actionType) {
+    ActionClass(Class<? extends ActionCallable> actionType) {
 
         ActionDefinition mapping = actionType.getAnnotation(ActionDefinition.class);
         Objects.requireNonNull(mapping, "Class is not annotated as 'OperationMapping': " + actionType.getName());
@@ -43,15 +42,14 @@ public final class ActionClass implements Serializable {
                     options.put(actionProperty.option(), field);
                 }
 
-            } else if (field.getAnnotation(ServiceWired.class) != null) {
-                serviceFields.add(field);
+            } else if (field.getAnnotation(WiredService.class) != null
+                    || field.getAnnotation(WiredProperty.class) != null
+                    || field.getAnnotation(WiredResource.class) != null) {
+                wiredFields.add(field);
             }
         }
 
-
-        this.produce = mapping.produces()[0];
-
-        ACTION_CLASSES.put(actionType, this);
+        this.resultFormat = mapping.produces()[0];
         COUNTS.put(actionName, new AtomicLong());
 
     }
@@ -76,8 +74,8 @@ public final class ActionClass implements Serializable {
         }
     }
 
-    public String getProduce() {
-        return produce;
+    public String getResultFormat() {
+        return resultFormat;
     }
 
     public String toURI() {
@@ -94,18 +92,31 @@ public final class ActionClass implements Serializable {
     }
 
     public ActionCallable newInstance() throws ActionCreationException {
+
         try {
             ActionCallable action = actionType.newInstance();
 
-            serviceFields.forEach(e -> {
-                ServiceWired serviceWired = e.getAnnotation(ServiceWired.class);
+            wiredFields.forEach(e -> {
                 Class<?> type = e.getType();
-                Object service = serviceWired.name().isEmpty() ? ActionContext.getInstance().getService(type)
-                        : ActionContext.getInstance().getService(serviceWired.name(), type);
+                Object value = null;
+                if (e.getAnnotation(WiredService.class) != null) {
+                    WiredService wiredService = e.getAnnotation(WiredService.class);
+                    value = wiredService.name().isEmpty() ? ActionContext.getInstance().getService(type)
+                            : ActionContext.getInstance().getService(wiredService.name(), type);
+
+                } else if (e.getAnnotation(WiredProperty.class) != null) {
+                    String prop = ActionContext.getInstance().getProperty(e.getAnnotation(WiredProperty.class).value());
+                    value = ConvertUtils.convert(prop, type);
+
+                } else if (e.getAnnotation(WiredResource.class) != null) {
+                    String res = Resources.getResourceAsString(e.getAnnotation(WiredResource.class).value());
+                    value = ConvertUtils.convert(res, type);
+
+                }
 
                 e.setAccessible(true);
                 try {
-                    e.set(action, service);
+                    e.set(action, value);
                 } catch (IllegalAccessException ex) {
                     throw new ActionCreationException(ex);
                 }
@@ -136,7 +147,9 @@ public final class ActionClass implements Serializable {
     }
 
     ActionResult createResult(ActionCallable action, Object result) {
-        ActionClass actionClass = ACTION_CLASSES.get(action.getClass());
+        ActionClass actionClass = ActionContext.getInstance().actionMappings.actionClass(action.getClass());
+
+        TOTAL_ACTION_COUNT.getAndIncrement();
 
         Map<String, Object> params = new LinkedHashMap<>();
         for (Field field : actionClass.getActionFields()) {
@@ -154,10 +167,9 @@ public final class ActionClass implements Serializable {
             }
         }
 
-        ActionResult actionResult = new DefaultActionResult(actionClass.getActionName(), COUNTS.get(actionName).getAndIncrement(), params, result);
-        TOTAL_ACTION_COUNT.getAndIncrement();
+        return (result != null && result instanceof Throwable) ? new FailureResult(actionClass.getActionName(), COUNTS.get(actionName).getAndIncrement(), params, (Throwable) result)
+                : new SuccessResult(actionClass.getActionName(), COUNTS.get(actionName).getAndIncrement(), params, result);
 
-        return actionResult;
     }
 
     private Field[] findActionFields() {
@@ -172,7 +184,10 @@ public final class ActionClass implements Serializable {
                     fields.add(field);
                     fieldNames.add(field.getName());
 
-                } else if (field.getAnnotation(ServiceWired.class) != null) {
+                } else if (field.getAnnotation(WiredService.class) != null
+                        || field.getAnnotation(WiredProperty.class) != null
+                        || field.getAnnotation(WiredResource.class) != null) {
+
                     fields.add(field);
 
                 }
@@ -186,13 +201,7 @@ public final class ActionClass implements Serializable {
         return fields.toArray(new Field[fields.size()]);
     }
 
-    static ActionName[] actionNames() {
-        List<ActionName> actionNames = new ArrayList<>(COUNTS.keySet());
-        Collections.sort(actionNames);
-        return actionNames.toArray(new ActionName[actionNames.size()]);
-    }
-
-    static long totalCount() {
+    public static long totalExecutedActionCount() {
         return TOTAL_ACTION_COUNT.get();
     }
 
@@ -202,12 +211,35 @@ public final class ActionClass implements Serializable {
         return count.get();
     }
 
-    public static ActionClass get(Class<? extends ActionCallable> actionType) {
-        if (!ACTION_CLASSES.containsKey(actionType)) {
-            new ActionClass(actionType);
-        }
+    public static String[] domains() {
+        return ActionContext.getInstance().actionMappings.domains();
+    }
 
-        return ACTION_CLASSES.get(actionType);
+    public static Class<?> domainType(String domain) {
+        return ActionContext.getInstance().actionMappings.domainType(domain);
+    }
+
+    public static ActionName[] actions(String domain) {
+        return ActionContext.getInstance().actionMappings.actions(domain);
+    }
+
+    public static ActionClass get(ActionName actionName) {
+        return ActionContext.getInstance().actionMappings.actionClass(actionName);
+    }
+
+    public static ActionClass get(Class<? extends ActionCallable> actionType) {
+        if(ActionContext.getInstance() != null
+                && ActionContext.getInstance().actionMappings.actionClass(actionType) != null) {
+            return ActionContext.getInstance().actionMappings.actionClass(actionType);
+
+        } else {
+            return new ActionClass(actionType);
+
+        }
+    }
+
+    public static long getExecutedActionCount(ActionName actionName) {
+        return ActionClass.actionCount(actionName);
     }
 
     private final class ParameterFieldComparator implements Comparator<Field> {
@@ -234,7 +266,7 @@ public final class ActionClass implements Serializable {
         }
     }
 
-    private static final class DefaultActionResult implements ActionResult {
+    private static final class SuccessResult implements ActionResult {
 
         private final ActionName actionName;
         private final long timestamp;
@@ -243,7 +275,7 @@ public final class ActionClass implements Serializable {
         private final Map<String, Object> parameters;
         private final Object value;
 
-        private DefaultActionResult(ActionName actionName, long sequence, Map<String, Object> parameters, Object value) {
+        private SuccessResult(ActionName actionName, long sequence, Map<String, Object> parameters, Object value) {
             this.timestamp = System.currentTimeMillis();
             this.actionName = actionName;
             this.sequence = sequence;
@@ -261,11 +293,49 @@ public final class ActionClass implements Serializable {
         }
 
         public boolean success() {
-            return !(value instanceof Throwable);
+            return true;
         }
 
         public boolean empty() {
             return value == null;
+        }
+    }
+
+    private static final class FailureResult implements ActionResult {
+
+        private final ActionName actionName;
+        private final long timestamp;
+        private final long sequence;
+
+        private final Map<String, Object> parameters;
+        private final Throwable exception;
+
+        private FailureResult(ActionName actionName, long sequence, Map<String, Object> parameters, Throwable exception) {
+            this.actionName = actionName;
+            this.timestamp = System.currentTimeMillis();
+            this.sequence = sequence;
+            this.parameters = parameters;
+            this.exception = exception;
+        }
+
+        @Override
+        public ActionName actionName() {
+            return actionName;
+        }
+
+        @Override
+        public Throwable get() {
+            return exception;
+        }
+
+        @Override
+        public boolean success() {
+            return false;
+        }
+
+        @Override
+        public boolean empty() {
+            return false;
         }
     }
 

@@ -85,7 +85,8 @@ public class ActionServlet extends HttpServlet {
                 try {
                     ActionCallable action = registry.create(event);
                     ActionResult actionResult = action.call();
-                    write(actionResult.get(), actionClass.getProduce(), resp);
+
+                    write(actionResult.get(), actionClass.getResultFormat(), resp);
 
                 } catch (Exception e) {
                     logger.severe(e.getMessage());

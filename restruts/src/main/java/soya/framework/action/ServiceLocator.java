@@ -1,6 +1,6 @@
 package soya.framework.action;
 
-import java.util.Map;
+import java.util.*;
 
 public interface ServiceLocator {
     String[] serviceNames();

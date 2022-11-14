@@ -12,13 +12,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "type-scan",
         path = "/util/type-scan",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Discovery Runtime Types",
-        description = "Scan classpath for specified types.")
+        description = "Scan classpath for specified types."
+)
 public class TypeScanAction extends Action<String[]> {
 
     @ActionProperty(

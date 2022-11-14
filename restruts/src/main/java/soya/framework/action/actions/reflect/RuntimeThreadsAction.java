@@ -9,13 +9,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "runtime-threads",
         path = "/runtime/threads",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Threads",
-        description = "List runtime threads.")
+        description = "List runtime threads."
+)
 public class RuntimeThreadsAction extends Action<String> {
 
     @Override

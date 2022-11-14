@@ -5,13 +5,15 @@ import soya.framework.commons.util.CodeBuilder;
 
 import java.net.URI;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "api-details",
-        path = "/api-details",
+        path = "/api/details",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "API Details",
-        description = "Print action api details in markdown format.")
+        description = "Print action api details in markdown format."
+)
 public class ApiDetailsAction extends ApiAction {
 
     @ActionProperty(
@@ -34,7 +36,7 @@ public class ApiDetailsAction extends ApiAction {
             actionClass = ActionClass.get((Class<? extends ActionCallable>) Class.forName(u.getHost()));
 
         } else {
-            actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(u));
+            actionClass = ActionClass.get(ActionName.fromURI(u));
 
         }
 

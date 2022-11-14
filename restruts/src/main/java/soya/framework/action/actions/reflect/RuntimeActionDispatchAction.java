@@ -8,15 +8,16 @@ import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "runtime-action-execution",
         path = "/runtime/action-execution",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Runtime Action Execution",
-        description = "Runtime Action Execution.")
+        description = "Runtime Action Execution."
+)
 public class RuntimeActionDispatchAction extends Action<String> {
 
     @ActionProperty(
@@ -51,7 +52,7 @@ public class RuntimeActionDispatchAction extends Action<String> {
 
         } else {
             String actionName = list.get(0).trim();
-            if(actionName.endsWith(":")) {
+            if (actionName.endsWith(":")) {
                 actionName = actionName.substring(0, actionName.length() - 1);
             }
 
@@ -65,7 +66,7 @@ public class RuntimeActionDispatchAction extends Action<String> {
                     throw new IllegalArgumentException(e);
                 }
             } else {
-                actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
+                actionClass = ActionClass.get(ActionName.fromURI(uri));
             }
 
             if (actionClass == null) {
@@ -74,26 +75,26 @@ public class RuntimeActionDispatchAction extends Action<String> {
 
             executor = ActionExecutor.executor(actionClass.getActionType());
 
-            for(int i = 1; i < list.size(); i ++) {
+            for (int i = 1; i < list.size(); i++) {
                 String ln = list.get(i).trim();
                 int index = ln.indexOf(':');
                 String key = ln.substring(0, index);
                 String value = ln.substring(index + 1);
-                if(key.startsWith("--")) {
+                if (key.startsWith("--")) {
                     key = key.substring(2).trim();
 
-                } else if(key.startsWith("-")) {
+                } else if (key.startsWith("-")) {
                     key = key.substring(1).trim();
 
                 }
 
-                if(value.length() > 1) {
-                    if(value.startsWith("\"") && value.endsWith("\"") || value.startsWith("'") && value.endsWith("'")) {
+                if (value.length() > 1) {
+                    if (value.startsWith("\"") && value.endsWith("\"") || value.startsWith("'") && value.endsWith("'")) {
                         value = value.substring(1, value.length() - 1);
                     }
                 }
 
-                if(actionClass.getActionField(key) != null) {
+                if (actionClass.getActionField(key) != null) {
                     executor.setProperty(actionClass.getActionField(key).getName(), value);
                 }
             }
@@ -101,7 +102,7 @@ public class RuntimeActionDispatchAction extends Action<String> {
 
         Object result = executor.execute();
 
-        if(result instanceof String) {
+        if (result instanceof String) {
             return (String) result;
         } else {
             return new GsonBuilder().setPrettyPrinting().create().toJson(result);

@@ -2,13 +2,15 @@ package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
 
-@ActionDefinition(domain = "reflect",
+@ActionDefinition(
+        domain = "reflect",
         name = "runtime-service-details",
         path = "/runtime/service-details",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Service Details",
-        description = "Print runtime service detail information.")
+        description = "Print runtime service detail information."
+)
 public class RuntimeServiceDetailsAction extends Action<ServiceInfo> {
 
     @ActionProperty(
@@ -29,7 +31,7 @@ public class RuntimeServiceDetailsAction extends Action<ServiceInfo> {
 
         }
 
-        if(serviceInstance == null) {
+        if (serviceInstance == null) {
             serviceInstance = ActionContext.getInstance().getService(Class.forName(service));
         }
 

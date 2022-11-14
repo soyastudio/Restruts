@@ -2,13 +2,14 @@ package soya.framework.action;
 
 import org.reflections.Reflections;
 
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class ActionContext {
 
-    protected static ActionContext INSTANCE;
+    private static ActionContext INSTANCE;
 
     private final ExecutorService executorService;
     private final ServiceLocator serviceLocator;
@@ -17,7 +18,7 @@ public final class ActionContext {
     protected ActionMappings actionMappings;
 
     protected ActionContext(ServiceLocator serviceLocator, ActionMappings actionMappings) {
-        Objects.requireNonNull(serviceLocator, "ServiceLocator is required.");
+        // Objects.requireNonNull(serviceLocator, "ServiceLocator is required.");
         Objects.requireNonNull("ActionMappings is required.");
 
         this.serviceLocator = serviceLocator;
@@ -138,8 +139,10 @@ public final class ActionContext {
                 Reflections reflections = new Reflections(pk.trim());
                 Set<Class<?>> set = reflections.getTypesAnnotatedWith(ActionDefinition.class);
                 set.forEach(c -> {
-                    ActionDefinition actionDefinition = c.getAnnotation(ActionDefinition.class);
-                    actionMappings.actions.put(ActionName.create(actionDefinition.domain(), actionDefinition.name()), (Class<? extends ActionCallable>) c);
+                    ActionClass actionClass = new ActionClass((Class<? extends ActionCallable>) c);
+
+                    actionMappings.actionClasses.put(actionClass.getActionName(), actionClass);
+                    actionMappings.actionTypes.put(actionClass.getActionType(), actionClass);
                 });
             }
             return this;
@@ -167,7 +170,8 @@ public final class ActionContext {
     static class DefaultActionMappings implements ActionMappings {
 
         private Map<String, Class<?>> domains = new LinkedHashMap<>();
-        private Map<ActionName, Class<? extends ActionCallable>> actions = new HashMap<>();
+        private Map<ActionName, ActionClass> actionClasses = new HashMap<>();
+        private Map<Class<? extends ActionCallable>, ActionClass> actionTypes = new HashMap<>();
 
         @Override
         public String[] domains() {
@@ -183,9 +187,9 @@ public final class ActionContext {
         public ActionName[] actions(String domain) {
             List<ActionName> list = new ArrayList<>();
             if (domain == null) {
-                list.addAll(actions.keySet());
+                list.addAll(actionClasses.keySet());
             } else {
-                actions.keySet().forEach(e -> {
+                actionClasses.keySet().forEach(e -> {
                     if (e.getDomain().equals(domain)) {
                         list.add(e);
                     }
@@ -198,7 +202,23 @@ public final class ActionContext {
 
         @Override
         public ActionClass actionClass(ActionName actionName) {
-            return ActionClass.get(actions.get(actionName));
+            return actionClasses.get(actionName);
+        }
+
+        @Override
+        public ActionClass actionClass(Class<? extends ActionCallable> actionType) {
+            if (actionType.isInterface() || Modifier.isAbstract(actionType.getModifiers())) {
+                throw new IllegalArgumentException("Action type cannot be interface or abstract class");
+            }
+
+            if (!actionTypes.containsKey(actionType)) {
+                ActionClass actionClass = new ActionClass(actionType);
+                actionTypes.put(actionClass.getActionType(), actionClass);
+                actionClasses.put(actionClass.getActionName(), actionClass);
+
+            }
+
+            return actionTypes.get(actionType);
         }
 
     }

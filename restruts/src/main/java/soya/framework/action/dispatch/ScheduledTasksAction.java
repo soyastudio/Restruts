@@ -6,7 +6,7 @@ import soya.framework.action.MediaType;
 
 @ActionDefinition(domain = "dispatch",
         name = "scheduled-tasks",
-        path = "/scheduled-tasks",
+        path = "/schedule/tasks",
         method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.APPLICATION_JSON,
         displayName = "Scheduled Tasks",
