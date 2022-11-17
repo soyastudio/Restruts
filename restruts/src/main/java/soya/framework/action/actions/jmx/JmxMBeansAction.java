@@ -21,6 +21,7 @@ import java.util.Set;
         displayName = "JMX MBeans",
         description = "Print as markdown format.")
 public class JmxMBeansAction extends Action<String[]> {
+
     @Override
     public String[] execute() throws Exception {
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();

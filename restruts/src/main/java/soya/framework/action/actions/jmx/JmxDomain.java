@@ -4,7 +4,7 @@ import soya.framework.action.Domain;
 
 @Domain(
         name = "jmx",
-        path = "/action/jmx",
+        path = "/actions/jmx",
         title = "JMX",
         description = "JMX services."
 )

@@ -1,5 +1,6 @@
 package soya.framework.action;
 
+import com.google.gson.JsonArray;
 import soya.framework.action.actions.reflect.EchoAction;
 import soya.framework.commons.util.StringUtils;
 
@@ -177,6 +178,9 @@ public final class ActionExecutor {
     }
 
     public static void main(String[] args) throws Exception {
+        Integer v = 123;
+
+        System.out.println((v instanceof Number));
 
         ActionContext.builder()
                 .scan("soya.framework")
