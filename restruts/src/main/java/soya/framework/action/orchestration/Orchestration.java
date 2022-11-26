@@ -206,17 +206,37 @@ public class Orchestration {
         Map<String, Object> data = new HashMap<>();
         data.put("msg", "Hello World");
 
-        Object result = Aggregator.builder()
-                .name("Aggregator")
-                .addParameter("msg", String.class)
-                .addTask("echo", "class://soya.framework.action.actions.reflect.EchoAction?message=val(Hello)")
-                .addTask("encode", "text-util://base64-encode?text=param(msg)")
-                .resultHandler("text-util://base64-decode?text=ref(encode)")
-                .create()
-                .execute(data);
+        Object result = null;
+
+        //result = executePipeline(data);
+
+        result = executeAggregate(data);
 
         System.out.println(result);
 
+
         System.exit(0);
+    }
+
+    private static Object executeAggregate(Object input) throws ProcessException {
+        return Aggregator.builder()
+                .name("Aggregator")
+                .addParameter("msg", String.class)
+                .addTask("encode", "text-util://base64-encode?text=param(msg)")
+                .resultHandler("text-util://base64-decode?text=ref(encode)")
+                .create()
+                .execute(input);
+    }
+
+    private static Object executePipeline(Object input) throws ProcessException {
+
+        return Pipeline
+                .builder()
+                .name("Pipeline XYZ")
+                .addParameter("msg", String.class)
+                .addTask("encode", "text-util://base64-encode?text=param(msg)")
+                .addTask("decode", "text-util://base64-decode?text=ref(encode)")
+                .create()
+                .execute(input);
     }
 }

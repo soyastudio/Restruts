@@ -1,9 +1,9 @@
 package soya.framework.action;
 
-import com.google.gson.JsonArray;
 import soya.framework.action.actions.reflect.EchoAction;
 import soya.framework.commons.util.StringUtils;
 
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.LinkedHashMap;
@@ -178,6 +178,13 @@ public final class ActionExecutor {
     }
 
     public static void main(String[] args) throws Exception {
+
+        URI uri = URI.create("action://some?a=A&b=B#x(classpath://x/y?xx=bb).y(a.b.c).z()");
+
+        System.out.println("------------ fragments: " + uri.getFragment());
+
+        //Toolkit.getDefaultToolkit().beep();
+
         Integer v = 123;
 
         System.out.println((v instanceof Number));

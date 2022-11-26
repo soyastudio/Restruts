@@ -1,11 +1,12 @@
 package soya.framework.restruts.configuration;
 
-import org.apache.poi.ss.formula.functions.T;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import soya.framework.action.dispatch.DispatchScheduler;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
-import soya.framework.action.orchestration.eventbus.Event;
+import soya.framework.action.orchestration.eventbus.ActionEvent;
 
 import javax.annotation.PostConstruct;
 import java.util.Timer;
@@ -19,6 +20,19 @@ public class ServerConfiguration {
     @Bean
     ActionEventBus actionEventBus() {
         return new DefaultActionEventBus();
+    }
+
+
+    @EventListener(classes = {ApplicationReadyEvent.class})
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+
+        Timer timer = new Timer("Pipeline Scanner");
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                //System.out.println("--------------------- !!!");
+            }
+        }, 1000l, 5000l);
     }
 
     static class DefaultActionEventBus extends ActionEventBus {
@@ -35,7 +49,7 @@ public class ServerConfiguration {
             new Timer().schedule(new TimerTask() {
                                      @Override
                                      public void run() {
-                                         dispatch(new Event(Heartbeat.getInstance(), HEARTBEAT_EVENT_ADDRESS, null));
+                                         dispatch(new ActionEvent(Heartbeat.getInstance(), HEARTBEAT_EVENT_ADDRESS, null));
                                      }
                                  },
                     5000l,

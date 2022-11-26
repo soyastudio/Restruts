@@ -1,11 +1,14 @@
-package soya.framework.action.orchestration.eventbus;
+package soya.framework.action.orchestration.actions;
 
 import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.action.orchestration.eventbus.ActionEvent;
+import soya.framework.action.orchestration.eventbus.ActionEventBus;
+import soya.framework.action.orchestration.eventbus.Event;
 
-@ActionDefinition(domain = "dispatch",
+@ActionDefinition(domain = "orchestration",
         name = "event-publisher",
         path = "/eventbus/publisher",
         method = ActionDefinition.HttpMethod.POST,
@@ -32,7 +35,7 @@ public class EventPublishAction extends Action<String> {
 
     @Override
     public String execute() throws Exception {
-        Event event = new Event(this, address, payload);
+        Event event = new ActionEvent(this, address, payload);
         context().getService(ActionEventBus.class).dispatch(event);
         return event.getId();
     }

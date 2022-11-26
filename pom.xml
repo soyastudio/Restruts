@@ -256,6 +256,8 @@
 
         <!-- command design pattern based -->
         <module>restruts-quartz</module>
+        <module>restruts-cache</module>
+
         <module>restruts-ant</module>
         <module>restruts-git</module>
 

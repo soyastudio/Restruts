@@ -72,7 +72,7 @@ public abstract class ActionDispatchSubscriber implements Subscriber {
 
         if (getClass().getAnnotation(EventPublisher.class) != null) {
             EventPublisher publisher = getClass().getAnnotation(EventPublisher.class);
-            ActionContext.getInstance().getService(ActionEventBus.class).dispatch(new Event(event, publisher.value(), result.get()));
+            ActionContext.getInstance().getService(ActionEventBus.class).dispatch(new ActionEvent(event, publisher.value(), result.get()));
         }
     }
 

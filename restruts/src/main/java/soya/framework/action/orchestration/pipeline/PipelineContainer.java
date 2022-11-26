@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class PipelineContainer {
+
     private static Logger logger = Logger.getLogger(PipelineContainer.class.getName());
 
     private URI home;

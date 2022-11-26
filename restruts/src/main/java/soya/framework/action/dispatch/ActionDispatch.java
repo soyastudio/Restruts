@@ -16,8 +16,9 @@ public final class ActionDispatch {
     private final ActionName actionName;
     private final Map<String, Evaluation> assignments;
     private final String[] parameterNames;
+    private final String fragment;
 
-    private ActionDispatch(ActionName actionName, Map<String, Evaluation> assignments) {
+    private ActionDispatch(ActionName actionName, Map<String, Evaluation> assignments, String fragment) {
         this.actionName = actionName;
         this.assignments = assignments;
 
@@ -28,6 +29,8 @@ public final class ActionDispatch {
             }
         });
         parameterNames = params.toArray(new String[params.size()]);
+
+        this.fragment = fragment.isEmpty()? null : fragment;
     }
 
     public ActionName getActionName() {
@@ -40,6 +43,10 @@ public final class ActionDispatch {
 
     public Evaluation getAssignment(String propName) {
         return assignments.get(propName);
+    }
+
+    public String getFragment() {
+        return fragment;
     }
 
     public ActionCallable create(Object context) {
@@ -132,6 +139,10 @@ public final class ActionDispatch {
             });
         }
 
+        if(uri.getFragment() != null && !uri.getFragment().isEmpty()) {
+            builder.addFragment(uri.getFragment());
+        }
+
         return builder.create();
 
     }
@@ -143,6 +154,7 @@ public final class ActionDispatch {
     public static class Builder {
         private final ActionName actionName;
         private final Map<String, Evaluation> params = new LinkedHashMap<>();
+        private final StringBuilder fragmentBuilder = new StringBuilder();
 
         private Builder(ActionName actionName) {
             this.actionName = actionName;
@@ -158,8 +170,17 @@ public final class ActionDispatch {
             return this;
         }
 
+        public Builder addFragment(String fragment) {
+            if(fragmentBuilder.length() == 0) {
+                fragmentBuilder.append(fragment);
+            } else {
+                fragmentBuilder.append(".").append(fragment);
+            }
+            return this;
+        }
+
         public ActionDispatch create() {
-            return new ActionDispatch(actionName, params);
+            return new ActionDispatch(actionName, params, fragmentBuilder.toString());
         }
     }
 }

@@ -4,13 +4,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
+import soya.framework.action.ActionResult;
 import soya.framework.action.MediaType;
 
 import java.net.URI;
 
 @ActionDefinition(domain = "dispatch",
         name = "generic-action-dispatch",
-        path = "/dispatch-to-action",
+        path = "/action-dispatch",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",
@@ -52,6 +53,12 @@ public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
             }
         }
 
-        return dispatch.create(context).call().get();
+        ActionResult actionResult = dispatch.create(context).call();
+
+        if(dispatch.getFragment() != null) {
+            actionResult = Fragment.process(actionResult, dispatch.getFragment());
+        }
+
+        return actionResult.get();
     }
 }
