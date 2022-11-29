@@ -3,7 +3,7 @@ package soya.framework.restruts.pattern;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.dispatch.EvaluationMethod;
+import soya.framework.action.dispatch.AssignmentType;
 import soya.framework.action.dispatch.MethodDispatchAction;
 import soya.framework.action.dispatch.MethodDispatchPattern;
 import soya.framework.action.dispatch.MethodParameterAssignment;
@@ -19,7 +19,7 @@ import soya.framework.action.dispatch.MethodParameterAssignment;
         methodName = "base64Encode",
         parameterAssignments = {
                 @MethodParameterAssignment(type = String.class,
-                        assignmentMethod = EvaluationMethod.PARAMETER,
+                        assignmentMethod = AssignmentType.PARAMETER,
                         expression = "msg")
         }
 )

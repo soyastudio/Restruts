@@ -31,12 +31,12 @@ public class DefaultEvaluator implements Evaluator {
     public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
         Object value = null;
 
-        EvaluationMethod evaluationMethod = evaluation.getAssignmentMethod();
+        AssignmentType assignmentType = evaluation.getAssignmentMethod();
         String expression = evaluation.getExpression();
-        if (EvaluationMethod.VALUE.equals(evaluationMethod)) {
+        if (AssignmentType.VALUE.equals(assignmentType)) {
             value = ConvertUtils.convert(expression, type);
 
-        } else if (EvaluationMethod.RESOURCE.equals(evaluationMethod)) {
+        } else if (AssignmentType.RESOURCE.equals(assignmentType)) {
             if (InputStream.class.isAssignableFrom(type)) {
                 value = Resources.getResourceAsInputStream(expression);
 
@@ -45,10 +45,10 @@ public class DefaultEvaluator implements Evaluator {
 
             }
 
-        } else if (EvaluationMethod.REFERENCE.equals(evaluationMethod)) {
+        } else if (AssignmentType.REFERENCE.equals(assignmentType)) {
             value = referenceEvaluator.evaluate(evaluation, context, type);
 
-        } else if (EvaluationMethod.PARAMETER.equals(evaluationMethod)) {
+        } else if (AssignmentType.PARAMETER.equals(assignmentType)) {
             value = parameterEvaluator.evaluate(evaluation, context, type);
         }
 

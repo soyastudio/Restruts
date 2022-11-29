@@ -5,7 +5,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import soya.framework.action.*;
 import soya.framework.action.dispatch.ActionDispatchPattern;
 import soya.framework.action.dispatch.ActionPropertyAssignment;
-import soya.framework.action.dispatch.EvaluationMethod;
+import soya.framework.action.dispatch.AssignmentType;
 import soya.framework.action.dispatch.ParamName;
 
 import java.lang.reflect.Field;
@@ -57,16 +57,16 @@ public final class ActionProxyBuilder<T> {
 
             for (ActionPropertyAssignment ap : actionMapping.propertyAssignments()) {
                 Object value = null;
-                if (EvaluationMethod.VALUE.equals(ap.assignmentMethod())) {
+                if (AssignmentType.VALUE.equals(ap.assignmentType())) {
                     value = ap.expression();
 
-                } else if (EvaluationMethod.RESOURCE.equals(ap.assignmentMethod())) {
+                } else if (AssignmentType.RESOURCE.equals(ap.assignmentType())) {
                     value = Resources.getResourceAsString(ap.expression());
 
-                } else if (EvaluationMethod.REFERENCE.equals(ap.assignmentMethod())) {
+                } else if (AssignmentType.REFERENCE.equals(ap.assignmentType())) {
                     // TODO:
 
-                } else if (EvaluationMethod.PARAMETER.equals(ap.assignmentMethod())) {
+                } else if (AssignmentType.PARAMETER.equals(ap.assignmentType())) {
                     value = args[paramIndex.get(ap.expression())];
 
                 }

@@ -4,25 +4,28 @@ import org.reflections.Reflections;
 import soya.framework.action.ActionContext;
 import soya.framework.action.ActionName;
 import soya.framework.action.ActionResult;
-import soya.framework.commons.util.StringUtils;
+import soya.framework.commons.util.URIUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Fragment {
 
-    protected static Fragment me;
+    private static Fragment me;
 
     private Map<String, Class<? extends FragmentProcessor>> functions = new ConcurrentHashMap<>();
 
     protected Fragment() {
         if (me == null) {
-            scan(ActionContext.class.getPackage().getName());
+            scan("soya.framework");
             me = this;
+        } else {
+            throw new IllegalStateException("Fragment instance is already created.");
         }
+    }
+
+    protected Map<String, Class<? extends FragmentProcessor>> getFunctions() {
+        return new HashMap<>(functions);
     }
 
     protected void scan(String packageName) {
@@ -89,12 +92,13 @@ public class Fragment {
             String expr = function.substring(function.indexOf("(") + 1, function.lastIndexOf(")"));
 
             String[] args = expr == null || expr.trim().length() == 0 ? new String[0]
-                    : StringUtils.trim(expr.split(","));
+                    : URIUtils.trim(expr.split(","));
             Class<? extends FragmentProcessor> cls = getInstance().functions.get(name);
 
             return cls.getConstructor(new Class[]{String[].class}).newInstance(new Object[]{args});
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("Cannot parse fragment function from '" + function + "'", e);
         }
 

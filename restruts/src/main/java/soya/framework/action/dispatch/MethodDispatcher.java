@@ -14,8 +14,8 @@ public final class MethodDispatcher extends Dispatcher {
         this.parameterEvaluations = new Evaluation[parameterTypes.length];
     }
 
-    public MethodDispatcher assignParameter(int paramIndex, EvaluationMethod evaluationMethod, String expression) {
-        parameterEvaluations[paramIndex] = new Evaluation(evaluationMethod, expression);
+    public MethodDispatcher assignParameter(int paramIndex, AssignmentType assignmentType, String expression) {
+        parameterEvaluations[paramIndex] = new Evaluation(assignmentType, expression);
         return this;
     }
 
@@ -28,18 +28,18 @@ public final class MethodDispatcher extends Dispatcher {
             Evaluation evaluation = parameterEvaluations[i];
 
             Object value = null;
-            if (evaluation.getAssignmentMethod().equals(EvaluationMethod.VALUE)) {
+            if (evaluation.getAssignmentMethod().equals(AssignmentType.VALUE)) {
                 value = evaluation.getExpression();
 
-            } else if (evaluation.getAssignmentMethod().equals(EvaluationMethod.RESOURCE)) {
+            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.RESOURCE)) {
                 value = Resources.getResourceAsString(evaluation.getExpression());
 
-            } else if (evaluation.getAssignmentMethod().equals(EvaluationMethod.PARAMETER)) {
+            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.PARAMETER)) {
                 Field actionField = actionClass.getActionField(evaluation.getExpression());
                 actionField.setAccessible(true);
                 value = actionField.get(context);
 
-            } else if (evaluation.getAssignmentMethod().equals(EvaluationMethod.REFERENCE)) {
+            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.REFERENCE)) {
                 throw new IllegalArgumentException("");
             }
 

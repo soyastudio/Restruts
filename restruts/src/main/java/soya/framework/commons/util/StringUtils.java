@@ -1,105 +1,14 @@
 package soya.framework.commons.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLDecoder;
-import java.util.*;
+import java.io.*;
+import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class StringUtils {
-
-    private StringUtils() {
-    }
-
-    public static URI toURI(String commandline) {
-        StringBuilder builder = new StringBuilder();
-        StringTokenizer tokenizer = new StringTokenizer(commandline);
-        String uri = null;
-        while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            if (uri == null) {
-                uri = token;
-                builder.append(uri);
-
-            } else if (token.startsWith("-")) {
-                if (builder.length() == uri.length()) {
-                    builder.append("?");
-                } else {
-                    builder.append("&");
-                }
-
-                if (token.startsWith("--")) {
-                    builder.append(token.substring(2));
-                } else {
-                    builder.append(token.substring(1));
-                }
-                builder.append("=");
-
-            } else {
-                builder.append(token);
-            }
-        }
-
-        return URI.create(builder.toString());
-
-    }
-
-    public static URI toURI(String[] args) {
-        if (args.length == 0) {
-            throw new IllegalArgumentException("");
-        }
-
-        StringBuilder builder = new StringBuilder(args[0]);
-        if (args.length > 1) {
-            builder.append("?");
-            for (int i = 1; i < args.length; i++) {
-                if (args[i].startsWith("--")) {
-                    builder.append(args[i].substring(2)).append("=");
-
-                } else if (args[i].startsWith("-")) {
-                    builder.append(args[i].substring(1)).append("=");
-
-                } else {
-                    builder.append(args[i]).append("&");
-
-                }
-            }
-        }
-
-        if (builder.charAt(builder.length() - 1) == '&') {
-            builder.deleteCharAt(builder.length() - 1);
-        }
-
-        return URI.create(builder.toString());
-    }
-
-    public static Map<String, List<String>> splitQuery(String query) {
-        Map<String, List<String>> params = new HashMap<>();
-        try {
-            params = splitQuery(query, "UTF-8");
-
-        } catch (UnsupportedEncodingException e) {
-
-        }
-        return params;
-    }
-
-    public static Map<String, List<String>> splitQuery(String query, String encoding) throws
-            UnsupportedEncodingException {
-        final Map<String, List<String>> query_pairs = new LinkedHashMap<String, List<String>>();
-        if (query != null && !query.isEmpty()) {
-            final String[] pairs = query.split("&");
-            for (String pair : pairs) {
-                final int idx = pair.indexOf("=");
-                final String key = idx > 0 ? URLDecoder.decode(pair.substring(0, idx), encoding) : pair;
-                if (!query_pairs.containsKey(key)) {
-                    query_pairs.put(key, new LinkedList<String>());
-                }
-                final String value = idx > 0 && pair.length() > idx + 1 ? URLDecoder.decode(pair.substring(idx + 1), "UTF-8") : null;
-                query_pairs.get(key).add(value);
-            }
-        }
-        return query_pairs;
-    }
+    private static String DEFAULT_ENCODING = "utf-8";
 
     public static String[] trim(String[] array) {
         if (array == null) {
@@ -133,5 +42,110 @@ public class StringUtils {
 
         return builder.toString();
 
+    }
+
+    public static String base64Encode(String text) {
+        return base64Encode(text, DEFAULT_ENCODING);
+    }
+
+    public static String base64Encode(String text, String encoding) {
+        try {
+            return Base64.getEncoder().encodeToString(text.getBytes(encoding));
+
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static String base64Decode(String text) {
+        return base64Decode(text, DEFAULT_ENCODING);
+    }
+
+    public static String base64Decode(String text, String encoding) {
+        try {
+            return new String(Base64.getDecoder().decode(text.getBytes()), encoding);
+
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static boolean isBase64(String s) {
+        String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(s);
+        return m.find();
+    }
+
+    public static String gzip(String text) {
+        return gzip(text, DEFAULT_ENCODING);
+    }
+
+    public static String gzip(String text, String encoding) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream)) {
+                gzipOutputStream.write(text.getBytes(encoding));
+            }
+
+            byte[] encoded = Base64.getEncoder().encode(byteArrayOutputStream.toByteArray());
+            return new String(encoded);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to zip content", e);
+        }
+    }
+
+    public static String unzip(String text) {
+        return unzip(text, DEFAULT_ENCODING);
+    }
+
+    public static String unzip(String text, String encoding) {
+        byte[] encoded;
+        try {
+            encoded = text.getBytes(encoding);
+
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        byte[] compressed = Base64.getDecoder().decode(encoded);
+
+        if ((compressed == null) || (compressed.length == 0)) {
+            throw new IllegalArgumentException("Cannot unzip null or empty bytes");
+        }
+
+        if (!isZipped(compressed)) {
+            return new String(compressed);
+        }
+
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(compressed)) {
+            try (GZIPInputStream gzipInputStream = new GZIPInputStream(byteArrayInputStream)) {
+                try (InputStreamReader inputStreamReader = new InputStreamReader(gzipInputStream, encoding)) {
+                    try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+                        StringBuilder output = new StringBuilder();
+                        String line;
+                        boolean boo = false;
+                        while ((line = bufferedReader.readLine()) != null) {
+                            if (boo) {
+                                output.append("\n");
+                            } else {
+                                boo = true;
+                            }
+
+                            output.append(line);
+                        }
+
+                        return output.toString();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to unzip content", e);
+        }
+    }
+
+    public static boolean isZipped(final byte[] compressed) {
+        return (compressed[0] == (byte) (GZIPInputStream.GZIP_MAGIC))
+                && (compressed[1] == (byte) (GZIPInputStream.GZIP_MAGIC >> 8));
     }
 }

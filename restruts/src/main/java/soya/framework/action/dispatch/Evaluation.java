@@ -4,21 +4,21 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public final class Evaluation implements Serializable {
-    private final EvaluationMethod evaluationMethod;
+    private final AssignmentType assignmentType;
     private final String expression;
 
     public Evaluation(String assignment) {
-        this.evaluationMethod = EvaluationMethod.getAssignmentMethod(assignment);
+        this.assignmentType = AssignmentType.getAssignmentMethod(assignment);
         this.expression = assignment.substring(assignment.indexOf('(') + 1, assignment.lastIndexOf(')')).trim();
     }
 
-    public Evaluation(EvaluationMethod evaluationMethod, String expression) {
-        this.evaluationMethod = evaluationMethod;
+    public Evaluation(AssignmentType assignmentType, String expression) {
+        this.assignmentType = assignmentType;
         this.expression = expression;
     }
 
-    public EvaluationMethod getAssignmentMethod() {
-        return evaluationMethod;
+    public AssignmentType getAssignmentMethod() {
+        return assignmentType;
     }
 
     public String getExpression() {
@@ -27,7 +27,7 @@ public final class Evaluation implements Serializable {
 
     @Override
     public String toString() {
-        return evaluationMethod.toString(expression);
+        return assignmentType.toString(expression);
     }
 
     @Override
@@ -35,11 +35,11 @@ public final class Evaluation implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Evaluation)) return false;
         Evaluation that = (Evaluation) o;
-        return evaluationMethod == that.evaluationMethod && expression.equals(that.expression);
+        return assignmentType == that.assignmentType && expression.equals(that.expression);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(evaluationMethod, expression);
+        return Objects.hash(assignmentType, expression);
     }
 }

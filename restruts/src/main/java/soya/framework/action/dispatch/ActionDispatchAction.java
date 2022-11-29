@@ -19,21 +19,21 @@ public abstract class ActionDispatchAction<T> extends Action<T> {
         ActionCallable action = actionClass.newInstance();
 
         for (ActionPropertyAssignment assignment : actionMapping.propertyAssignments()) {
-            EvaluationMethod evaluationMethod = assignment.assignmentMethod();
+            AssignmentType assignmentType = assignment.assignmentType();
             Field field = ReflectUtils.findField(actionType, assignment.name());
             Object value = null;
-            if (EvaluationMethod.VALUE.equals(evaluationMethod)) {
+            if (AssignmentType.VALUE.equals(assignmentType)) {
                 value = assignment.expression();
 
-            } else if (EvaluationMethod.RESOURCE.equals(evaluationMethod)) {
+            } else if (AssignmentType.RESOURCE.equals(assignmentType)) {
                 value = Resources.getResourceAsString(assignment.expression());
 
-            } else if (EvaluationMethod.PARAMETER.equals(evaluationMethod)) {
+            } else if (AssignmentType.PARAMETER.equals(assignmentType)) {
                 Field paramField = ReflectUtils.findField(getClass(), assignment.expression());
                 paramField.setAccessible(true);
                 value = paramField.get(this);
 
-            } else if (EvaluationMethod.REFERENCE.equals(evaluationMethod)) {
+            } else if (AssignmentType.REFERENCE.equals(assignmentType)) {
                 throw new IllegalArgumentException("No context defined for 'REFERENCE' assignment.");
 
             }

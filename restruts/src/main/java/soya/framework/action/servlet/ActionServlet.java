@@ -3,7 +3,7 @@ package soya.framework.action.servlet;
 import org.reflections.Reflections;
 import soya.framework.action.*;
 import soya.framework.action.servlet.api.Swagger;
-import soya.framework.commons.util.StringUtils;
+import soya.framework.commons.util.URIUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
@@ -231,7 +231,7 @@ public class ActionServlet extends HttpServlet {
 
             }
 
-            StringBuilder descBuilder = new StringBuilder(StringUtils.merge(actionDefinition.description(), "\n")).append("\n");
+            StringBuilder descBuilder = new StringBuilder(URIUtils.merge(actionDefinition.description(), "\n")).append("\n");
             descBuilder.append("- Action name: ").append(actionDefinition.domain()).append("://").append(actionDefinition.name()).append("\n");
             descBuilder.append("- Action class: ").append(cls.getName()).append("\n");
 
@@ -243,19 +243,19 @@ public class ActionServlet extends HttpServlet {
                         ActionProperty param = f.getAnnotation(ActionProperty.class);
                         String name = param.name().isEmpty() ? f.getName() : param.name();
                         if (ActionProperty.PropertyType.PATH_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "path", StringUtils.merge(param.description(), "\n")).build();
+                            pathBuilder.parameterBuilder(name, "path", URIUtils.merge(param.description(), "\n")).build();
 
                         } else if (ActionProperty.PropertyType.QUERY_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "query", StringUtils.merge(param.description(), "\n")).build();
+                            pathBuilder.parameterBuilder(name, "query", URIUtils.merge(param.description(), "\n")).build();
 
                         } else if (ActionProperty.PropertyType.HEADER_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "header", StringUtils.merge(param.description(), "\n")).build();
+                            pathBuilder.parameterBuilder(name, "header", URIUtils.merge(param.description(), "\n")).build();
 
                         } else if (ActionProperty.PropertyType.COOKIE_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "cookie", StringUtils.merge(param.description(), "\n")).build();
+                            pathBuilder.parameterBuilder(name, "cookie", URIUtils.merge(param.description(), "\n")).build();
 
                         } else if (ActionProperty.PropertyType.PAYLOAD.equals(param.parameterType())) {
-                            pathBuilder.bodyParameterBuilder(name, StringUtils.merge(param.description(), "\n"))
+                            pathBuilder.bodyParameterBuilder(name, URIUtils.merge(param.description(), "\n"))
                                     .build()
                                     .consumes(param.contentType());
                         }

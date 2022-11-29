@@ -1,5 +1,6 @@
 package soya.framework.action.springboot.starter;
 
+import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,12 +16,14 @@ import soya.framework.action.ActionContext;
 import soya.framework.action.ServiceLocator;
 import soya.framework.action.ServiceNotAvailableException;
 import soya.framework.action.dispatch.proxy.ActionProxyFactory;
+import soya.framework.action.dispatch.proxy.ActionProxyPattern;
 import soya.framework.action.servlet.ActionServlet;
 import soya.framework.action.servlet.StateMachineServlet;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.stream.StreamSupport;
 
 @Configuration
@@ -107,7 +110,17 @@ public class ActionContextAutoConfiguration {
 
     @Bean
     ActionProxyFactory actionProxyFactory() {
-        return new ActionProxyFactory();
+        ActionProxyFactory proxyFactory = new ActionProxyFactory();
+
+        Reflections reflections = new Reflections();
+        Set<Class<?>> proxyInterfaces = reflections.getTypesAnnotatedWith(ActionProxyPattern.class);
+        proxyInterfaces.forEach(e -> {
+            if(e.isInterface()) {
+                proxyFactory.create(e);
+            }
+        });
+
+        return proxyFactory;
     }
 
     @Bean

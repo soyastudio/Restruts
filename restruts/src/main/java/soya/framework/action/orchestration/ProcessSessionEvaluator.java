@@ -3,7 +3,7 @@ package soya.framework.action.orchestration;
 import soya.framework.action.ConvertUtils;
 import soya.framework.action.Resources;
 import soya.framework.action.dispatch.Evaluation;
-import soya.framework.action.dispatch.EvaluationMethod;
+import soya.framework.action.dispatch.AssignmentType;
 import soya.framework.action.dispatch.Evaluator;
 
 import java.io.InputStream;
@@ -15,12 +15,12 @@ public class ProcessSessionEvaluator implements Evaluator {
 
         Object value = null;
 
-        EvaluationMethod evaluationMethod = evaluation.getAssignmentMethod();
+        AssignmentType assignmentType = evaluation.getAssignmentMethod();
         String expression = evaluation.getExpression();
-        if (EvaluationMethod.VALUE.equals(evaluationMethod)) {
+        if (AssignmentType.VALUE.equals(assignmentType)) {
             value = ConvertUtils.convert(expression, type);
 
-        } else if (EvaluationMethod.RESOURCE.equals(evaluationMethod)) {
+        } else if (AssignmentType.RESOURCE.equals(assignmentType)) {
             if (InputStream.class.isAssignableFrom(type)) {
                 value = Resources.getResourceAsInputStream(expression);
 
@@ -29,10 +29,10 @@ public class ProcessSessionEvaluator implements Evaluator {
 
             }
 
-        } else if (EvaluationMethod.REFERENCE.equals(evaluationMethod)) {
+        } else if (AssignmentType.REFERENCE.equals(assignmentType)) {
             value = ConvertUtils.convert(session.parameterValue(evaluation.getExpression()), type);
 
-        } else if (EvaluationMethod.PARAMETER.equals(evaluationMethod)) {
+        } else if (AssignmentType.PARAMETER.equals(assignmentType)) {
             value = ConvertUtils.convert(session.get(evaluation.getExpression()), type);
         }
 

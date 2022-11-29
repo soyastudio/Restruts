@@ -30,7 +30,7 @@ public abstract class ScheduledDispatchJob implements Job {
             Object[] paramValues = new Object[assignments.length];
             for (int i = 0; i < assignments.length; i++) {
                 paramTypes[i] = assignments[i].type();
-                if (assignments[i].assignmentMethod().equals(EvaluationMethod.VALUE)) {
+                if (assignments[i].assignmentMethod().equals(AssignmentType.VALUE)) {
                     paramValues[i] = ConvertUtils.convert(assignments[i].expression(), paramTypes[i]);
                 }
             }

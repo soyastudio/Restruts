@@ -2,7 +2,7 @@ package soya.framework.action.actions.reflect;
 
 import soya.framework.action.*;
 import soya.framework.commons.util.CodeBuilder;
-import soya.framework.commons.util.StringUtils;
+import soya.framework.commons.util.URIUtils;
 
 import java.lang.reflect.Field;
 
@@ -17,7 +17,7 @@ public abstract class ApiAction extends Action<String> {
         String domainPath = domainType == null ? "" : domainType.getAnnotation(Domain.class).path();
 
         builder.append("## ACTION: ").appendLine(operation.displayName().isEmpty() ? operation.name() : operation.displayName());
-        builder.appendLine(StringUtils.merge(operation.description(), "\n"));
+        builder.appendLine(URIUtils.merge(operation.description(), "\n"));
 
         builder.appendLine("### 1. Action Definition");
         builder.append("- class: ").appendLine(actionClass.getActionType().getName());
@@ -38,7 +38,7 @@ public abstract class ApiAction extends Action<String> {
                 builder.append("- ").appendLine(field.getName());
                 if (field.getAnnotation(ActionProperty.class) != null) {
                     ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
-                    builder.append("-- Description: ").appendLine(StringUtils.merge(actionProperty.description(), "\n"));
+                    builder.append("-- Description: ").appendLine(URIUtils.merge(actionProperty.description(), "\n"));
                     builder.append("-- Property Type: ").appendLine(field.getType().getName());
                     builder.append("-- HTTP Input Type: ").appendLine(actionProperty.parameterType().name());
                     builder.append("-- Required: ").appendLine("" + actionProperty.required());

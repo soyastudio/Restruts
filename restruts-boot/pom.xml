@@ -82,6 +82,12 @@
 
         <dependency>
             <groupId>soya.framework.restruts</groupId>
+            <artifactId>restruts-mustache</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>soya.framework.restruts</groupId>
             <artifactId>restruts-document</artifactId>
             <version>${project.version}</version>
         </dependency>

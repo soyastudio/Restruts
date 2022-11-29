@@ -1,7 +1,7 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
-import soya.framework.commons.util.StringUtils;
+import soya.framework.commons.util.URIUtils;
 
 import java.lang.reflect.Field;
 import java.net.URI;
@@ -24,7 +24,7 @@ public final class ActionDispatch {
 
         List<String> params = new ArrayList<>();
         assignments.entrySet().forEach(e -> {
-            if (e.getValue().getAssignmentMethod().equals(EvaluationMethod.PARAMETER)) {
+            if (e.getValue().getAssignmentMethod().equals(AssignmentType.PARAMETER)) {
                 params.add(e.getValue().getExpression());
             }
         });
@@ -104,7 +104,7 @@ public final class ActionDispatch {
     public static ActionDispatch fromAnnotation(ActionDispatchPattern pattern) {
         ActionDispatch.Builder builder = builder(ActionName.fromURI(URI.create(pattern.uri())));
         for (ActionPropertyAssignment assignment : pattern.propertyAssignments()) {
-            builder.addAssignment(assignment.name(), assignment.assignmentMethod(), assignment.expression());
+            builder.addAssignment(assignment.name(), assignment.assignmentType(), assignment.expression());
         }
 
         return builder.create();
@@ -131,7 +131,7 @@ public final class ActionDispatch {
         }
 
         if (uri.getQuery() != null) {
-            StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
+            URIUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
                 String name = e.getKey();
                 String expression = e.getValue().get(0);
                 builder.addAssignment(name, expression);
@@ -165,8 +165,8 @@ public final class ActionDispatch {
             return this;
         }
 
-        public Builder addAssignment(String name, EvaluationMethod evaluationMethod, String expression) {
-            params.put(name, new Evaluation(evaluationMethod, expression));
+        public Builder addAssignment(String name, AssignmentType assignmentType, String expression) {
+            params.put(name, new Evaluation(assignmentType, expression));
             return this;
         }
 

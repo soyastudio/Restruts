@@ -10,7 +10,7 @@ public abstract class CommandDispatchAction<T> extends Action<T> {
         CommandDispatchPattern annotation = getClass().getAnnotation(CommandDispatchPattern.class);
         CommandDispatcher dispatcher = new CommandDispatcher(annotation.commandType(), annotation.methodName());
         for (ActionPropertyAssignment assignment : annotation.propertyAssignments()) {
-            dispatcher.assignProperty(assignment.name(), assignment.assignmentMethod(), assignment.expression());
+            dispatcher.assignProperty(assignment.name(), assignment.assignmentType(), assignment.expression());
         }
 
         return convert(dispatcher.dispatch(this));

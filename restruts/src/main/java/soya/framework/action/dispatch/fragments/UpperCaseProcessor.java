@@ -4,7 +4,7 @@ import soya.framework.action.ActionResult;
 import soya.framework.action.dispatch.FragmentFunction;
 
 @FragmentFunction("uppercase")
-public class UpperCaseProcessor extends AbstractFragmentProcessor<String> {
+public class UpperCaseProcessor extends AbstractProcessor<String> {
 
     public UpperCaseProcessor(String[] exp) {
         super(exp);
@@ -12,6 +12,6 @@ public class UpperCaseProcessor extends AbstractFragmentProcessor<String> {
 
     @Override
     public String process(ActionResult in) {
-        return null;
+        return in.get().toString().toUpperCase();
     }
 }

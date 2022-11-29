@@ -6,7 +6,7 @@ import soya.framework.action.MediaType;
 import soya.framework.action.dispatch.ActionDispatchAction;
 import soya.framework.action.dispatch.ActionDispatchPattern;
 import soya.framework.action.dispatch.ActionPropertyAssignment;
-import soya.framework.action.dispatch.EvaluationMethod;
+import soya.framework.action.dispatch.AssignmentType;
 
 @ActionDefinition(domain = "pattern",
         name = "action-dispatch-example",
@@ -17,7 +17,7 @@ import soya.framework.action.dispatch.EvaluationMethod;
         description = "EDM Table Mapping.")
 @ActionDispatchPattern(uri = "albertsons://base64-encode",
         propertyAssignments = {
-                @ActionPropertyAssignment(name = "message", assignmentMethod = EvaluationMethod.PARAMETER, expression = "msg")
+                @ActionPropertyAssignment(name = "message", assignmentType = AssignmentType.PARAMETER, expression = "msg")
         })
 public class ActionDispatchExample extends ActionDispatchAction<String> {
 

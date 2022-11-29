@@ -1,7 +1,7 @@
 package soya.framework.action;
 
 import soya.framework.commons.util.StreamUtils;
-import soya.framework.commons.util.StringUtils;
+import soya.framework.commons.util.URIUtils;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -254,7 +254,7 @@ public class Resources {
             }
 
             if (this.uri.getQuery() != null) {
-                params = StringUtils.splitQuery(this.uri.getQuery());
+                params = URIUtils.splitQuery(this.uri.getQuery());
             }
         }
 

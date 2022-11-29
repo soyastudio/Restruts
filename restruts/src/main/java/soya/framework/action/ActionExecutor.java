@@ -1,9 +1,8 @@
 package soya.framework.action;
 
 import soya.framework.action.actions.reflect.EchoAction;
-import soya.framework.commons.util.StringUtils;
+import soya.framework.commons.util.URIUtils;
 
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.LinkedHashMap;
@@ -43,7 +42,7 @@ public final class ActionExecutor {
         try {
             uri = URI.create(cmd);
         } catch (Exception e) {
-            uri = StringUtils.toURI(cmd);
+            uri = URIUtils.toURI(cmd);
         }
 
         if (uri.getScheme().equals("class")) {
@@ -61,7 +60,7 @@ public final class ActionExecutor {
         }
 
         ActionExecutor executor = new ActionExecutor(actionClass.getActionType());
-        StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
+        URIUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
             Field field = actionClass.getActionField(e.getKey());
             if (field != null) {
                 executor.setProperty(field.getName(), ConvertUtils.convert(e.getValue().get(0), field.getType()));
@@ -89,7 +88,7 @@ public final class ActionExecutor {
         }
 
         ActionExecutor executor = new ActionExecutor(actionClass.getActionType());
-        StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
+        URIUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
             Field field = actionClass.getActionField(e.getKey());
             if (field != null) {
                 executor.setProperty(field.getName(), ConvertUtils.convert(e.getValue().get(0), field.getType()));
@@ -101,7 +100,7 @@ public final class ActionExecutor {
     }
 
     public static ActionExecutor executor(String[] args) {
-        return executor(StringUtils.toURI(args));
+        return executor(URIUtils.toURI(args));
     }
 
     public static ActionExecutor executor(Class<? extends ActionCallable> actionType) {

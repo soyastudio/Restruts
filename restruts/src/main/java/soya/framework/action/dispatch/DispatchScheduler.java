@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import soya.framework.action.*;
-import soya.framework.commons.util.StringUtils;
+import soya.framework.commons.util.URIUtils;
 
 import java.lang.reflect.Field;
 import java.net.URI;
@@ -101,17 +101,17 @@ public class DispatchScheduler {
 
 
                 ActionExecutor executor = ActionExecutor.executor(actionClass.getActionType());
-                StringUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
+                URIUtils.splitQuery(uri.getQuery()).entrySet().forEach(e -> {
                     Field field = actionClass.getActionField(e.getKey());
                     if (field != null) {
                         String exp = e.getValue().get(0);
                         String value = exp;
                         if(exp.contains("(") && exp.endsWith(")")) {
                             Evaluation evaluation = new Evaluation(exp);
-                            if(EvaluationMethod.VALUE.equals(evaluation.getAssignmentMethod())) {
+                            if(AssignmentType.VALUE.equals(evaluation.getAssignmentMethod())) {
                                 value = evaluation.getExpression();
 
-                            } else if(EvaluationMethod.RESOURCE.equals(evaluation.getAssignmentMethod())) {
+                            } else if(AssignmentType.RESOURCE.equals(evaluation.getAssignmentMethod())) {
                                 value = Resources.getResourceAsString(evaluation.getExpression());
                             }
                         }

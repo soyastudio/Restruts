@@ -21,8 +21,8 @@ public final class CommandDispatcher extends Dispatcher {
         super(executeClass, methodName, new Class[0]);
     }
 
-    public CommandDispatcher assignProperty(String propName, EvaluationMethod evaluationMethod, String expression) {
-        assignments.put(propName, new Evaluation(evaluationMethod, expression));
+    public CommandDispatcher assignProperty(String propName, AssignmentType assignmentType, String expression) {
+        assignments.put(propName, new Evaluation(assignmentType, expression));
         return this;
     }
 
@@ -41,18 +41,18 @@ public final class CommandDispatcher extends Dispatcher {
 
             Object value = null;
             Evaluation evaluation = e.getValue();
-            if (evaluation.getAssignmentMethod().equals(EvaluationMethod.VALUE)) {
+            if (evaluation.getAssignmentMethod().equals(AssignmentType.VALUE)) {
                 value = evaluation.getExpression();
 
-            } else if (evaluation.getAssignmentMethod().equals(EvaluationMethod.RESOURCE)) {
+            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.RESOURCE)) {
                 value = Resources.getResourceAsString(evaluation.getExpression());
 
-            } else if (evaluation.getAssignmentMethod().equals(EvaluationMethod.PARAMETER)) {
+            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.PARAMETER)) {
                 Field actionField = actionClass.getActionField(evaluation.getExpression());
                 actionField.setAccessible(true);
                 value = actionField.get(context);
 
-            } else if (evaluation.getAssignmentMethod().equals(EvaluationMethod.REFERENCE)) {
+            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.REFERENCE)) {
                 throw new IllegalArgumentException("");
             }
 

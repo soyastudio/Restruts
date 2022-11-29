@@ -1,13 +1,28 @@
 package soya.framework.commons.util;
 
+import org.reflections.Reflections;
+import soya.framework.action.dispatch.FragmentFunction;
+import soya.framework.action.dispatch.FragmentProcessor;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ReflectUtils {
+
     private ReflectUtils() {
+    }
+
+    public static <T> Set<Class<? extends T>> scanForSubType(String packageName , Class<T> type) {
+        return new Reflections(packageName).getSubTypesOf(type);
+    }
+
+    public static Set<Class<?>> scanForAnnotation(String packageName , Class<? extends Annotation> type) {
+        return new Reflections(packageName).getTypesAnnotatedWith(type);
     }
 
     public static Field findField(Class<?> cls, String fieldName) {

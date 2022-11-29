@@ -4,7 +4,7 @@ import com.google.gson.*;
 import org.apache.commons.beanutils.PropertyUtils;
 import soya.framework.action.*;
 import soya.framework.commons.util.ReflectUtils;
-import soya.framework.commons.util.StringUtils;
+import soya.framework.commons.util.URIUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -89,7 +89,7 @@ public class GenericCommandDispatchAction extends GenericDispatchAction<Object> 
             }
 
         } else {
-            Map<String, List<String>> paramMap = StringUtils.splitQuery(propertyAssignments);
+            Map<String, List<String>> paramMap = URIUtils.splitQuery(propertyAssignments);
             JsonObject jsonObject = data == null ? null : JsonParser.parseString(data).getAsJsonObject();
 
             paramMap.entrySet().forEach(e -> {
@@ -99,13 +99,13 @@ public class GenericCommandDispatchAction extends GenericDispatchAction<Object> 
 
                 Evaluation evaluation = new Evaluation(e.getValue().get(0));
 
-                if (EvaluationMethod.VALUE.equals(evaluation.getAssignmentMethod())) {
+                if (AssignmentType.VALUE.equals(evaluation.getAssignmentMethod())) {
                     propValue = ConvertUtils.convert(evaluation.getExpression(), propType);
 
-                } else if (EvaluationMethod.RESOURCE.equals(evaluation.getAssignmentMethod())) {
+                } else if (AssignmentType.RESOURCE.equals(evaluation.getAssignmentMethod())) {
                     propValue = ConvertUtils.convert(Resources.getResourceAsString(evaluation.getExpression()), propType);
 
-                } else if (EvaluationMethod.PARAMETER.equals(evaluation.getAssignmentMethod())) {
+                } else if (AssignmentType.PARAMETER.equals(evaluation.getAssignmentMethod())) {
                     if (jsonObject != null) {
                         JsonElement jsonElement = jsonObject.get(evaluation.getExpression());
                         propValue = gson.fromJson(jsonElement, propType);

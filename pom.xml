@@ -261,6 +261,7 @@
         <module>restruts-ant</module>
         <module>restruts-git</module>
 
+        <module>restruts-mustache</module>
         <module>restruts-document</module>
 
         <module>restruts-kafka</module>
@@ -270,6 +271,8 @@
         <module>restruts-workshop</module>
 
         <module>restruts-boot</module>
+        <module>restruts-csv</module>
+        <module>restruts-transform</module>
     </modules>
 
 </project>

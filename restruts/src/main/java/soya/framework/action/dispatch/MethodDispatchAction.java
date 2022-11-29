@@ -24,20 +24,20 @@ public abstract class MethodDispatchAction<T> extends Action<T> {
         for (int i = 0; i < assignments.length; i++) {
             paramTypes[i] = assignments[i].type();
 
-            if (EvaluationMethod.VALUE.equals(assignments[i].assignmentMethod())) {
+            if (AssignmentType.VALUE.equals(assignments[i].assignmentMethod())) {
                 paramValues[i] = ConvertUtils.convert(assignments[i].expression(), paramTypes[i]);
 
-            } else if (EvaluationMethod.RESOURCE.equals(assignments[i].assignmentMethod())) {
+            } else if (AssignmentType.RESOURCE.equals(assignments[i].assignmentMethod())) {
                 if (InputStream.class.isAssignableFrom(paramTypes[i])) {
                     paramValues[i] = Resources.getResourceAsInputStream(assignments[i].expression());
                 } else {
                     paramValues[i] = ConvertUtils.convert(Resources.getResourceAsString(assignments[i].expression()), paramTypes[i]);
                 }
 
-            } else if (EvaluationMethod.REFERENCE.equals(assignments[i].assignmentMethod())) {
+            } else if (AssignmentType.REFERENCE.equals(assignments[i].assignmentMethod())) {
                 paramValues[i] = ActionContext.getInstance().getService(assignments[i].expression(), assignments[i].type());
 
-            } else if (EvaluationMethod.PARAMETER.equals(assignments[i].assignmentMethod())) {
+            } else if (AssignmentType.PARAMETER.equals(assignments[i].assignmentMethod())) {
                 Field field = actionClass.getActionField(assignments[i].expression());
                 field.setAccessible(true);
                 paramValues[i] = field.get(this);

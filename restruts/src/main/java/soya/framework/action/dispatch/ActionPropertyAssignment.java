@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 public @interface ActionPropertyAssignment {
     String name();
 
-    EvaluationMethod assignmentMethod();
+    AssignmentType assignmentType();
 
     String expression();
 
