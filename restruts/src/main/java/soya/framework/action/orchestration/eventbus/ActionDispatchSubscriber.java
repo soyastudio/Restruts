@@ -68,7 +68,7 @@ public abstract class ActionDispatchSubscriber implements Subscriber {
         }
 
         ActionDispatchSession session = digester != null? digester.digest(event) : new EventSession(actionDispatch, event);
-        ActionResult result = actionDispatch.create(session, evaluator).call();
+        ActionResult result = actionDispatch.dispatch(session);
 
         if (getClass().getAnnotation(EventPublisher.class) != null) {
             EventPublisher publisher = getClass().getAnnotation(EventPublisher.class);

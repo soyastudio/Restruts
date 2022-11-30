@@ -53,12 +53,6 @@ public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
             }
         }
 
-        ActionResult actionResult = dispatch.create(context).call();
-
-        if(dispatch.getFragment() != null) {
-            actionResult = Fragment.process(actionResult, dispatch.getFragment());
-        }
-
-        return actionResult.get();
+        return dispatch.dispatch(context);
     }
 }

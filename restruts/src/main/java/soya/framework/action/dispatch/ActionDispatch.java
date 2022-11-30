@@ -49,50 +49,6 @@ public final class ActionDispatch {
         return fragment;
     }
 
-    public ActionCallable create(Object context, AssignmentEvaluator evaluator) {
-        return create(context, DEFAULT_EVALUATOR);
-    }
-
-    public ActionCallable create(Object context) {
-        return create(context, DEFAULT_EVALUATOR);
-    }
-
-    public ActionCallable create(Object context, Evaluator evaluator) {
-        Class<? extends ActionCallable> actionType = null;
-        if ("class".equals(actionName.getDomain())) {
-            try {
-                actionType = (Class<? extends ActionCallable>) Class.forName(actionName.getName());
-
-            } catch (ClassNotFoundException e) {
-                throw new ActionDispatchException(e);
-            }
-        } else {
-            actionType = ActionContext.getInstance().getActionMappings().actionClass(actionName).getActionType();
-        }
-
-        try {
-            ActionCallable action = actionType.newInstance();
-            ActionClass actionClass = ActionClass.get(actionType);
-            Field[] fields = actionClass.getActionFields();
-            for (Field field : fields) {
-                if (assignments.containsKey(field.getName())) {
-                    Assignment assignment = assignments.get(field.getName());
-                    Object value = evaluator.evaluate(assignment, context, field.getType());
-                    if (value != null) {
-                        field.setAccessible(true);
-                        field.set(action, value);
-                    }
-                }
-            }
-
-            return action;
-
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new ActionDispatchException(e);
-        }
-
-    }
-
     public String toURI() {
         StringBuilder builder = new StringBuilder(actionName.toString());
         if (assignments.size() > 0) {
@@ -103,6 +59,10 @@ public final class ActionDispatch {
             builder.deleteCharAt(builder.length() - 1);
         }
         return builder.toString();
+    }
+
+    public ActionResult dispatch(Object context) throws ActionDispatchException {
+        return dispatch(context, AssignmentEvaluator.DEFAULT_EVALUATOR);
     }
 
     public ActionResult dispatch(Object context, AssignmentEvaluator evaluator) throws ActionDispatchException {

@@ -10,9 +10,9 @@ public final class ActionDispatchJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
         ActionDispatch
                 .fromURI(jobExecutionContext.getJobDetail().getJobDataMap().getString(ACTION_DISPATCH))
-                .create(jobExecutionContext)
-                .call();
+                .dispatch(jobExecutionContext);
     }
 }

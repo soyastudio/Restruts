@@ -1,6 +1,7 @@
 package soya.framework.action;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.net.URI;
@@ -50,6 +51,10 @@ public class ConvertUtils {
             } else {
                 return GSON.fromJson(JsonParser.parseString(str), type);
             }
+
+        } else if (value instanceof JsonElement) {
+            JsonElement jsonElement = (JsonElement) value;
+            return GSON.fromJson(jsonElement, type);
 
         } else {
             try {

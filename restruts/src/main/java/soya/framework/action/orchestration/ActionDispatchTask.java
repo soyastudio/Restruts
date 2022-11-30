@@ -17,10 +17,7 @@ public final class ActionDispatchTask<T> implements Task<T> {
 
     @Override
     public T execute(ProcessSession session) {
-        ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionDispatch.getActionName());
-        ActionCallable action = actionDispatch.create(session, new DefaultEvaluator(new ParameterEvaluator(), new ReferenceEvaluator()));
-
-        return (T) action.call().get();
+        return (T) actionDispatch.dispatch(session).get();
     }
 
     private static class ParameterEvaluator implements Evaluator {
