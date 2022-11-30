@@ -1,19 +1,32 @@
 package soya.framework.action.orchestration.choice;
 
 import soya.framework.action.dispatch.Assignment;
-import soya.framework.action.dispatch.Evaluator;
+import soya.framework.action.dispatch.AssignmentEvaluator;
 import soya.framework.action.orchestration.ProcessSession;
-import soya.framework.action.orchestration.ProcessSessionEvaluator;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class ConditionBuilder implements Serializable {
-    private static final Evaluator evaluator = new ProcessSessionEvaluator();
+    private static final AssignmentEvaluator evaluator;
 
     private final Assignment left;
     private final Assignment right;
     private final Operator operator;
+
+    static {
+        evaluator = AssignmentEvaluator
+                .builder()
+                .parameterResolver((expression, context) -> {
+                    ProcessSession session = (ProcessSession) context;
+                    return session.parameterValue(expression);
+                })
+                .referenceResolver((expression, context) -> {
+                    ProcessSession session = (ProcessSession) context;
+                    return session.get(expression);
+                })
+                .create();
+    }
 
     private ConditionBuilder(Assignment left, Assignment right, Operator operator) {
         this.left = left;
@@ -23,7 +36,7 @@ public class ConditionBuilder implements Serializable {
 
     public boolean evaluate(ProcessSession session) {
         String leftValue = (String) evaluator.evaluate(left, session, String.class);
-        String rightValue = (String) evaluator.evaluate(left, session, String.class);
+        String rightValue = (String) evaluator.evaluate(right, session, String.class);
 
         switch (operator) {
             case EQUAL_TO:

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class ActionDispatch {
-    private static final Evaluator DEFAULT_EVALUATOR = new DefaultEvaluator();
 
     private final ActionName actionName;
     private final Map<String, Assignment> assignments;

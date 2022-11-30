@@ -1,52 +1,12 @@
 package soya.framework.action.orchestration.eventbus;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import soya.framework.action.ActionContext;
 import soya.framework.action.ActionResult;
-import soya.framework.action.ConvertUtils;
-import soya.framework.action.dispatch.*;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
+import soya.framework.action.dispatch.ActionDispatch;
+import soya.framework.action.dispatch.ActionDispatchPattern;
+import soya.framework.action.dispatch.ActionDispatchSession;
 
 public abstract class ActionDispatchSubscriber implements Subscriber {
-    private static Evaluator evaluator;
-
-    static {
-        evaluator = new DefaultEvaluator(
-                // Reference evaluator
-                (assignment, context, type) -> {
-                    Event event = (Event) context;
-
-                    return null;
-                },
-
-                // Parameter evaluator
-                (assignment, context, type) -> {
-                    Event event = (Event) context;
-                    Object ctx = event.getPayload();
-
-                    String exp = assignment.getExpression();
-                    Object value = null;
-                    if (ctx instanceof String) {
-
-                    } else if (ctx instanceof Map) {
-                        Map<String, Object> map = (Map<String, Object>) ctx;
-                        value = map.get(exp);
-
-                    } else {
-                        try {
-                            value = PropertyUtils.getProperty(ctx, exp);
-
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    return ConvertUtils.convert(value, type);
-                }
-        );
-    }
 
     protected ActionDispatch actionDispatch;
 
@@ -60,14 +20,14 @@ public abstract class ActionDispatchSubscriber implements Subscriber {
     @Override
     public void onEvent(Event event) {
         EventDigester digester;
-        if(EventDigester.class.isAssignableFrom(getClass())) {
+        if (EventDigester.class.isAssignableFrom(getClass())) {
             digester = (EventDigester) this;
 
         } else {
             digester = getEventDigester();
         }
 
-        ActionDispatchSession session = digester != null? digester.digest(event) : new EventSession(actionDispatch, event);
+        ActionDispatchSession session = digester != null ? digester.digest(event) : new EventSession(actionDispatch, event);
         ActionResult result = actionDispatch.dispatch(session);
 
         if (getClass().getAnnotation(EventPublisher.class) != null) {

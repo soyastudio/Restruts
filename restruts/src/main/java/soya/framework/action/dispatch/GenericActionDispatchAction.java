@@ -53,6 +53,6 @@ public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
             }
         }
 
-        return dispatch.dispatch(context);
+        return dispatch.dispatch(context).get();
     }
 }
