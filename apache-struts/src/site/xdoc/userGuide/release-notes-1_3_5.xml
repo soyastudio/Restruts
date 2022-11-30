@@ -176,7 +176,7 @@
 <li>[<a href='http://issues.apache.org/struts/browse/STR-2862'>STR-2862</a>] - Cannot load a validator resource from '/WEB-INF/validator-rules.xml</li>
 <li>[<a href='http://issues.apache.org/struts/browse/STR-2859'>STR-2859</a>] - When using &lt;html:html xhtml="true"&gt; the form name is not used but the id, and the client validation using javascript fails</li>
 <li>[<a href='http://issues.apache.org/struts/browse/STR-2795'>STR-2795</a>] - Postback Forms - Caching and Modules</li>
-<li>[<a href='http://issues.apache.org/struts/browse/STR-2527'>STR-2527</a>] - Attributes with &lt;rtexprvalue>false&lt;/rtexprvalue> in TLD prevent EL evaluation</li>
+<li>[<a href='http://issues.apache.org/struts/browse/STR-2527'>STR-2527</a>] - Attributes with &lt;rtexprvalue>false&lt;/rtexprvalue> in TLD prevent EL assignment</li>
 <li>[<a href='http://issues.apache.org/struts/browse/STR-2496'>STR-2496</a>] - [struts-faces] Example applications don't work?!</li>
 <li>[<a href='http://issues.apache.org/struts/browse/STR-2493'>STR-2493</a>] - [struts-faces] ErrorsRenderer assumes ActionErrors</li>
 <li>[<a href='http://issues.apache.org/struts/browse/STR-1892'>STR-1892</a>] - timezone support for bean:write tag</li>

@@ -556,7 +556,7 @@ The "form-bean" element describes a particular form bean, which is a
                               Silently swallowed, reserved for future use
                      If not specified, the default forwardPattern is
                      "$M$P", which is consistent with previous hard coded
-                     behavior of URL evaluation for "page" attributes.
+                     behavior of URL assignment for "page" attributes.
                      ["$M$P"]
 
      processorClass  The fully qualified Java class name of the

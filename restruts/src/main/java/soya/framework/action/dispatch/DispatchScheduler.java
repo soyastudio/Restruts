@@ -107,12 +107,12 @@ public class DispatchScheduler {
                         String exp = e.getValue().get(0);
                         String value = exp;
                         if(exp.contains("(") && exp.endsWith(")")) {
-                            Evaluation evaluation = new Evaluation(exp);
-                            if(AssignmentType.VALUE.equals(evaluation.getAssignmentMethod())) {
-                                value = evaluation.getExpression();
+                            Assignment assignment = new Assignment(exp);
+                            if(AssignmentType.VALUE.equals(assignment.getAssignmentType())) {
+                                value = assignment.getExpression();
 
-                            } else if(AssignmentType.RESOURCE.equals(evaluation.getAssignmentMethod())) {
-                                value = Resources.getResourceAsString(evaluation.getExpression());
+                            } else if(AssignmentType.RESOURCE.equals(assignment.getAssignmentType())) {
+                                value = Resources.getResourceAsString(assignment.getExpression());
                             }
                         }
 

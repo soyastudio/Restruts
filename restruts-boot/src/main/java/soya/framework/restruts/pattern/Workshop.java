@@ -12,23 +12,14 @@ public interface Workshop {
     String about();
 
     @ActionDispatchPattern(
-            uri = "albertsons://base64-encode",
-            propertyAssignments = {
-                    @ActionPropertyAssignment(name = "message", assignmentType = AssignmentType.PARAMETER, expression = "msg")
-            }
+            uri = "albertsons://base64-encode?message=param(msg)"
     )
     String base64Encode(
             @ParamName("msg") String msg
     );
 
-    @ActionDispatchPattern(uri = "albertsons://base64-decode",
-            propertyAssignments = {
-                    @ActionPropertyAssignment(
-                            name = "message",
-                            assignmentType = AssignmentType.PARAMETER,
-                            expression = "msg"
-                    )
-            }
+    @ActionDispatchPattern(
+            uri = "albertsons://base64-decode?message=param(msg)#base64encode()"
     )
     String base64Decode(@ParamName("msg") String msg);
 

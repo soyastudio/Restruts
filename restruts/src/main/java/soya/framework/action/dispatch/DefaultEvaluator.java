@@ -28,11 +28,11 @@ public class DefaultEvaluator implements Evaluator {
     }
 
     @Override
-    public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
+    public Object evaluate(Assignment assignment, Object context, Class<?> type) {
         Object value = null;
 
-        AssignmentType assignmentType = evaluation.getAssignmentMethod();
-        String expression = evaluation.getExpression();
+        AssignmentType assignmentType = assignment.getAssignmentType();
+        String expression = assignment.getExpression();
         if (AssignmentType.VALUE.equals(assignmentType)) {
             value = ConvertUtils.convert(expression, type);
 
@@ -46,10 +46,10 @@ public class DefaultEvaluator implements Evaluator {
             }
 
         } else if (AssignmentType.REFERENCE.equals(assignmentType)) {
-            value = referenceEvaluator.evaluate(evaluation, context, type);
+            value = referenceEvaluator.evaluate(assignment, context, type);
 
         } else if (AssignmentType.PARAMETER.equals(assignmentType)) {
-            value = parameterEvaluator.evaluate(evaluation, context, type);
+            value = parameterEvaluator.evaluate(assignment, context, type);
         }
 
         return value;
@@ -58,8 +58,8 @@ public class DefaultEvaluator implements Evaluator {
     static class DefaultParameterEvaluator implements Evaluator {
 
         @Override
-        public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
-            String exp = evaluation.getExpression();
+        public Object evaluate(Assignment assignment, Object context, Class<?> type) {
+            String exp = assignment.getExpression();
             Object value = null;
             if (context instanceof ActionCallable) {
                 Field field = ReflectUtils.findField(context.getClass(), exp);
@@ -97,13 +97,13 @@ public class DefaultEvaluator implements Evaluator {
     static class DefaultReferenceEvaluator implements Evaluator {
 
         @Override
-        public Object evaluate(Evaluation evaluation, Object context, Class<?> type) {
+        public Object evaluate(Assignment assignment, Object context, Class<?> type) {
             if (context instanceof ActionDispatchSession) {
                 ActionDispatchSession session = (ActionDispatchSession) context;
-                return evaluate(evaluation, session.data(), type);
+                return evaluate(assignment, session.data(), type);
 
             } else {
-                String expression = evaluation.getExpression();
+                String expression = assignment.getExpression();
                 String[] arr = expression.split("\\.");
                 Object value = context;
                 for (String exp : arr) {

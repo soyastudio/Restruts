@@ -14,23 +14,23 @@ public final class ActionDispatch {
     private static final Evaluator DEFAULT_EVALUATOR = new DefaultEvaluator();
 
     private final ActionName actionName;
-    private final Map<String, Evaluation> assignments;
+    private final Map<String, Assignment> assignments;
     private final String[] parameterNames;
     private final String fragment;
 
-    private ActionDispatch(ActionName actionName, Map<String, Evaluation> assignments, String fragment) {
+    private ActionDispatch(ActionName actionName, Map<String, Assignment> assignments, String fragment) {
         this.actionName = actionName;
         this.assignments = assignments;
 
         List<String> params = new ArrayList<>();
         assignments.entrySet().forEach(e -> {
-            if (e.getValue().getAssignmentMethod().equals(AssignmentType.PARAMETER)) {
+            if (e.getValue().getAssignmentType().equals(AssignmentType.PARAMETER)) {
                 params.add(e.getValue().getExpression());
             }
         });
         parameterNames = params.toArray(new String[params.size()]);
 
-        this.fragment = fragment.isEmpty()? null : fragment;
+        this.fragment = fragment.isEmpty() ? null : fragment;
     }
 
     public ActionName getActionName() {
@@ -41,12 +41,16 @@ public final class ActionDispatch {
         return parameterNames;
     }
 
-    public Evaluation getAssignment(String propName) {
+    public Assignment getAssignment(String propName) {
         return assignments.get(propName);
     }
 
     public String getFragment() {
         return fragment;
+    }
+
+    public ActionCallable create(Object context, AssignmentEvaluator evaluator) {
+        return create(context, DEFAULT_EVALUATOR);
     }
 
     public ActionCallable create(Object context) {
@@ -72,8 +76,8 @@ public final class ActionDispatch {
             Field[] fields = actionClass.getActionFields();
             for (Field field : fields) {
                 if (assignments.containsKey(field.getName())) {
-                    Evaluation evaluation = assignments.get(field.getName());
-                    Object value = evaluator.evaluate(evaluation, context, field.getType());
+                    Assignment assignment = assignments.get(field.getName());
+                    Object value = evaluator.evaluate(assignment, context, field.getType());
                     if (value != null) {
                         field.setAccessible(true);
                         field.set(action, value);
@@ -101,13 +105,35 @@ public final class ActionDispatch {
         return builder.toString();
     }
 
-    public static ActionDispatch fromAnnotation(ActionDispatchPattern pattern) {
-        ActionDispatch.Builder builder = builder(ActionName.fromURI(URI.create(pattern.uri())));
-        for (ActionPropertyAssignment assignment : pattern.propertyAssignments()) {
-            builder.addAssignment(assignment.name(), assignment.assignmentType(), assignment.expression());
+    public ActionResult dispatch(Object context, AssignmentEvaluator evaluator) throws ActionDispatchException {
+        ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionName);
+        ActionCallable action = actionClass.newInstance();
+
+        for (Field field : actionClass.getActionFields()) {
+            Assignment assignment = getAssignment(field.getName());
+
+            if (assignment == null) {
+                assignment = new Assignment(AssignmentType.PARAMETER.toString(field.getName()));
+            }
+
+            Object value = evaluator.evaluate(assignment, context, field.getType());
+            if (value != null) {
+                field.setAccessible(true);
+                try {
+                    field.set(action, ConvertUtils.convert(value, field.getType()));
+                } catch (IllegalAccessException e) {
+                    throw new ActionDispatchException(e);
+                }
+            }
         }
 
-        return builder.create();
+        ActionResult actionResult = action.call();
+
+        if (fragment != null) {
+            actionResult = Fragment.process(actionResult, fragment);
+        }
+
+        return actionResult;
     }
 
     public static ActionDispatch fromURI(String uri) {
@@ -139,7 +165,7 @@ public final class ActionDispatch {
             });
         }
 
-        if(uri.getFragment() != null && !uri.getFragment().isEmpty()) {
+        if (uri.getFragment() != null && !uri.getFragment().isEmpty()) {
             builder.addFragment(uri.getFragment());
         }
 
@@ -153,7 +179,7 @@ public final class ActionDispatch {
 
     public static class Builder {
         private final ActionName actionName;
-        private final Map<String, Evaluation> params = new LinkedHashMap<>();
+        private final Map<String, Assignment> params = new LinkedHashMap<>();
         private final StringBuilder fragmentBuilder = new StringBuilder();
 
         private Builder(ActionName actionName) {
@@ -161,17 +187,17 @@ public final class ActionDispatch {
         }
 
         public Builder addAssignment(String name, String assignment) {
-            params.put(name, new Evaluation(assignment));
+            params.put(name, new Assignment(assignment));
             return this;
         }
 
         public Builder addAssignment(String name, AssignmentType assignmentType, String expression) {
-            params.put(name, new Evaluation(assignmentType, expression));
+            params.put(name, new Assignment(assignmentType, expression));
             return this;
         }
 
         public Builder addFragment(String fragment) {
-            if(fragmentBuilder.length() == 0) {
+            if (fragmentBuilder.length() == 0) {
                 fragmentBuilder.append(fragment);
             } else {
                 fragmentBuilder.append(".").append(fragment);

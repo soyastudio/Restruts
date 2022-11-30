@@ -5,8 +5,6 @@ import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 import soya.framework.action.dispatch.ActionDispatchAction;
 import soya.framework.action.dispatch.ActionDispatchPattern;
-import soya.framework.action.dispatch.ActionPropertyAssignment;
-import soya.framework.action.dispatch.AssignmentType;
 
 @ActionDefinition(domain = "pattern",
         name = "action-dispatch-example",
@@ -15,11 +13,10 @@ import soya.framework.action.dispatch.AssignmentType;
         produces = MediaType.TEXT_PLAIN,
         displayName = "EDM Table Mapping",
         description = "EDM Table Mapping.")
-@ActionDispatchPattern(uri = "albertsons://base64-encode",
-        propertyAssignments = {
-                @ActionPropertyAssignment(name = "message", assignmentType = AssignmentType.PARAMETER, expression = "msg")
-        })
-public class ActionDispatchExample extends ActionDispatchAction<String> {
+@ActionDispatchPattern(
+        uri = "albertsons://base64-encode#base64decode()"
+)
+public class ActionDispatchExample extends ActionDispatchAction {
 
     @ActionProperty(
             parameterType = ActionProperty.PropertyType.PAYLOAD,
@@ -27,5 +24,5 @@ public class ActionDispatchExample extends ActionDispatchAction<String> {
             option = "m",
             description = "Execution method. The method must take no arguments."
     )
-    private String msg;
+    private String message;
 }

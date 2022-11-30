@@ -3,15 +3,11 @@ package soya.framework.action.dispatch.proxy;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import soya.framework.action.*;
-import soya.framework.action.dispatch.ActionDispatchPattern;
-import soya.framework.action.dispatch.ActionPropertyAssignment;
-import soya.framework.action.dispatch.AssignmentType;
-import soya.framework.action.dispatch.ParamName;
+import soya.framework.action.dispatch.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,35 +47,42 @@ public final class ActionProxyBuilder<T> {
                 index++;
             }
 
-            ActionDispatchPattern actionMapping = method.getAnnotation(ActionDispatchPattern.class);
-            ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(URI.create(actionMapping.uri())));
+            ActionDispatchPattern actionDispatchPattern = method.getAnnotation(ActionDispatchPattern.class);
+            ActionDispatch actionDispatch = ActionDispatch.fromURI(actionDispatchPattern.uri());
+
+            ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionDispatch.getActionName());
             ActionCallable action = actionClass.newInstance();
 
-            for (ActionPropertyAssignment ap : actionMapping.propertyAssignments()) {
+            for (Field field : actionClass.getActionFields()) {
+                Assignment assignment = actionDispatch.getAssignment(field.getName());
                 Object value = null;
-                if (AssignmentType.VALUE.equals(ap.assignmentType())) {
-                    value = ap.expression();
+                if (AssignmentType.VALUE.equals(assignment.getAssignmentType())) {
+                    value = assignment.getExpression();
 
-                } else if (AssignmentType.RESOURCE.equals(ap.assignmentType())) {
-                    value = Resources.getResourceAsString(ap.expression());
+                } else if (AssignmentType.RESOURCE.equals(assignment.getAssignmentType())) {
+                    value = Resources.getResourceAsString(assignment.getExpression());
 
-                } else if (AssignmentType.REFERENCE.equals(ap.assignmentType())) {
+                } else if (AssignmentType.REFERENCE.equals(assignment.getAssignmentType())) {
                     // TODO:
 
-                } else if (AssignmentType.PARAMETER.equals(ap.assignmentType())) {
-                    value = args[paramIndex.get(ap.expression())];
+                } else if (AssignmentType.PARAMETER.equals(assignment.getAssignmentType())) {
+                    value = args[paramIndex.get(assignment.getExpression())];
 
                 }
 
-                if(value != null) {
-                    Field field = actionClass.getActionField(ap.name());
+                if (value != null) {
                     field.setAccessible(true);
                     field.set(action, ConvertUtils.convert(value, field.getType()));
                 }
 
             }
 
-            Object result = action.call().get();
+            ActionResult actionResult = action.call();
+            if(actionDispatch.getFragment() != null) {
+                actionResult = Fragment.process(actionResult, actionDispatch.getFragment());
+            }
+
+            Object result = actionResult.get();
             if (method.getReturnType() != Void.TYPE) {
                 return ConvertUtils.convert(result, method.getReturnType());
 

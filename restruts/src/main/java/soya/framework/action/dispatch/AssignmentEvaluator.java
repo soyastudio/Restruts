@@ -1,18 +1,13 @@
-package soya.framework.action.orchestration;
+package soya.framework.action.dispatch;
 
 import soya.framework.action.ConvertUtils;
 import soya.framework.action.Resources;
-import soya.framework.action.dispatch.Assignment;
-import soya.framework.action.dispatch.AssignmentType;
-import soya.framework.action.dispatch.Evaluator;
 
 import java.io.InputStream;
 
-public class ProcessSessionEvaluator implements Evaluator {
-    @Override
-    public Object evaluate(Assignment assignment, Object context, Class<?> type) {
-        ProcessSession session = (ProcessSession) context;
+public abstract class AssignmentEvaluator {
 
+    public Object evaluate(Assignment assignment, Object context, Class<?> type) {
         Object value = null;
 
         AssignmentType assignmentType = assignment.getAssignmentType();
@@ -30,12 +25,17 @@ public class ProcessSessionEvaluator implements Evaluator {
             }
 
         } else if (AssignmentType.REFERENCE.equals(assignmentType)) {
-            value = ConvertUtils.convert(session.parameterValue(assignment.getExpression()), type);
+            value = fromReference(expression, context, type);
 
         } else if (AssignmentType.PARAMETER.equals(assignmentType)) {
-            value = ConvertUtils.convert(session.get(assignment.getExpression()), type);
+            value = fromParameter(expression, context, type);
         }
 
         return value;
     }
+
+    protected abstract Object fromParameter(String exp, Object context, Class<?> type);
+
+    protected abstract Object fromReference(String exp, Object context, Class<?> type);
+
 }

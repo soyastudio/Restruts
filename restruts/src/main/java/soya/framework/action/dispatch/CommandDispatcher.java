@@ -15,14 +15,14 @@ import java.util.Map;
 
 public final class CommandDispatcher extends Dispatcher {
 
-    private Map<String, Evaluation> assignments = new HashMap<>();
+    private Map<String, Assignment> assignments = new HashMap<>();
 
     public CommandDispatcher(Class<?> executeClass, String methodName) {
         super(executeClass, methodName, new Class[0]);
     }
 
     public CommandDispatcher assignProperty(String propName, AssignmentType assignmentType, String expression) {
-        assignments.put(propName, new Evaluation(assignmentType, expression));
+        assignments.put(propName, new Assignment(assignmentType, expression));
         return this;
     }
 
@@ -36,23 +36,23 @@ public final class CommandDispatcher extends Dispatcher {
         Object executor = executeClass.newInstance();
 
         ActionClass actionClass = ActionClass.get(context.getClass());
-        for (Map.Entry<String, Evaluation> e : assignments.entrySet()) {
+        for (Map.Entry<String, Assignment> e : assignments.entrySet()) {
             String propName = e.getKey();
 
             Object value = null;
-            Evaluation evaluation = e.getValue();
-            if (evaluation.getAssignmentMethod().equals(AssignmentType.VALUE)) {
-                value = evaluation.getExpression();
+            Assignment assignment = e.getValue();
+            if (assignment.getAssignmentType().equals(AssignmentType.VALUE)) {
+                value = assignment.getExpression();
 
-            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.RESOURCE)) {
-                value = Resources.getResourceAsString(evaluation.getExpression());
+            } else if (assignment.getAssignmentType().equals(AssignmentType.RESOURCE)) {
+                value = Resources.getResourceAsString(assignment.getExpression());
 
-            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.PARAMETER)) {
-                Field actionField = actionClass.getActionField(evaluation.getExpression());
+            } else if (assignment.getAssignmentType().equals(AssignmentType.PARAMETER)) {
+                Field actionField = actionClass.getActionField(assignment.getExpression());
                 actionField.setAccessible(true);
                 value = actionField.get(context);
 
-            } else if (evaluation.getAssignmentMethod().equals(AssignmentType.REFERENCE)) {
+            } else if (assignment.getAssignmentType().equals(AssignmentType.REFERENCE)) {
                 throw new IllegalArgumentException("");
             }
 

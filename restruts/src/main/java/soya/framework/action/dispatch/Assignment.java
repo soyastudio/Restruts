@@ -3,21 +3,21 @@ package soya.framework.action.dispatch;
 import java.io.Serializable;
 import java.util.Objects;
 
-public final class Evaluation implements Serializable {
+public final class Assignment implements Serializable {
     private final AssignmentType assignmentType;
     private final String expression;
 
-    public Evaluation(String assignment) {
+    public Assignment(String assignment) {
         this.assignmentType = AssignmentType.getAssignmentMethod(assignment);
         this.expression = assignment.substring(assignment.indexOf('(') + 1, assignment.lastIndexOf(')')).trim();
     }
 
-    public Evaluation(AssignmentType assignmentType, String expression) {
+    public Assignment(AssignmentType assignmentType, String expression) {
         this.assignmentType = assignmentType;
         this.expression = expression;
     }
 
-    public AssignmentType getAssignmentMethod() {
+    public AssignmentType getAssignmentType() {
         return assignmentType;
     }
 
@@ -33,8 +33,8 @@ public final class Evaluation implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Evaluation)) return false;
-        Evaluation that = (Evaluation) o;
+        if (!(o instanceof Assignment)) return false;
+        Assignment that = (Assignment) o;
         return assignmentType == that.assignmentType && expression.equals(that.expression);
     }
 

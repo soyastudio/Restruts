@@ -11,26 +11,60 @@ import soya.framework.commons.util.CodeBuilder;
 import java.lang.reflect.Field;
 
 @ActionDefinition(domain = "dispatch",
-        name = "proxy-interface-generator",
-        path = "/proxy/interface",
+        name = "proxy-domain",
+        path = "/proxy/domain",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",
         description = "Generic action dispatch action.")
-public class ProxyInterfaceAction extends ProxyInterfaceGenerator {
+public class DomainProxyInterfaceAction extends Action<String> {
 
     @ActionProperty(
             description = {
             },
-            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            required = true,
+            option = "c")
+    private String className;
+
+    @ActionProperty(
+            description = {
+            },
+            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
             required = true,
             option = "d")
-    private String configuration;
+    private String domain;
 
     @Override
     public String execute() throws Exception {
+        int lastPoint = className.lastIndexOf('.');
+        String packageName = className.substring(0, lastPoint);
+        String simpleName = className.substring(lastPoint + 1);
 
-        return null;
+
+        CodeBuilder builder = CodeBuilder.newInstance();
+
+        builder.append("package ").append(packageName).appendLine(";");
+        builder.appendLine();
+
+        builder.append("import ").append(getType(ActionDispatchPattern.class)).appendLine(";");
+        builder.append("import ").append(getType(ActionPropertyAssignment.class)).appendLine(";");
+        builder.append("import ").append(getType(AssignmentType.class)).appendLine(";");
+        builder.append("import ").append(getType(ParamName.class)).appendLine(";");
+        builder.append("import ").append(getType(ActionProxyPattern.class)).appendLine(";");
+        builder.appendLine();
+
+        builder.appendLine("@ActionProxyPattern");
+        builder.append("public interface ").append(simpleName).appendLine(" {");
+
+        ActionName[] actionNames = ActionContext.getInstance().getActionMappings().actions(domain);
+        for (ActionName actionName : actionNames) {
+            printMethod(ActionContext.getInstance().getActionMappings().actionClass(actionName), builder);
+        }
+
+        builder.append("}");
+
+        return builder.toString();
     }
 
     private void printMethod(ActionClass actionClass, CodeBuilder builder) {
@@ -97,6 +131,4 @@ public class ProxyInterfaceAction extends ProxyInterfaceGenerator {
             return type.getName();
         }
     }
-
-
 }

@@ -17,7 +17,7 @@ public abstract class ScheduledDispatchJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
         if (getClass().getAnnotation(ActionDispatchPattern.class) != null) {
-            ActionDispatch actionDispatch = ActionDispatch.fromAnnotation(getClass().getAnnotation(ActionDispatchPattern.class));
+            ActionDispatch actionDispatch = ActionDispatch.fromURI(getClass().getAnnotation(ActionDispatchPattern.class).uri());
             actionDispatch(actionDispatch, jobExecutionContext);
 
         } else if (getClass().getAnnotation(CommandDispatchPattern.class) != null) {

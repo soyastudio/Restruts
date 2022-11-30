@@ -97,22 +97,22 @@ public class GenericCommandDispatchAction extends GenericDispatchAction<Object> 
                 Class<?> propType = getPropertyType(propName, instance);
                 Object propValue = null;
 
-                Evaluation evaluation = new Evaluation(e.getValue().get(0));
+                Assignment assignment = new Assignment(e.getValue().get(0));
 
-                if (AssignmentType.VALUE.equals(evaluation.getAssignmentMethod())) {
-                    propValue = ConvertUtils.convert(evaluation.getExpression(), propType);
+                if (AssignmentType.VALUE.equals(assignment.getAssignmentType())) {
+                    propValue = ConvertUtils.convert(assignment.getExpression(), propType);
 
-                } else if (AssignmentType.RESOURCE.equals(evaluation.getAssignmentMethod())) {
-                    propValue = ConvertUtils.convert(Resources.getResourceAsString(evaluation.getExpression()), propType);
+                } else if (AssignmentType.RESOURCE.equals(assignment.getAssignmentType())) {
+                    propValue = ConvertUtils.convert(Resources.getResourceAsString(assignment.getExpression()), propType);
 
-                } else if (AssignmentType.PARAMETER.equals(evaluation.getAssignmentMethod())) {
+                } else if (AssignmentType.PARAMETER.equals(assignment.getAssignmentType())) {
                     if (jsonObject != null) {
-                        JsonElement jsonElement = jsonObject.get(evaluation.getExpression());
+                        JsonElement jsonElement = jsonObject.get(assignment.getExpression());
                         propValue = gson.fromJson(jsonElement, propType);
                     }
 
                 } else {
-                    throw new IllegalArgumentException(evaluation.getAssignmentMethod() + " is not supported for command dispatch.");
+                    throw new IllegalArgumentException(assignment.getAssignmentType() + " is not supported for command dispatch.");
                 }
 
                 if (propValue != null) {

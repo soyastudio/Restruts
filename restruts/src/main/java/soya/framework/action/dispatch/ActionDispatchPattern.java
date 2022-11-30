@@ -8,6 +8,4 @@ import java.lang.annotation.*;
 public @interface ActionDispatchPattern {
     String uri();
 
-    ActionPropertyAssignment[] propertyAssignments() default {};
-
 }

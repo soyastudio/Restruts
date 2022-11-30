@@ -1,6 +1,6 @@
 package soya.framework.action.orchestration.choice;
 
-import soya.framework.action.dispatch.Evaluation;
+import soya.framework.action.dispatch.Assignment;
 import soya.framework.action.dispatch.Evaluator;
 import soya.framework.action.orchestration.ProcessSession;
 import soya.framework.action.orchestration.ProcessSessionEvaluator;
@@ -11,11 +11,11 @@ import java.util.Objects;
 public class ConditionBuilder implements Serializable {
     private static final Evaluator evaluator = new ProcessSessionEvaluator();
 
-    private final Evaluation left;
-    private final Evaluation right;
+    private final Assignment left;
+    private final Assignment right;
     private final Operator operator;
 
-    private ConditionBuilder(Evaluation left, Evaluation right, Operator operator) {
+    private ConditionBuilder(Assignment left, Assignment right, Operator operator) {
         this.left = left;
         this.right = right;
         this.operator = operator;
@@ -111,20 +111,20 @@ public class ConditionBuilder implements Serializable {
     }
 
     public static class Builder {
-        private Evaluation left;
-        private Evaluation right;
+        private Assignment left;
+        private Assignment right;
         private Operator operator;
 
         private Builder() {
         }
 
-        public Builder left(Evaluation evaluation) {
-            this.left = evaluation;
+        public Builder left(Assignment assignment) {
+            this.left = assignment;
             return this;
         }
 
-        public Builder right(Evaluation evaluation) {
-            this.right = evaluation;
+        public Builder right(Assignment assignment) {
+            this.right = assignment;
             return this;
         }
 

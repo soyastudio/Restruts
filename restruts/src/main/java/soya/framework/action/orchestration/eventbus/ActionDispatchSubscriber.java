@@ -53,7 +53,7 @@ public abstract class ActionDispatchSubscriber implements Subscriber {
     public ActionDispatchSubscriber() {
         if (getClass().getAnnotation(ActionDispatchPattern.class) != null) {
             ActionDispatchPattern pattern = getClass().getAnnotation(ActionDispatchPattern.class);
-            this.actionDispatch = ActionDispatch.fromAnnotation(pattern);
+            this.actionDispatch = ActionDispatch.fromURI(pattern.uri());
         }
     }
 
