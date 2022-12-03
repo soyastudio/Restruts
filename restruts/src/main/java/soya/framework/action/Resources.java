@@ -250,7 +250,7 @@ public class Resources {
                     throw new IllegalArgumentException(e);
                 }
             } else {
-                this.actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionName);
+                this.actionClass = ActionClass.get(actionName);
             }
 
             if (this.uri.getQuery() != null) {

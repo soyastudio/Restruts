@@ -65,7 +65,7 @@ public final class ActionDispatch {
     }
 
     public ActionResult dispatch(Object context, AssignmentEvaluator evaluator) throws ActionDispatchException {
-        ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionName);
+        ActionClass actionClass = ActionClass.get(actionName);
         ActionCallable action = actionClass.newInstance();
 
         for (Field field : actionClass.getActionFields()) {

@@ -50,7 +50,7 @@ public final class ActionProxyBuilder<T> {
             ActionDispatchPattern actionDispatchPattern = method.getAnnotation(ActionDispatchPattern.class);
             ActionDispatch actionDispatch = ActionDispatch.fromURI(actionDispatchPattern.uri());
 
-            ActionClass actionClass = ActionContext.getInstance().getActionMappings().actionClass(actionDispatch.getActionName());
+            ActionClass actionClass = ActionClass.get(actionDispatch.getActionName());
             ActionCallable action = actionClass.newInstance();
 
             for (Field field : actionClass.getActionFields()) {

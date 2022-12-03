@@ -1,5 +1,7 @@
 package soya.framework.action;
 
+import com.sun.org.apache.xalan.internal.xsltc.DOM;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -7,6 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class ActionClass implements Serializable {
+
+    private static Map<String, Class<?>> DOMAINS = new LinkedHashMap<>();
+    private static Map<ActionName, ActionClass> ACTION_CLASSES = new HashMap<>();
+    private static Map<Class<? extends ActionCallable>, ActionClass> ACTION_TYPES = new HashMap<>();
 
     private static Map<ActionName, AtomicLong> COUNTS = new ConcurrentHashMap<>();
     private static final AtomicLong TOTAL_ACTION_COUNT = new AtomicLong();
@@ -50,6 +56,10 @@ public final class ActionClass implements Serializable {
         }
 
         this.resultFormat = mapping.produces()[0];
+
+        // ------------
+        ACTION_CLASSES.put(actionName, this);
+        ACTION_TYPES.put(actionType, this);
         COUNTS.put(actionName, new AtomicLong());
 
     }
@@ -147,7 +157,7 @@ public final class ActionClass implements Serializable {
     }
 
     ActionResult createResult(ActionCallable action, Object result) {
-        ActionClass actionClass = ActionContext.getInstance().actionMappings.actionClass(action.getClass());
+        ActionClass actionClass = ACTION_TYPES.get(action.getClass());
 
         TOTAL_ACTION_COUNT.getAndIncrement();
 
@@ -211,31 +221,52 @@ public final class ActionClass implements Serializable {
         return count.get();
     }
 
+    static void addDomain(Class<?> domainClass) {
+        Domain domain = domainClass.getAnnotation(Domain.class);
+        Objects.requireNonNull(domain, "Class is not annotated as 'Domain': " + domainClass.getName());
+
+        if(DOMAINS.containsKey(domain.name())) {
+            throw new IllegalArgumentException("Domain name already exist: " + domain.name());
+        }
+        DOMAINS.put(domain.name(), domainClass);
+    }
+
     public static String[] domains() {
-        return ActionContext.getInstance().actionMappings.domains();
+        List<String> domains = new ArrayList<>(DOMAINS.keySet());
+        Collections.sort(domains);
+        return domains.toArray(new String[domains.size()]);
     }
 
     public static Class<?> domainType(String domain) {
-        return ActionContext.getInstance().actionMappings.domainType(domain);
+        return DOMAINS.get(domain);
     }
 
     public static ActionName[] actions(String domain) {
-        return ActionContext.getInstance().actionMappings.actions(domain);
+        List<ActionName> list = new ArrayList<>();
+        if (domain == null) {
+            list.addAll(ACTION_CLASSES.keySet());
+        } else {
+            ACTION_CLASSES.keySet().forEach(e -> {
+                if (e.getDomain().equals(domain)) {
+                    list.add(e);
+                }
+            });
+        }
+
+        Collections.sort(list);
+        return list.toArray(new ActionName[list.size()]);
     }
 
     public static ActionClass get(ActionName actionName) {
-        return ActionContext.getInstance().actionMappings.actionClass(actionName);
+        return ACTION_CLASSES.get(actionName);
     }
 
     public static ActionClass get(Class<? extends ActionCallable> actionType) {
-        if(ActionContext.getInstance() != null
-                && ActionContext.getInstance().actionMappings.actionClass(actionType) != null) {
-            return ActionContext.getInstance().actionMappings.actionClass(actionType);
-
-        } else {
-            return new ActionClass(actionType);
-
+        if(!ACTION_TYPES.containsKey(actionType)) {
+            new ActionClass(actionType);
         }
+
+        return ACTION_TYPES.get(actionType);
     }
 
     public static long getExecutedActionCount(ActionName actionName) {
@@ -333,5 +364,14 @@ public final class ActionClass implements Serializable {
             return false;
         }
     }
+
+    private static class DomainClassComparator implements Comparator<Class<?>> {
+
+        @Override
+        public int compare(Class<?> o1, Class<?> o2) {
+            return o1.getAnnotation(Domain.class).path().compareTo(o2.getAnnotation(Domain.class).path());
+        }
+    }
+
 
 }

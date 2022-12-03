@@ -174,16 +174,15 @@ public class ActionServlet extends HttpServlet {
         }
         builder.basePath(path);
 
-        ActionMappings actionMappings = ActionContext.getInstance().getActionMappings();
-        for (String dm : actionMappings.domains()) {
-            Domain domain = actionMappings.domainType(dm).getAnnotation(Domain.class);
+        for (String dm : ActionClass.domains()) {
+            Domain domain = ActionClass.domainType(dm).getAnnotation(Domain.class);
             builder.addTag(Swagger.TagObject.instance()
                     .name(domain.title().isEmpty() ? domain.name() : domain.title())
                     .description(domain.description()));
 
-            ActionName[] actionNames = actionMappings.actions(dm);
+            ActionName[] actionNames = ActionClass.actions(dm);
             for (ActionName actionName : actionNames) {
-                ActionClass actionClass = actionMappings.actionClass(actionName);
+                ActionClass actionClass = ActionClass.get(actionName);
                 Class<? extends ActionCallable> cls = actionClass.getActionType();
                 ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
 
@@ -263,7 +262,7 @@ public class ActionServlet extends HttpServlet {
                 }
             }
 
-            Class<?> domainClass = actionMappings.domainType(actionDefinition.domain());
+            Class<?> domainClass = ActionClass.domainType(actionDefinition.domain());
             if (domainClass != null) {
                 Domain domain = domainClass.getAnnotation(Domain.class);
                 pathBuilder

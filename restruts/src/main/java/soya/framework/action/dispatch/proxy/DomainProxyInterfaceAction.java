@@ -57,9 +57,9 @@ public class DomainProxyInterfaceAction extends Action<String> {
         builder.appendLine("@ActionProxyPattern");
         builder.append("public interface ").append(simpleName).appendLine(" {");
 
-        ActionName[] actionNames = ActionContext.getInstance().getActionMappings().actions(domain);
+        ActionName[] actionNames = ActionClass.actions(domain);
         for (ActionName actionName : actionNames) {
-            printMethod(ActionContext.getInstance().getActionMappings().actionClass(actionName), builder);
+            printMethod(ActionClass.get(actionName), builder);
         }
 
         builder.append("}");

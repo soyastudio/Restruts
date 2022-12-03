@@ -52,7 +52,7 @@ public final class ActionExecutor {
                 throw new IllegalArgumentException(e);
             }
         } else {
-            actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
+            actionClass = ActionClass.get(ActionName.fromURI(uri));
         }
 
         if (actionClass == null) {
@@ -80,7 +80,7 @@ public final class ActionExecutor {
                 throw new IllegalArgumentException(e);
             }
         } else {
-            actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
+            actionClass = ActionClass.get(ActionName.fromURI(uri));
         }
 
         if (actionClass == null) {

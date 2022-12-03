@@ -92,7 +92,7 @@ public class DispatchScheduler {
                         throw new IllegalArgumentException(e);
                     }
                 } else {
-                    actionClass = ActionContext.getInstance().getActionMappings().actionClass(ActionName.fromURI(uri));
+                    actionClass = ActionClass.get(ActionName.fromURI(uri));
                 }
 
                 if (actionClass == null) {
