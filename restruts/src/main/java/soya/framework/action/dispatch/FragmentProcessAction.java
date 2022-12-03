@@ -46,11 +46,6 @@ public class FragmentProcessAction extends Action<String> {
             public boolean success() {
                 return true;
             }
-
-            @Override
-            public boolean empty() {
-                return false;
-            }
         };
 
         return Fragment.process(result, fragment).get().toString();

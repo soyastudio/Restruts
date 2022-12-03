@@ -332,13 +332,6 @@ public final class ActionClass implements Serializable {
         public boolean success() {
             return false;
         }
-
-        @Override
-        public boolean empty() {
-            return false;
-        }
     }
-
-
 
 }

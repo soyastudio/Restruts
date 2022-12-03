@@ -134,11 +134,6 @@ public class Fragment {
         public boolean success() {
             return true;
         }
-
-        @Override
-        public boolean empty() {
-            return false;
-        }
     }
 
     public static void main(String[] args) {

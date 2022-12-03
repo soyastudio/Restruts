@@ -10,6 +10,4 @@ public interface ActionResult extends Serializable {
 
     boolean success();
 
-    boolean empty();
-
 }
