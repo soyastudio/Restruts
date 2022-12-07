@@ -1,7 +1,5 @@
 package soya.framework.action;
 
-import com.sun.org.apache.xalan.internal.xsltc.DOM;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -225,16 +223,14 @@ public final class ActionClass implements Serializable {
         Domain domain = domainClass.getAnnotation(Domain.class);
         Objects.requireNonNull(domain, "Class is not annotated as 'Domain': " + domainClass.getName());
 
-        if(DOMAINS.containsKey(domain.name())) {
+        if (DOMAINS.containsKey(domain.name())) {
             throw new IllegalArgumentException("Domain name already exist: " + domain.name());
         }
         DOMAINS.put(domain.name(), domainClass);
     }
 
     public static String[] domains() {
-        List<String> domains = new ArrayList<>(DOMAINS.keySet());
-        Collections.sort(domains);
-        return domains.toArray(new String[domains.size()]);
+        return DOMAINS.keySet().toArray(new String[DOMAINS.size()]);
     }
 
     public static Class<?> domainType(String domain) {
@@ -262,7 +258,7 @@ public final class ActionClass implements Serializable {
     }
 
     public static ActionClass get(Class<? extends ActionCallable> actionType) {
-        if(!ACTION_TYPES.containsKey(actionType)) {
+        if (!ACTION_TYPES.containsKey(actionType)) {
             new ActionClass(actionType);
         }
 
@@ -364,14 +360,4 @@ public final class ActionClass implements Serializable {
             return false;
         }
     }
-
-    private static class DomainClassComparator implements Comparator<Class<?>> {
-
-        @Override
-        public int compare(Class<?> o1, Class<?> o2) {
-            return o1.getAnnotation(Domain.class).path().compareTo(o2.getAnnotation(Domain.class).path());
-        }
-    }
-
-
 }

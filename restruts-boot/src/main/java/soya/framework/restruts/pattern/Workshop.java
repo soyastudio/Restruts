@@ -8,7 +8,8 @@ import soya.framework.action.dispatch.proxy.ActionProxyPattern;
 
 @ActionProxyPattern
 public interface Workshop {
-    @ActionDispatchPattern(uri = "about://about")
+    @ActionDispatchPattern(
+            uri = "about://index")
     String about();
 
     @ActionDispatchPattern(

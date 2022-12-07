@@ -4,6 +4,7 @@ import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
 
+import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
 
 @ActionDefinition(domain = "jmx",
@@ -17,6 +18,7 @@ public class JmxDomainsAction extends Action<String[]> {
 
     @Override
     public String[] execute() throws Exception {
+        MBeanServer server;
         return ManagementFactory.getPlatformMBeanServer().getDomains();
     }
 }

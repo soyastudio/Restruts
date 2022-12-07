@@ -16,22 +16,29 @@ public final class ActionContext {
     protected Properties properties = new Properties();
 
     protected ActionContext(ServiceLocator serviceLocator, Set<String> scanPackages) {
-        // Objects.requireNonNull(serviceLocator, "ServiceLocator is required.");
-        Objects.requireNonNull("ActionMappings is required.");
-
         this.serviceLocator = serviceLocator;
         this.executorService = createExecutorService();
 
         Set<Class<?>> domains = new HashSet<>();
         Set<Class<?>> actions = new HashSet<>();
 
-        scanPackages.forEach(pkg -> {
-            Reflections reflections = new Reflections(pkg.trim());
+        if (scanPackages.isEmpty()) {
+            Reflections reflections = new Reflections();
             domains.addAll(reflections.getTypesAnnotatedWith(Domain.class));
             actions.addAll(reflections.getTypesAnnotatedWith(ActionDefinition.class));
-        });
 
-        domains.forEach(e -> {
+        } else {
+            scanPackages.forEach(pkg -> {
+                Reflections reflections = new Reflections(pkg.trim());
+                domains.addAll(reflections.getTypesAnnotatedWith(Domain.class));
+                actions.addAll(reflections.getTypesAnnotatedWith(ActionDefinition.class));
+            });
+
+        }
+
+        List<Class<?>> domainList = new ArrayList<>(domains);
+        Collections.sort(domainList, (o1, o2) -> o1.getAnnotation(Domain.class).path().compareTo(o2.getAnnotation(Domain.class).path()));
+        domainList.forEach(e -> {
             ActionClass.addDomain(e);
         });
 
@@ -83,19 +90,19 @@ public final class ActionContext {
         return serviceLocator.serviceNames();
     }
 
-    public Object getService(String name) throws ServiceNotAvailableException {
+    public Object getService(String name) throws ServiceLocateException {
         return serviceLocator.getService(name);
     }
 
-    public <T> T getService(Class<T> type) throws ServiceNotAvailableException {
+    public <T> T getService(Class<T> type) throws ServiceLocateException {
         return serviceLocator.getService(type);
     }
 
-    public <T> T getService(String name, Class<T> type) throws ServiceNotAvailableException {
+    public <T> T getService(String name, Class<T> type) throws ServiceLocateException {
         return serviceLocator.getService(name, type);
     }
 
-    public <T> Map<String, T> getServices(Class<T> type) throws ServiceNotAvailableException {
+    public <T> Map<String, T> getServices(Class<T> type) throws ServiceLocateException {
         return serviceLocator.getServices(type);
     }
 

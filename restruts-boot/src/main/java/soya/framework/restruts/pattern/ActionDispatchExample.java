@@ -6,13 +6,15 @@ import soya.framework.action.MediaType;
 import soya.framework.action.dispatch.ActionDispatchAction;
 import soya.framework.action.dispatch.ActionDispatchPattern;
 
-@ActionDefinition(domain = "pattern",
+@ActionDefinition(
+        domain = "pattern",
         name = "action-dispatch-example",
         path = "/pattern/dispatch/action-dispatch-example",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.TEXT_PLAIN,
         displayName = "EDM Table Mapping",
-        description = "EDM Table Mapping.")
+        description = "EDM Table Mapping."
+)
 @ActionDispatchPattern(
         uri = "albertsons://base64-encode#base64decode()"
 )

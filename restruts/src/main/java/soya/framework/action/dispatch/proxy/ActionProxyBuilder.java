@@ -8,32 +8,25 @@ import soya.framework.action.dispatch.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public final class ActionProxyBuilder<T> {
 
     private final Class<T> proxyInterface;
 
-    public ActionProxyBuilder(Class<T> proxyInterface) {
+    public ActionProxyBuilder(Class<T> proxyInterface) throws ActionProxyBuildException {
         this.proxyInterface = proxyInterface;
+        validateInterface(proxyInterface);
     }
 
-    public T create() throws ActionProxyBuildException {
-        if (!proxyInterface.isInterface()) {
-            throw new ActionProxyBuildException("Class is not an interface: " + proxyInterface.getName());
-        }
-
-        ActionProxyPattern actionProxy = proxyInterface.getAnnotation(ActionProxyPattern.class);
-        if (actionProxy == null) {
-            throw new ActionProxyBuildException("Class is not annotated as 'ActionProxy': " + proxyInterface.getName());
-        }
-
+    public T create() {
         Enhancer enhancer = new Enhancer();
         enhancer.setInterfaces(new Class[]{proxyInterface});
 
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
-
             Parameter[] parameters = method.getParameters();
             Map<String, Integer> paramIndex = new LinkedHashMap<>();
             int index = 0;
@@ -49,10 +42,9 @@ public final class ActionProxyBuilder<T> {
 
             ActionDispatchPattern actionDispatchPattern = method.getAnnotation(ActionDispatchPattern.class);
             ActionDispatch actionDispatch = ActionDispatch.fromURI(actionDispatchPattern.uri());
-
             ActionClass actionClass = ActionClass.get(actionDispatch.getActionName());
-            ActionCallable action = actionClass.newInstance();
 
+            ActionCallable action = actionClass.newInstance();
             for (Field field : actionClass.getActionFields()) {
                 Assignment assignment = actionDispatch.getAssignment(field.getName());
                 Object value = null;
@@ -78,7 +70,7 @@ public final class ActionProxyBuilder<T> {
             }
 
             ActionResult actionResult = action.call();
-            if(actionDispatch.getFragment() != null) {
+            if (actionDispatch.getFragment() != null) {
                 actionResult = Fragment.process(actionResult, actionDispatch.getFragment());
             }
 
@@ -95,29 +87,45 @@ public final class ActionProxyBuilder<T> {
         return (T) enhancer.create();
     }
 
-    static class Context {
-        private Method method;
-        private Object[] args;
+    private void validateInterface(Class<T> proxyInterface) throws ActionProxyBuildException {
 
-        public Context(Method method, Object[] args) {
-            this.method = method;
-            this.args = args;
+        if (!proxyInterface.isInterface()) {
+            throw new ActionProxyBuildException("Class is not an interface: " + proxyInterface.getName());
+        }
+
+        ActionProxyPattern actionProxy = proxyInterface.getAnnotation(ActionProxyPattern.class);
+        if (actionProxy == null) {
+            throw new ActionProxyBuildException("Class is not annotated as 'ActionProxy': " + proxyInterface.getName());
+        }
+
+        for (Method method : proxyInterface.getDeclaredMethods()) {
+            ActionDispatchPattern actionDispatchPattern = method.getAnnotation(ActionDispatchPattern.class);
+            ActionDispatch actionDispatch = ActionDispatch.fromURI(actionDispatchPattern.uri());
+            ActionClass actionClass = ActionClass.get(actionDispatch.getActionName());
+            if (actionClass == null) {
+                throw new ActionProxyBuildException("ActionClass is not found: " + actionDispatch.getActionName());
+            }
+
+            Parameter[] parameters = method.getParameters();
+            String[] parameterNames = actionDispatch.getParameterNames();
+            if (parameters.length != parameterNames.length) {
+                throw new ActionProxyBuildException("The number of dispatch parameters does not match that of method parameters.");
+            }
+
+            if (parameters.length > 0) {
+                Set<String> set = new HashSet<>();
+                for (Parameter parameter : parameters) {
+                    set.add(parameter.getAnnotation(ParamName.class).value());
+                }
+
+                for (String paramName : parameterNames) {
+                    if (!set.contains(paramName)) {
+                        throw new ActionProxyBuildException("Parameter '" + paramName +"' is not defined in method: " + proxyInterface.getName() + "." + method.getName());
+
+                    }
+                }
+
+            }
         }
     }
-
-    public static class ActionProxyBuildException extends RuntimeException {
-
-        public ActionProxyBuildException(String message) {
-            super(message);
-        }
-
-        public ActionProxyBuildException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public ActionProxyBuildException(Throwable cause) {
-            super(cause);
-        }
-    }
-
 }

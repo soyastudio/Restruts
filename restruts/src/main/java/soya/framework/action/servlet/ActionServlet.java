@@ -275,6 +275,8 @@ public class ActionServlet extends HttpServlet {
                         .produces(actionDefinition.produces());
 
             }
+
+
             pathBuilder.build();
         });
 

@@ -9,4 +9,5 @@ import soya.framework.action.Domain;
         description = "About the services."
 )
 public interface ReflectDomain {
+
 }

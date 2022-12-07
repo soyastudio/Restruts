@@ -5,14 +5,16 @@ import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
 import soya.framework.commons.util.CodeBuilder;
 
+import java.lang.reflect.Method;
+
 @ActionDefinition(domain = "dispatch",
-        name = "proxy-interface-generate",
-        path = "/proxy/generate/interface",
-        method = ActionDefinition.HttpMethod.POST,
+        name = "proxy-interface",
+        path = "/proxy/interface",
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN,
         displayName = "Generic Action Dispatch",
         description = "Generic action dispatch action.")
-public class ProxyInterfaceAction extends ProxyInterfaceGenerator {
+public class ProxyInterfaceDetailsAction extends ProxyInterfaceGenerator {
 
     @ActionProperty(
             description = {
@@ -25,21 +27,19 @@ public class ProxyInterfaceAction extends ProxyInterfaceGenerator {
     @Override
     public String execute() throws Exception {
         CodeBuilder builder = CodeBuilder.newInstance();
+        Class<?> cls = Class.forName(className);
 
-        String packageName = className.substring(0, className.lastIndexOf('.'));
-        String simpleName = className.substring(packageName.length() + 1);
-
-        printPackage(packageName, builder);
+        printPackage(cls.getPackage().getName(), builder);
         printImports(builder);
-        printInterfaceStart(simpleName, builder);
 
-        builder.appendLine();
-        builder.appendLine("// add dispatch method here", 1);
-        builder.appendLine();
+        printInterfaceStart(cls.getSimpleName(), builder);
 
-        printInterfaceEnd(builder);
+        for (Method method : cls.getDeclaredMethods()) {
+            printMethod(method, builder);
+        }
+
+            printInterfaceEnd(builder);
 
         return builder.toString();
     }
-
 }

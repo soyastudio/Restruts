@@ -188,9 +188,7 @@ public final class ActionExecutor {
 
         System.out.println((v instanceof Number));
 
-        ActionContext.builder()
-                .scan("soya.framework")
-                .create();
+        ActionContext.builder().create();
 
         Object result = ActionExecutor
                 .executor(EchoAction.class)
