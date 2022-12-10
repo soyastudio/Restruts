@@ -47,7 +47,7 @@ public class DynaActionClass implements DynaClass {
         }
         dynaClass = new BasicDynaClass(actionName.toString(), null, properties);
 
-        if(singleton) {
+        if (singleton) {
             DYNA_ACTION_CLASSES.put(actionName, this);
         }
     }
@@ -67,7 +67,7 @@ public class DynaActionClass implements DynaClass {
     }
 
     public ActionProperty getActionProperty(String name) {
-        if(!parameterFields.containsKey(name)) {
+        if (!parameterFields.containsKey(name)) {
             throw new IllegalArgumentException("No such field: " + name);
         }
         return parameterFields.get(name).getAnnotation(ActionProperty.class);
@@ -79,8 +79,13 @@ public class DynaActionClass implements DynaClass {
     }
 
     @Override
-    public DynaActionBean newInstance() throws IllegalAccessException, InstantiationException {
-        return new DefaultDynaActionBean(dynaClass.newInstance(), actionDispatch);
+    public DynaActionBean newInstance() throws ActionCreationException {
+        try {
+            return new DefaultDynaActionBean(dynaClass.newInstance(), actionDispatch);
+
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new ActionCreationException(e);
+        }
     }
 
     static void add(DynaDomain domain) {

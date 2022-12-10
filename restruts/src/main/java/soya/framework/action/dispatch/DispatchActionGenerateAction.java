@@ -16,19 +16,19 @@ import java.net.URI;
 public class DispatchActionGenerateAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "c")
     private String className;
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "a")
     private String actionName;
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "d")
     private String dispatch;
@@ -75,7 +75,7 @@ public class DispatchActionGenerateAction extends Action<String> {
                 ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
 
                 builder.append("@", 1).append(ActionProperty.class.getSimpleName()).appendLine("(");
-                builder.append("parameterType = ", 3).append("ActionProperty.PropertyType.").append(actionProperty.parameterType().toString()).appendLine(",");
+                builder.append("parameterType = ", 3).append("PropertyType.").append(actionProperty.parameterType().toString()).appendLine(",");
                 builder.append("required = ", 3).append("" + actionProperty.required()).appendLine(",");
                 builder.append("option = \"", 3).append(actionProperty.option()).appendLine("\",");
                 builder.append("description = {}", 3).appendLine(",");

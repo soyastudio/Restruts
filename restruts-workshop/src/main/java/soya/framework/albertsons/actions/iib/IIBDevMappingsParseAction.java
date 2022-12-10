@@ -1,11 +1,8 @@
 package soya.framework.albertsons.actions.iib;
 
 import org.apache.commons.beanutils.DynaBean;
+import soya.framework.action.*;
 import soya.framework.commons.util.CodeBuilder;
-import soya.framework.action.ActionExecutor;
-import soya.framework.action.MediaType;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
 import soya.framework.document.actions.poi.SpreadSheetAction;
 import soya.framework.document.actions.poi.XlsxDynaClass;
 
@@ -20,10 +17,10 @@ import java.io.File;
 public class IIBDevMappingsParseAction extends IIBDevAction<String> {
     private static final String COLUMNS = "Target, DataType, Cardinality, Mapping, Source, Version";
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private String fileName;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private String sheetName;
 
     @Override

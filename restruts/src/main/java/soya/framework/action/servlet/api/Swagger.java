@@ -709,6 +709,7 @@ public class Swagger {
     public static class ExternalDocumentObject {
 
     }
+
 /*
     private static String commandName(String operationId) {
         String token = operationId;

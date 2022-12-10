@@ -16,7 +16,7 @@ import java.net.URI;
 public class DispatchURIGenerateAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "a")
 

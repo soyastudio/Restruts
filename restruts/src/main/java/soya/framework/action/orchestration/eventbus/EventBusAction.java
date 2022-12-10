@@ -9,7 +9,7 @@ public abstract class EventBusAction<T> extends Action<T> implements EventBus {
 
     private Set<Subscriber> subscribers = new HashSet<>();
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.PAYLOAD,
+    @ActionProperty(parameterType = ParameterType.PAYLOAD,
             contentType = MediaType.APPLICATION_JSON,
             description = "Parameter values in json format.")
     protected String payload;

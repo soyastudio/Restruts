@@ -1,10 +1,7 @@
 package soya.framework.action.actions.reflect;
 
 import org.reflections.Reflections;
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
@@ -24,7 +21,7 @@ import java.util.List;
 public class TypeScanAction extends Action<String[]> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "t",
             description = "Class name for search."
@@ -32,14 +29,14 @@ public class TypeScanAction extends Action<String[]> {
     private String type;
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             option = "p",
             description = "Package name under which to search."
     )
     protected String packageName;
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             option = "a",
             displayOrder = 6,
             description = "If abstract classes are included."

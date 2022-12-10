@@ -1,14 +1,7 @@
 package soya.framework.action.dispatch.proxy;
 
-import com.google.common.base.CaseFormat;
 import soya.framework.action.*;
-import soya.framework.action.dispatch.ActionDispatchPattern;
-import soya.framework.action.dispatch.ActionPropertyAssignment;
-import soya.framework.action.dispatch.AssignmentType;
-import soya.framework.action.dispatch.ParamName;
 import soya.framework.commons.util.CodeBuilder;
-
-import java.lang.reflect.Field;
 
 @ActionDefinition(domain = "dispatch",
         name = "proxy-domain-generate",
@@ -22,7 +15,7 @@ public class DomainProxyInterfaceAction extends ProxyInterfaceGenerator {
     @ActionProperty(
             description = {
             },
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "c")
     private String className;
@@ -30,7 +23,7 @@ public class DomainProxyInterfaceAction extends ProxyInterfaceGenerator {
     @ActionProperty(
             description = {
             },
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "d")
     private String domain;

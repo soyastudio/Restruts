@@ -3,6 +3,7 @@ package soya.framework.albertsons.actions.edm;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
+import soya.framework.action.ParameterType;
 
 @ActionDefinition(domain = "albertsons",
         name = "edm-table-mapping",
@@ -13,7 +14,7 @@ import soya.framework.action.ActionProperty;
         description = "EDM Table Mapping.")
 public class EdmTableMappingAction extends EdmAction<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private String table;
 
     @Override

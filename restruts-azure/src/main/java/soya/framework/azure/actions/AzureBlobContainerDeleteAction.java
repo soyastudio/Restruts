@@ -3,6 +3,7 @@ package soya.framework.azure.actions;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.action.ParameterType;
 
 @ActionDefinition(
         domain = "azure-blob-storage",
@@ -13,7 +14,7 @@ import soya.framework.action.MediaType;
 )
 public class AzureBlobContainerDeleteAction extends AzureBlobAction<Boolean> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private String name;
 
     @Override

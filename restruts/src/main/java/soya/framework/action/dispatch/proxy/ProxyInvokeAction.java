@@ -1,6 +1,5 @@
 package soya.framework.action.dispatch.proxy;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import soya.framework.action.*;
@@ -21,7 +20,7 @@ public class ProxyInvokeAction extends Action<String> {
     @ActionProperty(
             description = {
             },
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "c")
     private String className;
@@ -29,7 +28,7 @@ public class ProxyInvokeAction extends Action<String> {
     @ActionProperty(
             description = {
             },
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "m")
     private String methodName;
@@ -37,7 +36,7 @@ public class ProxyInvokeAction extends Action<String> {
     @ActionProperty(
             description = {
             },
-            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            parameterType = ParameterType.PAYLOAD,
             contentType = MediaType.APPLICATION_JSON,
             option = "i")
     private String inputs;

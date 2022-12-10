@@ -9,6 +9,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.header.internals.RecordHeaders;
+import soya.framework.action.ParameterType;
 import soya.framework.kafka.KafkaClient;
 import soya.framework.action.Action;
 import soya.framework.action.ActionProperty;
@@ -29,10 +30,10 @@ public abstract class KafkaAction<T> extends Action<T> {
     public static final long DEFAULT_TIMEOUT = 30000l;
     public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM)
     protected Long timeout;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     protected String configuration;
 
     protected AdminClient adminClient() throws IOException {

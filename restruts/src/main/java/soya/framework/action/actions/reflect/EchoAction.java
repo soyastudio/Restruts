@@ -1,9 +1,6 @@
 package soya.framework.action.actions.reflect;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 @ActionDefinition(
         domain = "reflect",
@@ -17,7 +14,7 @@ import soya.framework.action.MediaType;
 public class EchoAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            parameterType = ParameterType.PAYLOAD,
             required = true,
             option = "m",
             description = "Message for echoing."

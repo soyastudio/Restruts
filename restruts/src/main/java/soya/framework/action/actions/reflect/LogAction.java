@@ -1,9 +1,6 @@
 package soya.framework.action.actions.reflect;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 import java.util.Locale;
 
@@ -19,7 +16,7 @@ import java.util.Locale;
 public class LogAction extends Action<Void> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             defaultValue = "INFO",
             option = "l",
@@ -35,7 +32,7 @@ public class LogAction extends Action<Void> {
     protected String level = "INFO";
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            parameterType = ParameterType.PAYLOAD,
             required = true,
             option = "m",
             description = "Log message."

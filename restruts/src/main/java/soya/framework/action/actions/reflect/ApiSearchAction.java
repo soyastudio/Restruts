@@ -4,7 +4,6 @@ import soya.framework.action.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @ActionDefinition(
         domain = "reflect",
@@ -18,7 +17,7 @@ import java.util.Locale;
 public class ApiSearchAction extends Action<String[]> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "k",
             description = {

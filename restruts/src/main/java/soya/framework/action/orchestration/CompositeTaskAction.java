@@ -13,7 +13,7 @@ public abstract class CompositeTaskAction<P extends Task<T>, T> extends Action<T
     private P task;
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            parameterType = ParameterType.PAYLOAD,
             contentType = MediaType.APPLICATION_JSON
     )
     protected String data;

@@ -16,7 +16,7 @@ import java.util.*;
 public class RuntimeServiceInterfacesAction extends Action<String[]> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             option = "p",
             required = true,
             description = "Prefix for filtering."

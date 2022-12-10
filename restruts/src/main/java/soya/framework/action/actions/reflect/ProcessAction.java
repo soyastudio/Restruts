@@ -1,9 +1,6 @@
 package soya.framework.action.actions.reflect;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,7 +27,7 @@ import java.util.function.Consumer;
 public class ProcessAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "c",
             description = "Command for executing. The command is system specified."
@@ -38,14 +35,14 @@ public class ProcessAction extends Action<String> {
     private String command;
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             option = "d",
             description = "Directory under which the command is executed. If not specified, 'user.home' is used."
     )
     private String directory;
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             defaultValue = "10",
             option = "t",
             description = "Execution timeout in second."

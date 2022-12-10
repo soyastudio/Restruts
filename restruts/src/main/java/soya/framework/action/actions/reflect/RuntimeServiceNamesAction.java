@@ -18,7 +18,7 @@ import java.util.List;
 public class RuntimeServiceNamesAction extends Action<String[]> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             option = "p",
             description = "Prefix for filtering."
 

@@ -1,9 +1,6 @@
 package soya.framework.action.orchestration.actions;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
 import soya.framework.action.orchestration.eventbus.Event;
@@ -20,7 +17,7 @@ public class EventPublishAction extends Action<String> {
     @ActionProperty(description = {
 
     },
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "a")
     private String address;
@@ -28,7 +25,7 @@ public class EventPublishAction extends Action<String> {
     @ActionProperty(description = {
 
     },
-            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            parameterType = ParameterType.PAYLOAD,
             required = true,
             option = "p")
     private String payload;

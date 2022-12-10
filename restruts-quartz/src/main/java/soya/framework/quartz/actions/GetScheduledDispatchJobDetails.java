@@ -4,6 +4,7 @@ package soya.framework.quartz.actions;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.action.ParameterType;
 
 @ActionDefinition(
         domain = "quartz-scheduler",
@@ -14,7 +15,7 @@ import soya.framework.action.MediaType;
 )
 public class GetScheduledDispatchJobDetails extends QuartzSchedulerAction<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true, option = "j")
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, option = "j")
     private String jobId;
 
     @Override

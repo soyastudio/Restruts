@@ -7,6 +7,7 @@ import org.apache.kafka.common.TopicPartition;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
+import soya.framework.action.ParameterType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,10 +20,10 @@ import java.util.List;
         produces = MediaType.TEXT_PLAIN)
 public class ConsumeFetchAction extends ConsumeAction<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private Integer partition;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private Long offset;
 
     @Override

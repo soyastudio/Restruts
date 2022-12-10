@@ -1,9 +1,6 @@
 package soya.framework.albertsons.actions.schema;
 
-import soya.framework.action.ActionExecutor;
-import soya.framework.action.MediaType;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
+import soya.framework.action.*;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.document.actions.xmlbeans.XPathSchemaAction;
 
@@ -16,7 +13,7 @@ import soya.framework.document.actions.xmlbeans.XPathSchemaAction;
         description = "Generate XPath Schema based on CMM XSD file.")
 public class IIBDevXPathSchemaAction extends WorkshopAction<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private String cmm;
 
     @Override

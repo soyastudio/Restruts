@@ -12,14 +12,13 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
-import soya.framework.action.ActionContext;
-import soya.framework.action.ServiceLocator;
-import soya.framework.action.ServiceLocateException;
+import soya.framework.action.*;
 import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.action.dispatch.proxy.ActionProxyPattern;
-import soya.framework.action.servlet.ActionServlet;
-import soya.framework.action.servlet.StateMachineServlet;
+import soya.framework.action.servlet.*;
 
+import javax.servlet.ServletContext;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
@@ -109,6 +108,36 @@ public class ActionContextAutoConfiguration {
     }
 
     @Bean
+    ActionMappings actionMapping(ActionContext actionContext, ServletContext servletContext) {
+        ActionMappings mappings = new ActionMappings();
+        for(String domainName : ActionClass.domains()) {
+            Domain domain = ActionClass.domainType(domainName).getAnnotation(Domain.class);
+            mappings.addDomain(domain.name(), domain.path(), domain.title(), domain.description());
+        }
+
+        for(ActionName actionName : ActionClass.actions()) {
+            if(!mappings.containsDomain(actionName.getDomain())) {
+                mappings.addDomain(actionName.getDomain());
+            }
+
+            ActionClass actionClass = ActionClass.get(actionName);
+            ActionDefinition definition = actionClass.getActionType().getAnnotation(ActionDefinition.class);
+            ActionMapping mapping = mappings.add(actionName, definition.method().name(), definition.path(), definition.produces()[0]);
+            for (Field field: actionClass.getActionFields()) {
+                ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
+                ParameterMapping pm = new ParameterMapping(field.getName(), actionProperty.parameterType());
+                mapping.getParameters().add(pm);
+            }
+
+        }
+
+        servletContext.setAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE, mappings);
+
+        return mappings;
+
+    }
+
+    @Bean
     ActionProxyFactory actionProxyFactory() {
         ActionProxyFactory proxyFactory = new ActionProxyFactory();
 
@@ -128,7 +157,7 @@ public class ActionContextAutoConfiguration {
 
         ServletRegistrationBean bean = new ServletRegistrationBean(new ActionServlet(),
                 "/api/*");
-        bean.setLoadOnStartup(10);
+        bean.setLoadOnStartup(5);
 
         return bean;
     }

@@ -2,10 +2,9 @@ package soya.framework.document.actions.poi;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.DynaBean;
-import org.checkerframework.checker.units.qual.A;
+import soya.framework.action.ParameterType;
 import soya.framework.document.actions.DocumentAction;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
@@ -24,13 +23,13 @@ import java.util.Map;
         produces = MediaType.APPLICATION_JSON)
 public class SpreadSheetAction extends DocumentAction<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true, displayOrder = 1)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, displayOrder = 1)
     private String uri;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true, displayOrder = 2)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, displayOrder = 2)
     private String sheet;
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true, displayOrder = 3)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, displayOrder = 3)
     private String columns;
 
     @Override

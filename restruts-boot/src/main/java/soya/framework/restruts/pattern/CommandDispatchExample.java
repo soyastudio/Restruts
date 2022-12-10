@@ -3,6 +3,7 @@ package soya.framework.restruts.pattern;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.action.ParameterType;
 import soya.framework.action.dispatch.ActionPropertyAssignment;
 import soya.framework.action.dispatch.AssignmentType;
 import soya.framework.action.dispatch.CommandDispatchAction;
@@ -25,7 +26,7 @@ public class CommandDispatchExample extends CommandDispatchAction<String> {
 
     @ActionProperty(
             description = "Execution method. The method must take no arguments.",
-            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            parameterType = ParameterType.PAYLOAD,
             required = true,
             option = "m")
     private String message;

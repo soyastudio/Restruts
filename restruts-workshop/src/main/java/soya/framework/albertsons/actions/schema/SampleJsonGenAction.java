@@ -7,6 +7,7 @@ import org.apache.xmlbeans.SchemaTypeSystem;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.action.ParameterType;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.document.actions.avro.SampleAvroGenerator;
 import soya.framework.document.actions.avro.XsdToAvsc;
@@ -24,7 +25,7 @@ import java.util.Random;
         description = "EDM Table Mapping.")
 public class SampleJsonGenAction extends WorkshopAction<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private String cmm;
 
     @Override

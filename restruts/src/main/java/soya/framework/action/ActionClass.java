@@ -237,6 +237,12 @@ public final class ActionClass implements Serializable {
         return DOMAINS.get(domain);
     }
 
+    public static ActionName[] actions() {
+        List<ActionName> list = new ArrayList<>(ACTION_CLASSES.keySet());
+        Collections.sort(list);
+        return list.toArray(new ActionName[list.size()]);
+    }
+
     public static ActionName[] actions(String domain) {
         List<ActionName> list = new ArrayList<>();
         if (domain == null) {
@@ -277,8 +283,8 @@ public final class ActionClass implements Serializable {
                 ActionProperty a1 = o1.getAnnotation(ActionProperty.class);
                 ActionProperty a2 = o2.getAnnotation(ActionProperty.class);
 
-                int result = ActionProperty.PropertyType.index(a1.parameterType())
-                        - ActionProperty.PropertyType.index(a2.parameterType());
+                int result = ParameterType.index(a1.parameterType())
+                        - ParameterType.index(a2.parameterType());
                 if (result != 0) {
                     return result;
                 }

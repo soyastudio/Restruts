@@ -3,6 +3,7 @@ package soya.framework.action.orchestration.choice;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.action.ParameterType;
 import soya.framework.action.orchestration.ProcessException;
 import soya.framework.action.orchestration.ProcessSession;
 
@@ -15,7 +16,7 @@ import soya.framework.action.orchestration.ProcessSession;
         description = "EDM Table Mapping.")
 public class ChoiceActionExample extends ChoiceAction {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
     private Integer number;
 
     @Override

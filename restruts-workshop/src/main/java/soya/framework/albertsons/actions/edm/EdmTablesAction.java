@@ -5,6 +5,7 @@ import org.apache.commons.beanutils.DynaBean;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
+import soya.framework.action.ParameterType;
 import soya.framework.document.actions.poi.XlsxDynaClass;
 
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.*;
         description = "EDM Table Mapping.")
 public class EdmTablesAction extends EdmAction<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM)
     private String bod;
 
     @Override

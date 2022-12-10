@@ -2,10 +2,7 @@ package soya.framework.action.dispatch;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.ActionResult;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 import java.net.URI;
 
@@ -26,7 +23,7 @@ public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
             "- param(exp): evaluate value from payload input in json format using expression: exp",
             "- ref(exp): evaluate value from context using expression: exp, available for multiple action dispatch patterns such as pipeline, eventbus etc."
     },
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "d")
     protected URI uri;

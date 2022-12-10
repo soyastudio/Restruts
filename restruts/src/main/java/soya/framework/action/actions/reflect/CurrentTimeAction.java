@@ -1,9 +1,6 @@
 package soya.framework.action.actions.reflect;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,7 +18,7 @@ import java.util.Date;
 public class CurrentTimeAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             option = "f",
             description = "Time format."
 

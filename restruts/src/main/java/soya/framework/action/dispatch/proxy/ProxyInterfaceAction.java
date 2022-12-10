@@ -3,6 +3,7 @@ package soya.framework.action.dispatch.proxy;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.action.ParameterType;
 import soya.framework.commons.util.CodeBuilder;
 
 @ActionDefinition(domain = "dispatch",
@@ -17,7 +18,7 @@ public class ProxyInterfaceAction extends ProxyInterfaceGenerator {
     @ActionProperty(
             description = {
             },
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "c")
     private String className;

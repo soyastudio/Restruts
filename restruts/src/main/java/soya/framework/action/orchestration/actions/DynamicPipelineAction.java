@@ -1,9 +1,6 @@
 package soya.framework.action.orchestration.actions;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 @ActionDefinition(
         domain = "orchestration",
@@ -19,7 +16,7 @@ import soya.framework.action.MediaType;
 public class DynamicPipelineAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ActionProperty.PropertyType.PAYLOAD
+            parameterType = ParameterType.PAYLOAD
     )
     private String message;
 

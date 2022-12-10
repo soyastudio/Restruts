@@ -20,11 +20,14 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class ActionServlet extends HttpServlet {
+
     private static Logger logger = Logger.getLogger(ActionServlet.class.getName());
 
     public static final String INIT_PARAM_STREAM_HANDLER = "soya.framework.action.STREAM_HANDLER";
 
+    private ActionMappings actionMappings;
     private Swagger swagger;
+
     private Registry registry = new Registry();
 
     private Map<String, StreamWriter> readers = new HashMap<>();
@@ -33,6 +36,8 @@ public class ActionServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        this.actionMappings = (ActionMappings) config.getServletContext().getAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE);
+
         initStreamHandlers(config);
         initSwagger(config);
     }
@@ -71,6 +76,9 @@ public class ActionServlet extends HttpServlet {
     }
 
     protected void dispatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ActionMapping mapping = actionMappings.get(req);
+        System.out.println("---------------- " + mapping.getHttpMethod() + ": " + mapping.getPathMapping());
+
         ActionRequestEvent event = new ActionRequestEvent(req);
 
         if (!registry.containsKey(event.registration)) {
@@ -162,6 +170,7 @@ public class ActionServlet extends HttpServlet {
     }
 
     protected void initSwagger(ServletConfig config) {
+        ActionMappings mappings = (ActionMappings) config.getServletContext().getAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE);
 
         Swagger.SwaggerBuilder builder = Swagger.builder();
 
@@ -174,111 +183,87 @@ public class ActionServlet extends HttpServlet {
         }
         builder.basePath(path);
 
-        for (String dm : ActionClass.domains()) {
-            Domain domain = ActionClass.domainType(dm).getAnnotation(Domain.class);
+        mappings.domains().forEach(dm -> {
             builder.addTag(Swagger.TagObject.instance()
-                    .name(domain.title().isEmpty() ? domain.name() : domain.title())
-                    .description(domain.description()));
+                    .name(dm.getTitle().isEmpty() ? dm.getName() : dm.getTitle())
+                    .description(dm.getDescription()));
 
-            ActionName[] actionNames = ActionClass.actions(dm);
-            for (ActionName actionName : actionNames) {
-                ActionClass actionClass = ActionClass.get(actionName);
-                Class<? extends ActionCallable> cls = actionClass.getActionType();
-                ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
+            dm.getActionMappings().forEach(am -> {
+                ActionName actionName = am.getActionName();
+                String httpMethod = am.getHttpMethod().toUpperCase();
 
-                String fullPath = domain.path() + actionDefinition.path();
-                registry.put(new Registration(actionDefinition.method().name(), fullPath), actionClass);
-            }
-        }
+                String fullPath = dm.getPath() + am.getPath();
 
-        List<Registration> registrations = new ArrayList<>(registry.keySet());
-        Collections.sort(registrations);
+                String operationId = dm.getName().replaceAll("_", "-")
+                        + "_"
+                        + actionName.getName().replaceAll("_", "-");
 
-        registrations.forEach(e -> {
-            String fullPath = e.path;
 
-            ActionClass actionClass = registry.get(e);
-            Class<? extends ActionCallable> cls = actionClass.getActionType();
-            ActionDefinition actionDefinition = cls.getAnnotation(ActionDefinition.class);
+                Swagger.PathBuilder pathBuilder = null;
+                if (httpMethod.equals("GET")) {
+                    pathBuilder = builder.get(fullPath, operationId);
 
-            String operationId = actionDefinition.domain().replaceAll("_", "-")
-                    + "_"
-                    + actionDefinition.name().replaceAll("_", "-");
+                } else if (httpMethod.equals("POST")) {
+                    pathBuilder = builder.post(fullPath, operationId);
 
-            ActionDefinition.HttpMethod httpMethod = actionDefinition.method();
-            Swagger.PathBuilder pathBuilder = null;
-            if (httpMethod.equals(ActionDefinition.HttpMethod.GET)) {
-                pathBuilder = builder.get(fullPath, operationId);
+                } else if (httpMethod.equals("DELETE")) {
+                    pathBuilder = builder.delete(fullPath, operationId);
 
-            } else if (httpMethod.equals(ActionDefinition.HttpMethod.POST)) {
-                pathBuilder = builder.post(fullPath, operationId);
+                } else if (httpMethod.equals("PUT")) {
+                    pathBuilder = builder.put(fullPath, operationId);
 
-            } else if (httpMethod.equals(ActionDefinition.HttpMethod.DELETE)) {
-                pathBuilder = builder.delete(fullPath, operationId);
+                } else if (httpMethod.equals("HEAD")) {
+                    pathBuilder = builder.head(fullPath, operationId);
 
-            } else if (httpMethod.equals(ActionDefinition.HttpMethod.PUT)) {
-                pathBuilder = builder.put(fullPath, operationId);
+                } else if (httpMethod.equals("OPTIONS")) {
+                    pathBuilder = builder.options(fullPath, operationId);
 
-            } else if (httpMethod.equals(ActionDefinition.HttpMethod.HEAD)) {
-                pathBuilder = builder.head(fullPath, operationId);
+                } else if (httpMethod.equals("PATCH")) {
+                    pathBuilder = builder.patch(fullPath, operationId);
 
-            } else if (httpMethod.equals(ActionDefinition.HttpMethod.OPTIONS)) {
-                pathBuilder = builder.options(fullPath, operationId);
+                }
 
-            } else if (httpMethod.equals(ActionDefinition.HttpMethod.PATCH)) {
-                pathBuilder = builder.patch(fullPath, operationId);
+                StringBuilder descBuilder = new StringBuilder(am.getDescription()).append("\n");
+                descBuilder.append("- Action name: ").append(actionName.toString()).append("\n");
+                //descBuilder.append("- Action class: ").append(.getName()).append("\n");
 
-            }
+                pathBuilder.description(descBuilder.toString());
+                pathBuilder.addTag(dm.getTitle() != null && !dm.getTitle().isEmpty()? dm.getTitle() : dm.getName());
+                pathBuilder.produces( am.getProduce());
 
-            StringBuilder descBuilder = new StringBuilder(URIUtils.merge(actionDefinition.description(), "\n")).append("\n");
-            descBuilder.append("- Action name: ").append(actionDefinition.domain()).append("://").append(actionDefinition.name()).append("\n");
-            descBuilder.append("- Action class: ").append(cls.getName()).append("\n");
+                if (pathBuilder != null) {
+                    for (ParameterMapping pm : am.getParameters()) {
+                        String name = pm.getName();
+                        ParameterType paramType = pm.getParameterType();
 
-            pathBuilder.description(descBuilder.toString());
+                        if (ParameterType.PATH_PARAM.equals(paramType)) {
+                            pathBuilder.parameterBuilder(name, "path", pm.getDescription()).build();
 
-            if (pathBuilder != null) {
-                for (Field f : actionClass.getActionFields()) {
-                    if (f.getAnnotation(ActionProperty.class) != null) {
-                        ActionProperty param = f.getAnnotation(ActionProperty.class);
-                        String name = param.name().isEmpty() ? f.getName() : param.name();
-                        if (ActionProperty.PropertyType.PATH_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "path", URIUtils.merge(param.description(), "\n")).build();
+                        } else if (ParameterType.QUERY_PARAM.equals(paramType)) {
+                            pathBuilder.parameterBuilder(name, "query", pm.getDescription()).build();
 
-                        } else if (ActionProperty.PropertyType.QUERY_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "query", URIUtils.merge(param.description(), "\n")).build();
+                        } else if (ParameterType.HEADER_PARAM.equals(paramType)) {
+                            pathBuilder.parameterBuilder(name, "header", pm.getDescription()).build();
 
-                        } else if (ActionProperty.PropertyType.HEADER_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "header", URIUtils.merge(param.description(), "\n")).build();
+                        } else if (ParameterType.COOKIE_PARAM.equals(paramType)) {
+                            pathBuilder.parameterBuilder(name, "cookie", pm.getDescription()).build();
 
-                        } else if (ActionProperty.PropertyType.COOKIE_PARAM.equals(param.parameterType())) {
-                            pathBuilder.parameterBuilder(name, "cookie", URIUtils.merge(param.description(), "\n")).build();
-
-                        } else if (ActionProperty.PropertyType.PAYLOAD.equals(param.parameterType())) {
-                            pathBuilder.bodyParameterBuilder(name, URIUtils.merge(param.description(), "\n"))
+                        } else if (ParameterType.PAYLOAD.equals(paramType)) {
+                            pathBuilder.bodyParameterBuilder(name, pm.getDescription())
                                     .build()
-                                    .consumes(param.contentType());
+                                    .consumes(pm.getContentType());
                         }
                     }
                 }
-            }
+                pathBuilder.build();
 
-            Class<?> domainClass = ActionClass.domainType(actionDefinition.domain());
-            if (domainClass != null) {
-                Domain domain = domainClass.getAnnotation(Domain.class);
-                pathBuilder
-                        .addTag(domain.title().isEmpty() ? domain.name() : domain.title())
-                        .produces(actionDefinition.produces());
-
-            } else {
-                pathBuilder
-                        .addTag(actionDefinition.domain())
-                        .produces(actionDefinition.produces());
-
-            }
-
-
-            pathBuilder.build();
+                registry.put(new Registration(am.getHttpMethod(), fullPath), ActionClass.get(am.getActionName()));
+            });
         });
+
+
+        List<Registration> registrations = new ArrayList<>(registry.keySet());
+        Collections.sort(registrations);
 
         this.swagger = builder.build();
     }
@@ -323,19 +308,19 @@ public class ActionServlet extends HttpServlet {
                 if (field.getAnnotation(ActionProperty.class) != null) {
                     ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
                     String name = actionProperty.name().isEmpty() ? field.getName() : actionProperty.name();
-                    if (ActionProperty.PropertyType.PAYLOAD.equals(actionProperty.parameterType())) {
+                    if (ParameterType.PAYLOAD.equals(actionProperty.parameterType())) {
                         value = event.getPayload(paramType);
 
-                    } else if (ActionProperty.PropertyType.HEADER_PARAM.equals(actionProperty.parameterType())) {
+                    } else if (ParameterType.HEADER_PARAM.equals(actionProperty.parameterType())) {
                         value = ConvertUtils.convert(httpServletRequest.getHeader(name), field.getType());
 
-                    } else if (ActionProperty.PropertyType.QUERY_PARAM.equals(actionProperty.parameterType())) {
+                    } else if (ParameterType.QUERY_PARAM.equals(actionProperty.parameterType())) {
                         value = ConvertUtils.convert(event.queryParams.get(name).get(0), field.getType());
 
-                    } else if (ActionProperty.PropertyType.QUERY_PARAM.equals(actionProperty.parameterType())) {
+                    } else if (ParameterType.QUERY_PARAM.equals(actionProperty.parameterType())) {
                         value = ConvertUtils.convert(event.getQueryParameter(name), field.getType());
 
-                    } else if (ActionProperty.PropertyType.COOKIE_PARAM.equals(actionProperty.parameterType())) {
+                    } else if (ParameterType.COOKIE_PARAM.equals(actionProperty.parameterType())) {
                         // TODO:
                     }
                 }
@@ -357,6 +342,7 @@ public class ActionServlet extends HttpServlet {
     static class Registration implements Comparable<Registration> {
         private final String method;
         private final String path;
+
         private String[] paths;
 
         Registration(String method, String path) {

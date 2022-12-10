@@ -1,9 +1,6 @@
 package soya.framework.albertsons.actions.edm;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 import soya.framework.commons.util.CodeBuilder;
 
 @ActionDefinition(domain = "albertsons",
@@ -15,7 +12,7 @@ import soya.framework.commons.util.CodeBuilder;
         description = "EDM Create View")
 public class EdmCreateViewAction extends Action<String> {
 
-    @ActionProperty(parameterType = ActionProperty.PropertyType.HEADER_PARAM, required = true, displayOrder = 1)
+    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, displayOrder = 1)
     private String view;
 
 

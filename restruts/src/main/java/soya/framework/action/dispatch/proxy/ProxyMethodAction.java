@@ -3,6 +3,7 @@ package soya.framework.action.dispatch.proxy;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
+import soya.framework.action.ParameterType;
 import soya.framework.commons.util.CodeBuilder;
 
 @ActionDefinition(domain = "dispatch",
@@ -17,7 +18,7 @@ public class ProxyMethodAction extends ProxyInterfaceGenerator {
     @ActionProperty(
             description = {
             },
-            parameterType = ActionProperty.PropertyType.PAYLOAD,
+            parameterType = ParameterType.PAYLOAD,
             required = true,
             option = "u")
     private String uri;

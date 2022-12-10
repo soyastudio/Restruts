@@ -1,9 +1,6 @@
 package soya.framework.action.dispatch;
 
-import soya.framework.action.Action;
-import soya.framework.action.ActionDefinition;
-import soya.framework.action.ActionProperty;
-import soya.framework.action.MediaType;
+import soya.framework.action.*;
 
 @ActionDefinition(domain = "dispatch",
         name = "scheduled-task-cancellation",
@@ -17,7 +14,7 @@ public class ScheduledTaskCancelAction extends Action<Boolean> {
             description = {
                     "Task name."
             },
-            parameterType = ActionProperty.PropertyType.HEADER_PARAM,
+            parameterType = ParameterType.HEADER_PARAM,
             required = true,
             option = "n"
     )
