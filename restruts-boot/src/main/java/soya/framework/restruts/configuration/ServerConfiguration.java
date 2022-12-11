@@ -29,9 +29,12 @@ public class ServerConfiguration {
 
     @Bean
     DynaActionLoader<ActionMappings> dynaActionLoader(ActionMappings mappings) {
-        System.out.println("------------ " + mappings);
+        mappings.addActionFactory(new ActionFactory() {
+            @Override
+            public boolean contains(ActionName actionName) {
+                return DynaActionClass.get(actionName) != null;
+            }
 
-        mappings.setActionFactory(new ActionFactory() {
             @Override
             public ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
                 ActionCallable action = null;

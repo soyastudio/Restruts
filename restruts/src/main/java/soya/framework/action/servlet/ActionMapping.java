@@ -1,8 +1,11 @@
 package soya.framework.action.servlet;
 
 import soya.framework.action.ActionName;
+import soya.framework.action.ParameterType;
+import soya.framework.commons.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +16,6 @@ public class ActionMapping implements Comparable<ActionMapping>, Serializable {
     private final String httpMethod;
     private final String path;
     private final String produce;
-
     private String description = "";
     private List<ParameterMapping> parameters = new ArrayList<>();
 
@@ -62,6 +64,39 @@ public class ActionMapping implements Comparable<ActionMapping>, Serializable {
 
     public boolean match(HttpServletRequest request) {
         return httpMethod.equalsIgnoreCase(request.getMethod()) && pathMapping.match(request.getPathInfo());
+    }
+
+    public Object getParameterValue(HttpServletRequest request, ParameterMapping parameterMapping) {
+        String paramName = parameterMapping.getName();
+        ParameterType paramType = parameterMapping.getParameterType();
+        String contentType = parameterMapping.getContentType();
+
+        switch (paramType) {
+            case HEADER_PARAM:
+                return request.getHeader(paramName);
+
+            case QUERY_PARAM:
+                return request.getParameter(paramName);
+
+            case PATH_PARAM:
+                return null;
+
+            case PAYLOAD:
+                return getPayload(request, contentType);
+
+            default:
+                throw new RuntimeException("Not supported.");
+        }
+    }
+
+    private Object getPayload(HttpServletRequest request, String contentType) {
+        try {
+            byte[] bin = StreamUtils.copyToByteArray(request.getInputStream());
+            return new String(bin);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

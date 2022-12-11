@@ -28,8 +28,6 @@ public class ActionServlet extends HttpServlet {
     private ActionMappings actionMappings;
     private Swagger swagger;
 
-    private Registry registry = new Registry();
-
     private Map<String, StreamWriter> readers = new HashMap<>();
     private Map<String, StreamWriter> writers = new HashMap<>();
 
@@ -76,36 +74,24 @@ public class ActionServlet extends HttpServlet {
     }
 
     protected void dispatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ActionMapping mapping = actionMappings.get(req);
-        System.out.println("---------------- " + mapping.getHttpMethod() + ": " + mapping.getPathMapping());
+        AsyncContext asyncContext = req.startAsync();
+        asyncContext.start(() -> {
+            try {
+                ActionMapping mapping = actionMappings.getActionMapping(req);
+                ActionCallable action = actionMappings.create(req);
+                ActionResult actionResult = action.call();
 
-        ActionRequestEvent event = new ActionRequestEvent(req);
+                write(actionResult.get(), mapping.getProduce(), resp);
 
-        if (!registry.containsKey(event.registration)) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            } catch (Exception e) {
+                logger.severe(e.getMessage());
+                throw new RuntimeException(e);
 
-        } else {
+            } finally {
+                asyncContext.complete();
 
-            ActionClass actionClass = registry.get(event.registration);
-
-            AsyncContext asyncContext = req.startAsync();
-            asyncContext.start(() -> {
-                try {
-                    ActionCallable action = registry.create(event);
-                    ActionResult actionResult = action.call();
-
-                    write(actionResult.get(), actionClass.getResultFormat(), resp);
-
-                } catch (Exception e) {
-                    logger.severe(e.getMessage());
-                    throw new RuntimeException(e);
-
-                } finally {
-                    asyncContext.complete();
-
-                }
-            });
-        }
+            }
+        });
     }
 
     protected void write(Object object, String contentType, HttpServletResponse response) throws IOException {
@@ -198,7 +184,6 @@ public class ActionServlet extends HttpServlet {
                         + "_"
                         + actionName.getName().replaceAll("_", "-");
 
-
                 Swagger.PathBuilder pathBuilder = null;
                 if (httpMethod.equals("GET")) {
                     pathBuilder = builder.get(fullPath, operationId);
@@ -225,7 +210,7 @@ public class ActionServlet extends HttpServlet {
 
                 StringBuilder descBuilder = new StringBuilder(am.getDescription()).append("\n");
                 descBuilder.append("- Action name: ").append(actionName.toString()).append("\n");
-                //descBuilder.append("- Action class: ").append(.getName()).append("\n");
+                //descBuilder.append("- Action class: ").append(am.).append("\n");
 
                 pathBuilder.description(descBuilder.toString());
                 pathBuilder.addTag(dm.getTitle() != null && !dm.getTitle().isEmpty()? dm.getTitle() : dm.getName());
@@ -256,212 +241,9 @@ public class ActionServlet extends HttpServlet {
                     }
                 }
                 pathBuilder.build();
-
-                registry.put(new Registration(am.getHttpMethod(), fullPath), ActionClass.get(am.getActionName()));
             });
         });
 
-
-        List<Registration> registrations = new ArrayList<>(registry.keySet());
-        Collections.sort(registrations);
-
         this.swagger = builder.build();
-    }
-
-    static class Registry extends AbstractMap<Registration, ActionClass> {
-
-        private Set<Entry<Registration, ActionClass>> entrySet = new HashSet<>();
-
-        @Override
-        public Set<Entry<Registration, ActionClass>> entrySet() {
-            return entrySet;
-        }
-
-        public ActionClass get(Registration registration) {
-            Iterator<Entry<Registration, ActionClass>> i = entrySet().iterator();
-            while (i.hasNext()) {
-                Entry<Registration, ActionClass> e = i.next();
-                if (registration.equals(e.getKey()))
-                    return e.getValue();
-            }
-            return null;
-        }
-
-        @Override
-        public ActionClass put(Registration key, ActionClass value) {
-            Map.Entry<Registration, ActionClass> entry = new SimpleEntry<>(key, value);
-            entrySet.add(entry);
-            return entry.getValue();
-        }
-
-        ActionCallable create(ActionRequestEvent event) throws Exception {
-            ActionClass actionClass = get(event.registration);
-            Class<? extends ActionCallable> actionType = actionClass.getActionType();
-            ActionCallable action = actionClass.newInstance();
-
-            HttpServletRequest httpServletRequest = (HttpServletRequest) event.getSource();
-
-            Field[] fields = actionClass.getActionFields();
-            for (Field field : fields) {
-                Class<?> paramType = field.getType();
-                Object value = null;
-                if (field.getAnnotation(ActionProperty.class) != null) {
-                    ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
-                    String name = actionProperty.name().isEmpty() ? field.getName() : actionProperty.name();
-                    if (ParameterType.PAYLOAD.equals(actionProperty.parameterType())) {
-                        value = event.getPayload(paramType);
-
-                    } else if (ParameterType.HEADER_PARAM.equals(actionProperty.parameterType())) {
-                        value = ConvertUtils.convert(httpServletRequest.getHeader(name), field.getType());
-
-                    } else if (ParameterType.QUERY_PARAM.equals(actionProperty.parameterType())) {
-                        value = ConvertUtils.convert(event.queryParams.get(name).get(0), field.getType());
-
-                    } else if (ParameterType.QUERY_PARAM.equals(actionProperty.parameterType())) {
-                        value = ConvertUtils.convert(event.getQueryParameter(name), field.getType());
-
-                    } else if (ParameterType.COOKIE_PARAM.equals(actionProperty.parameterType())) {
-                        // TODO:
-                    }
-                }
-
-                if (value != null) {
-                    field.setAccessible(true);
-                    try {
-                        field.set(action, value);
-                    } catch (IllegalAccessException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-            }
-
-            return action;
-        }
-    }
-
-    static class Registration implements Comparable<Registration> {
-        private final String method;
-        private final String path;
-
-        private String[] paths;
-
-        Registration(String method, String path) {
-            this.method = method.toLowerCase();
-            this.path = path.trim();
-            this.paths = path.split("/");
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-
-            if (!(o instanceof Registration)) return false;
-
-            Registration that = (Registration) o;
-            if (!method.equals(that.method)) {
-                return false;
-            }
-
-            if (path.equals(that.path)) {
-                return true;
-            }
-
-            if (paths.length != that.paths.length) {
-                return false;
-            }
-
-            for (int i = 0; i < paths.length; i++) {
-                if (!paths[i].equals(that.paths[i]) && !(that.paths[i].contains("{") && that.paths[i].contains("}"))) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        public int compareTo(Registration o) {
-            int result = path.compareTo(o.path);
-
-            if (result == 0) {
-                result = method.compareTo(o.method);
-            }
-
-            return result;
-        }
-    }
-
-    static class ActionRequestEvent extends EventObject {
-
-        private Registration registration;
-        private Map<String, List<String>> queryParams = new HashMap<>();
-        private byte[] inputData;
-
-        ActionRequestEvent(HttpServletRequest request) {
-            super(request);
-            this.registration = new Registration(request.getMethod(), request.getPathInfo());
-
-            request.getPathInfo();
-
-            String encoding = "UTF-8";
-            String query = request.getQueryString();
-            if (query != null && !query.isEmpty()) {
-                final String[] pairs = query.split("&");
-                for (String pair : pairs) {
-                    try {
-                        final int idx = pair.indexOf("=");
-                        final String key = idx > 0 ? URLDecoder.decode(pair.substring(0, idx), encoding) : pair;
-                        if (!queryParams.containsKey(key)) {
-                            queryParams.put(key, new LinkedList<String>());
-                        }
-                        final String value = idx > 0 && pair.length() > idx + 1 ? URLDecoder.decode(pair.substring(idx + 1), encoding) : null;
-                        queryParams.get(key).add(value);
-
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-
-            try {
-                ServletInputStream inputStream = request.getInputStream();
-                if (inputStream != null && inputStream.available() > 0) {
-                    inputData = new byte[request.getContentLength()];
-
-                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    int nRead;
-                    while ((nRead = inputStream.read(inputData, 0, inputData.length)) != -1) {
-                        buffer.write(inputData, 0, nRead);
-                    }
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-
-        public String getHeader(String name) {
-            HttpServletRequest request = (HttpServletRequest) getSource();
-            return request.getHeader(name);
-        }
-
-        public String getQueryParameter(String name) {
-            if (queryParams.containsKey(name)) {
-                return queryParams.get(name).size() > 0 ? queryParams.get(name).get(0) : null;
-            } else {
-                return null;
-            }
-        }
-
-        public <T> T getPayload(Class<T> type) {
-            if (inputData == null || inputData.length == 0) {
-                return null;
-            }
-
-            if (type.getName().equals("java.lang.String")) {
-                return (T) new String(inputData);
-            }
-
-            return null;
-        }
     }
 }

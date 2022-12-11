@@ -1,26 +1,31 @@
 package soya.framework.action.servlet;
 
-import soya.framework.action.ActionCallable;
-import soya.framework.action.ActionClass;
-import soya.framework.action.ActionName;
-import soya.framework.action.Domain;
+import soya.framework.action.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class ActionMappings {
     public static String ACTION_MAPPINGS_ATTRIBUTE = "SOYA_FRAMEWORK_ACTION_MAPPINGS";
 
     private Map<String, DomainMapping> domains = new HashMap<>();
-    private Set<ActionMapping> entrySet = new HashSet<>();
+    private Set<ActionMapping> actions = new HashSet<>();
 
     private ActionFactory actionFactory = new DefaultActionFactory();
 
-    public ActionMappings() {
+    private Set<ActionFactory> factories = new LinkedHashSet<>();
+    private Map<ActionName, ActionFactory> creators = new HashMap<>();
 
+    public ActionMappings() {
+        factories.add(new DefaultActionFactory());
     }
 
-    public void setActionFactory(ActionFactory actionFactory) {
+    public ActionCallable create(HttpServletRequest request) {
+        return create(getActionMapping(request), request);
+    }
+
+    public void addActionFactory(ActionFactory actionFactory) {
         this.actionFactory = actionFactory;
     }
 
@@ -60,14 +65,13 @@ public class ActionMappings {
         mapping.getPathMapping().add(domainMapping.getPath());
 
         domainMapping.add(mapping);
-        entrySet.add(mapping);
-
+        actions.add(mapping);
         return mapping;
     }
 
-    public ActionMapping get(HttpServletRequest request) {
+    public ActionMapping getActionMapping(HttpServletRequest request) {
 
-        Iterator<ActionMapping> iterator = entrySet.iterator();
+        Iterator<ActionMapping> iterator = actions.iterator();
         while (iterator.hasNext()) {
             ActionMapping mapping = iterator.next();
             if (mapping.match(request)) {
@@ -79,22 +83,55 @@ public class ActionMappings {
     }
 
     private ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
-        ActionCallable action = null;
         ActionName actionName = mapping.getActionName();
-        if (ActionClass.get(actionName) != null) {
-            ActionClass actionClass = ActionClass.get(actionName);
-            action = actionClass.newInstance();
 
+        ActionFactory factory = null;
+        if(creators.containsKey(actionName)) {
+            factory = creators.get(actionName);
+        } else {
+            for (ActionFactory f : factories) {
+                if(f.contains(actionName)) {
+                    creators.put(actionName, f);
+                    factory = f;
+                    break;
+                }
+            }
         }
 
-        return action;
+        if(factory == null) {
+            throw new ActionCreationException("Cannot find ActionFactory for action: " + actionName);
+        }
+
+        return factory.create(mapping, request);
     }
 
     static class DefaultActionFactory implements ActionFactory {
 
         @Override
+        public boolean contains(ActionName actionName) {
+            return ActionClass.get(actionName) != null;
+        }
+
+        @Override
         public ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
-            return null;
+            ActionClass actionClass = ActionClass.get(mapping.getActionName());
+            ActionCallable action = actionClass.newInstance();
+
+            mapping.getParameters().forEach(pm -> {
+                Field field = actionClass.getActionField(pm.getName());
+                Object value = ConvertUtils.convert(mapping.getParameterValue(request, pm), field.getType());
+
+                field.setAccessible(true);
+                try {
+                    field.set(action, value);
+
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+
+                }
+            });
+
+            return action;
         }
     }
 
