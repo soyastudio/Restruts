@@ -208,11 +208,7 @@ public class ActionServlet extends HttpServlet {
 
                 }
 
-                StringBuilder descBuilder = new StringBuilder(am.getDescription()).append("\n");
-                descBuilder.append("- Action name: ").append(actionName.toString()).append("\n");
-                //descBuilder.append("- Action class: ").append(am.).append("\n");
-
-                pathBuilder.description(descBuilder.toString());
+                pathBuilder.description(am.getDescription());
                 pathBuilder.addTag(dm.getTitle() != null && !dm.getTitle().isEmpty()? dm.getTitle() : dm.getName());
                 pathBuilder.produces( am.getProduce());
 

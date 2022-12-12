@@ -4,12 +4,15 @@ import soya.framework.action.MediaType;
 import soya.framework.action.ParameterType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class ParameterMapping implements Serializable {
     private final String name;
     private final ParameterType parameterType;
-    private String description = "";
+    private List<String> descriptions = new ArrayList<>();
     private String contentType = MediaType.TEXT_PLAIN;
 
     public ParameterMapping(String name, ParameterType parameterType) {
@@ -25,12 +28,18 @@ public class ParameterMapping implements Serializable {
         return parameterType;
     }
 
-    public String getDescription() {
-        return description;
+    public void addDescriptions(String... lines) {
+        if (lines != null) {
+            descriptions.addAll(Arrays.asList(lines));
+        }
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getDescription() {
+        StringBuilder builder = new StringBuilder();
+        descriptions.forEach(e -> {
+            builder.append(e).append("\n");
+        });
+        return builder.toString();
     }
 
     public String getContentType() {

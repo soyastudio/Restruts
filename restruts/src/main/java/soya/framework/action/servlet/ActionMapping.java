@@ -4,10 +4,12 @@ import soya.framework.action.ActionName;
 import soya.framework.action.ParameterType;
 import soya.framework.commons.util.StreamUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,7 +18,8 @@ public class ActionMapping implements Comparable<ActionMapping>, Serializable {
     private final String httpMethod;
     private final String path;
     private final String produce;
-    private String description = "";
+
+    private List<String> descriptions = new ArrayList<>();
     private List<ParameterMapping> parameters = new ArrayList<>();
 
     private PathMapping pathMapping;
@@ -46,12 +49,18 @@ public class ActionMapping implements Comparable<ActionMapping>, Serializable {
         return produce;
     }
 
-    public String getDescription() {
-        return description;
+    public void addDescriptions(String... line) {
+        if(line != null) {
+            descriptions.addAll(Arrays.asList(line));
+        }
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getDescription() {
+        StringBuilder builder = new StringBuilder();
+        descriptions.forEach(e -> {
+            builder.append(e).append("\n");
+        });
+        return builder.toString();
     }
 
     public List<ParameterMapping> getParameters() {
@@ -72,24 +81,99 @@ public class ActionMapping implements Comparable<ActionMapping>, Serializable {
         String contentType = parameterMapping.getContentType();
 
         switch (paramType) {
+            case PATH_PARAM:
+                return getFromPath(request, parameterMapping);
+
+            case QUERY_PARAM:
+                return getFromQuery(request, parameterMapping);
+
             case HEADER_PARAM:
                 return request.getHeader(paramName);
 
-            case QUERY_PARAM:
-                return request.getParameter(paramName);
+            case COOKIE_PARAM:
+                return getFromCookie(request, parameterMapping);
 
-            case PATH_PARAM:
-                return null;
+            case FORM_PARAM:
+                return getFromForm(request, parameterMapping);
+
+            case MATRIX_PARAM:
+                return getFromMatrix(request, parameterMapping);
+
+            case BEAN_PARAM:
+                return getFromBean(request, parameterMapping);
 
             case PAYLOAD:
-                return getPayload(request, contentType);
+                return getFromPayload(request, contentType);
 
             default:
                 throw new RuntimeException("Not supported.");
         }
     }
 
-    private Object getPayload(HttpServletRequest request, String contentType) {
+    private String getFromPath(HttpServletRequest request, ParameterMapping parameterMapping) {
+        String token = "{" + parameterMapping.getName() + "}";
+        String[] items = getPathMapping().getItems();
+        String[] values = new PathMapping(request.getPathInfo()).getItems();
+        for(int i = 0; i < items.length; i ++) {
+            if(items[i].contains(token)) {
+                return parse(items[i], token, values[i]);
+            }
+        }
+
+        return null;
+    }
+
+    private String parse(String pattern, String token, String value) {
+        int index = pattern.indexOf(token);
+
+        String prefix = pattern.substring(0, index);
+        String suffix = pattern.substring(index + token.length());
+
+        if(prefix.contains("{") && prefix.contains("}") || suffix.contains("{") && suffix.contains("}")) {
+            throw new IllegalArgumentException("Multiple path parameters in one path item is not supported.");
+        }
+
+        if(value.startsWith(prefix) && value.endsWith(suffix)) {
+            return value.substring(index, value.length() - suffix.length());
+        }
+
+        return null;
+    }
+
+    private String getFromQuery(HttpServletRequest request, ParameterMapping parameterMapping) {
+        return request.getParameter(parameterMapping.getName());
+    }
+
+    private String getFromHeader(HttpServletRequest request, ParameterMapping parameterMapping) {
+        return request.getHeader(parameterMapping.getName());
+    }
+
+    private String getFromCookie(HttpServletRequest request, ParameterMapping parameterMapping) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if(cookie.getName().equals(parameterMapping.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private String getFromForm(HttpServletRequest request, ParameterMapping parameterMapping) {
+        throw new UnsupportedOperationException("Form param is not supported yet.");
+    }
+
+    private String getFromMatrix(HttpServletRequest request, ParameterMapping parameterMapping) {
+        throw new UnsupportedOperationException("Matrix param is not supported yet.");
+    }
+
+    private String getFromBean(HttpServletRequest request, ParameterMapping parameterMapping) {
+        throw new UnsupportedOperationException("Bean param is not supported yet.");
+    }
+
+    private Object getFromPayload(HttpServletRequest request, String contentType) {
         try {
             byte[] bin = StreamUtils.copyToByteArray(request.getInputStream());
             return new String(bin);

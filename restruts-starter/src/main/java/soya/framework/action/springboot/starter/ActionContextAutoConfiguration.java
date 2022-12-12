@@ -110,22 +110,29 @@ public class ActionContextAutoConfiguration {
     @Bean
     ActionMappings actionMapping(ActionContext actionContext, ServletContext servletContext) {
         ActionMappings mappings = new ActionMappings();
-        for(String domainName : ActionClass.domains()) {
+        for (String domainName : ActionClass.domains()) {
             Domain domain = ActionClass.domainType(domainName).getAnnotation(Domain.class);
             mappings.addDomain(domain.name(), domain.path(), domain.title(), domain.description());
         }
 
-        for(ActionName actionName : ActionClass.actions()) {
-            if(!mappings.containsDomain(actionName.getDomain())) {
+        for (ActionName actionName : ActionClass.actions()) {
+            if (!mappings.containsDomain(actionName.getDomain())) {
                 mappings.addDomain(actionName.getDomain());
             }
 
             ActionClass actionClass = ActionClass.get(actionName);
             ActionDefinition definition = actionClass.getActionType().getAnnotation(ActionDefinition.class);
             ActionMapping mapping = mappings.add(actionName, definition.method().name(), definition.path(), definition.produces()[0]);
-            for (Field field: actionClass.getActionFields()) {
+
+            mapping.addDescriptions(definition.description());
+            mapping.addDescriptions("- Action name: " + actionName);
+            mapping.addDescriptions("- Action class: " + actionClass.getActionType().getName());
+
+            for (Field field : actionClass.getActionFields()) {
                 ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
                 ParameterMapping pm = new ParameterMapping(field.getName(), actionProperty.parameterType());
+                pm.addDescriptions(actionProperty.description());
+
                 mapping.getParameters().add(pm);
             }
 
@@ -144,7 +151,7 @@ public class ActionContextAutoConfiguration {
         Reflections reflections = new Reflections();
         Set<Class<?>> proxyInterfaces = reflections.getTypesAnnotatedWith(ActionProxyPattern.class);
         proxyInterfaces.forEach(e -> {
-            if(e.isInterface()) {
+            if (e.isInterface()) {
                 proxyFactory.create(e);
             }
         });

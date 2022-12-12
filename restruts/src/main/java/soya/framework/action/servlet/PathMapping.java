@@ -20,6 +20,10 @@ public class PathMapping {
         this.items = result;
     }
 
+    public String[] getItems() {
+        return items;
+    }
+
     public boolean match(String path) {
         if(!path.startsWith("/")) {
             return false;
