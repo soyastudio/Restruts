@@ -1,6 +1,9 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
+import soya.framework.action.dispatch.AssignmentType;
+import soya.framework.action.dispatch.MethodDispatchPattern;
+import soya.framework.action.dispatch.MethodParameterAssignment;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;

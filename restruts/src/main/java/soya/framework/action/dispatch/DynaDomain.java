@@ -18,9 +18,9 @@ public final class DynaDomain implements Comparable<DynaDomain>, Serializable {
 
     public DynaDomain(String name, String path, String title, String description) {
         this.name = name;
-        this.path = path;
-        this.title = title;
-        this.description = description;
+        this.path = path != null ? path : "/" + name;
+        this.title = title != null ? title : name;
+        this.description = description != null ? description : "";
     }
 
     public String getName() {

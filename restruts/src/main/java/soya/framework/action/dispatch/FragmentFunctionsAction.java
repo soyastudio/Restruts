@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
+import soya.framework.action.dispatch.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;

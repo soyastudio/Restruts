@@ -4,6 +4,7 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import soya.framework.action.*;
 import soya.framework.action.dispatch.*;
+import soya.framework.action.dispatch.ActionDispatchPattern;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

@@ -135,7 +135,7 @@
                     The term "MVC" originated with the SmallTalk 
                     Model-View-Controller framework. Under MVC, 
                     an application is seen as having three distinct parts. The 
-                    problem domain is represented by the Model. The output to 
+                    problem domain is represented by the Model. The output to
                     the user is represented by the View. And, the input from the 
                     user is represented by Controller.
                 </p>

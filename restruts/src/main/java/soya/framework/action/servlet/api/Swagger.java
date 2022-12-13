@@ -11,6 +11,8 @@ import java.util.*;
 public class Swagger {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    private long createdTime;
+
     public enum HttpMethod {
         get, post, put, delete, patch, options, head
     }
@@ -30,6 +32,14 @@ public class Swagger {
     private SecurityRequirementObject[] security;
 
     private TagObject[] tags;
+
+    private Swagger() {
+        this.createdTime = System.currentTimeMillis();
+    }
+
+    public long getCreatedTime() {
+        return createdTime;
+    }
 
     public String getSwagger() {
         return swagger;

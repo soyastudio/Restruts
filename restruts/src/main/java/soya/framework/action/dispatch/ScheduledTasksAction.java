@@ -3,6 +3,7 @@ package soya.framework.action.dispatch;
 import soya.framework.action.Action;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.MediaType;
+import soya.framework.action.dispatch.DispatchScheduler;
 
 @ActionDefinition(domain = "dispatch",
         name = "scheduled-tasks",

@@ -1,8 +1,6 @@
 package soya.framework.restruts.pattern;
 
 import soya.framework.action.dispatch.ActionDispatchPattern;
-import soya.framework.action.dispatch.ActionPropertyAssignment;
-import soya.framework.action.dispatch.AssignmentType;
 import soya.framework.action.dispatch.ParamName;
 import soya.framework.action.dispatch.proxy.ActionProxyPattern;
 

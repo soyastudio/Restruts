@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.*;
 
 public class DynaActionClass implements DynaClass {
+
     private static Set<DynaDomain> DYNA_DOMAINS = new HashSet<>();
     private static Map<ActionName, DynaActionClass> DYNA_ACTION_CLASSES = new HashMap<>();
 
@@ -88,8 +89,14 @@ public class DynaActionClass implements DynaClass {
         }
     }
 
-    static void add(DynaDomain domain) {
+    public static void add(DynaDomain domain) {
         DYNA_DOMAINS.add(domain);
+    }
+
+    public static DynaDomain[] domains() {
+        List<DynaDomain> list = new ArrayList<>(DYNA_DOMAINS);
+        Collections.sort(list);
+        return list.toArray(new DynaDomain[list.size()]);
     }
 
     public static ActionName[] actions() {

@@ -22,10 +22,11 @@ import java.util.logging.Logger;
 public class ActionServlet extends HttpServlet {
 
     private static Logger logger = Logger.getLogger(ActionServlet.class.getName());
-
     public static final String INIT_PARAM_STREAM_HANDLER = "soya.framework.action.STREAM_HANDLER";
 
+    private ServletRegistration registration;
     private ActionMappings actionMappings;
+
     private Swagger swagger;
 
     private Map<String, StreamWriter> readers = new HashMap<>();
@@ -34,15 +35,21 @@ public class ActionServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+
+        this.registration = config.getServletContext().getServletRegistration(getServletName());
         this.actionMappings = (ActionMappings) config.getServletContext().getAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE);
 
         initStreamHandlers(config);
-        initSwagger(config);
+        initSwagger(actionMappings);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getPathInfo().equals("/swagger.json")) {
+            if(actionMappings.getLastUpdateTime() > swagger.getCreatedTime()) {
+                initSwagger(actionMappings);
+            }
+
             PrintWriter writer = resp.getWriter();
             writer.print(swagger.toJson());
 
@@ -155,13 +162,10 @@ public class ActionServlet extends HttpServlet {
         });
     }
 
-    protected void initSwagger(ServletConfig config) {
-        ActionMappings mappings = (ActionMappings) config.getServletContext().getAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE);
-
+    protected void initSwagger(ActionMappings mappings) {
         Swagger.SwaggerBuilder builder = Swagger.builder();
 
         String path = this.getServletInfo();
-        ServletRegistration registration = config.getServletContext().getServletRegistration(getServletName());
         for (String e : registration.getMappings()) {
             if (e.endsWith("/*")) {
                 path = e.substring(0, e.lastIndexOf("/*"));

@@ -5,6 +5,7 @@ import soya.framework.action.Action;
 import soya.framework.action.ActionClass;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.dispatch.*;
+import soya.framework.action.dispatch.ActionDispatchPattern;
 import soya.framework.commons.util.CodeBuilder;
 
 import java.lang.reflect.Field;

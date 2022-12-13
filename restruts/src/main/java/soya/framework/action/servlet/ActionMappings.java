@@ -12,21 +12,24 @@ public class ActionMappings {
     private Map<String, DomainMapping> domains = new HashMap<>();
     private Set<ActionMapping> actions = new HashSet<>();
 
-    private ActionFactory actionFactory = new DefaultActionFactory();
-
+    private ActionFactory defaultFactory;
     private Set<ActionFactory> factories = new LinkedHashSet<>();
     private Map<ActionName, ActionFactory> creators = new HashMap<>();
 
+    private long lastUpdateTime;
+
     public ActionMappings() {
-        factories.add(new DefaultActionFactory());
+        defaultFactory = new DefaultActionFactory();
+        touch();
     }
 
-    public ActionCallable create(HttpServletRequest request) {
-        return create(getActionMapping(request), request);
+    public long getLastUpdateTime() {
+        return lastUpdateTime;
     }
 
     public void addActionFactory(ActionFactory actionFactory) {
-        this.actionFactory = actionFactory;
+        factories.add(actionFactory);
+        touch();
     }
 
     public List<DomainMapping> domains() {
@@ -45,10 +48,14 @@ public class ActionMappings {
         String title = token;
         String description = token;
         addDomain(name, path, title, description);
+
+        touch();
     }
 
     public void addDomain(String name, String path, String title, String description) {
         domains.put(name, new DomainMapping(name, path, title, description));
+
+        touch();
     }
 
     public boolean containsDomain(String domainName) {
@@ -57,7 +64,7 @@ public class ActionMappings {
 
     public ActionMapping add(ActionName actionName, String httpMethod, String path, String produce) {
         ActionMapping mapping = new ActionMapping(actionName, httpMethod, path, produce);
-        if(!domains.containsKey(actionName.getDomain())) {
+        if (!domains.containsKey(actionName.getDomain())) {
             addDomain(actionName.getDomain());
         }
 
@@ -66,7 +73,14 @@ public class ActionMappings {
 
         domainMapping.add(mapping);
         actions.add(mapping);
+
+        touch();
+
         return mapping;
+    }
+
+    public synchronized void touch() {
+        this.lastUpdateTime = System.currentTimeMillis();
     }
 
     public ActionMapping getActionMapping(HttpServletRequest request) {
@@ -82,15 +96,23 @@ public class ActionMappings {
         return null;
     }
 
+    public ActionCallable create(HttpServletRequest request) {
+        return create(getActionMapping(request), request);
+    }
+
     private ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
         ActionName actionName = mapping.getActionName();
 
         ActionFactory factory = null;
-        if(creators.containsKey(actionName)) {
+        if (defaultFactory.contains(actionName)) {
+            factory = defaultFactory;
+
+        } else if (creators.containsKey(actionName)) {
             factory = creators.get(actionName);
+
         } else {
             for (ActionFactory f : factories) {
-                if(f.contains(actionName)) {
+                if (f.contains(actionName)) {
                     creators.put(actionName, f);
                     factory = f;
                     break;
@@ -98,9 +120,12 @@ public class ActionMappings {
             }
         }
 
-        if(factory == null) {
+        if (factory == null) {
             throw new ActionCreationException("Cannot find ActionFactory for action: " + actionName);
         }
+
+
+
 
         return factory.create(mapping, request);
     }

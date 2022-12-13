@@ -6,6 +6,7 @@ import org.quartz.JobExecutionException;
 import soya.framework.action.ActionContext;
 import soya.framework.action.ConvertUtils;
 import soya.framework.action.dispatch.*;
+import soya.framework.action.dispatch.ActionDispatchPattern;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class ActionClass implements Serializable {
 
     private static Map<String, Class<?>> DOMAINS = new LinkedHashMap<>();
+
     private static Map<ActionName, ActionClass> ACTION_CLASSES = new HashMap<>();
     private static Map<Class<? extends ActionCallable>, ActionClass> ACTION_TYPES = new HashMap<>();
 
