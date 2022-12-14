@@ -1,7 +1,6 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
-import soya.framework.action.dispatch.Fragment;
 
 @ActionDefinition(
         domain = "dispatch",

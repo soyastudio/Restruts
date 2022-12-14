@@ -18,14 +18,13 @@ public class ApiDocAction extends ApiAction {
     public String execute() throws Exception {
         CodeBuilder builder = CodeBuilder.newInstance();
 
-        for (String dm : ActionClass.domains()) {
-            Domain domain = ActionClass.domainType(dm).getAnnotation(Domain.class);
-            builder.append("# DOMAIN: ").appendLine(domain.title().isEmpty() ? domain.name() : domain.title());
-            builder.appendLine(domain.description());
+        for (ActionDomain domain : ActionDomain.domains()) {
+            builder.append("# DOMAIN: ").appendLine(domain.getTitle());
+            builder.appendLine(domain.getDescription());
 
             builder.appendLine();
 
-            for (ActionName actionName : ActionClass.actions(dm)) {
+            for (ActionName actionName : ActionClass.actions(domain.getName())) {
                 ActionClass actionClass = ActionClass.get(actionName);
                 render(actionClass, builder);
                 builder.appendLine();

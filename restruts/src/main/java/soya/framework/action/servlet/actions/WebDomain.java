@@ -4,7 +4,7 @@ import soya.framework.action.Domain;
 
 @Domain(
         name = "web",
-        path = "/action/web-info",
+        path = "/action/web",
         title = "Web Info",
         description = "Web Info."
 )

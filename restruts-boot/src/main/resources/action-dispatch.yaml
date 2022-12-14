@@ -1,0 +1,8 @@
+domain: xyz
+path: /xyz
+title: XYZ
+description: This is domain xyz.
+
+actions:
+  - action1: http://z/x
+  -

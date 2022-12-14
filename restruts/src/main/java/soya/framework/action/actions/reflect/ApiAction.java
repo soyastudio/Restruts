@@ -13,8 +13,8 @@ public abstract class ApiAction extends Action<String> {
         Class<? extends ActionCallable> cls = actionClass.getActionType();
         ActionDefinition operation = cls.getAnnotation(ActionDefinition.class);
 
-        Class<?> domainType = ActionClass.domainType(operation.domain());
-        String domainPath = domainType == null ? "" : domainType.getAnnotation(Domain.class).path();
+        ActionDomain domain = ActionDomain.get(operation.domain());
+        String domainPath = domain.getPath();
 
         builder.append("## ACTION: ").appendLine(operation.displayName().isEmpty() ? operation.name() : operation.displayName());
         builder.appendLine(URIUtils.merge(operation.description(), "\n"));

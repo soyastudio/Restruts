@@ -14,7 +14,7 @@ import soya.framework.action.ParameterType;
         displayName = "Service Names",
         description = "Print runtime service names."
 )
-public class ContextAttributeUpdateAction extends WebInfoAction<Void> {
+public class ContextAttributeUpdateAction extends ServletContextAction<Void> {
 
     @ActionProperty(
             parameterType = ParameterType.HEADER_PARAM,

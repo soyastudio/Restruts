@@ -5,12 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import soya.framework.action.dispatch.DispatchScheduler;
-import soya.framework.action.dispatch.DynaActionClass;
-import soya.framework.action.dispatch.DynaDomain;
-import soya.framework.action.dispatch.DynaDomainRegistry;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
-import soya.framework.action.servlet.ActionMappings;
 
 import javax.annotation.PostConstruct;
 import java.util.Timer;
@@ -20,27 +16,6 @@ import java.util.concurrent.Executors;
 @Configuration
 public class ServerConfiguration {
     private static String HEARTBEAT_EVENT_ADDRESS = "timer://heartbeat";
-
-    @Bean
-    DynaDomainRegistry dynaDomainRegistry(ActionMappings mappings) {
-        DynaDomainRegistry registry = new DynaDomainRegistry() {
-            @Override
-            public DynaDomain register(String name, String path, String title, String description) {
-                DynaDomain domain = new DynaDomain(name, path, title, description);
-                DynaActionClass.add(domain);
-                mappings.addDomain(name, path, title,description);
-
-                return domain;
-            }
-
-            @Override
-            public void unregister(String name) {
-
-            }
-        };
-
-        return registry;
-    }
 
     @Bean
     ActionEventBus actionEventBus() {

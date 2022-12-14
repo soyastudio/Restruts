@@ -16,7 +16,7 @@ import java.util.Enumeration;
         displayName = "Service Names",
         description = "Print runtime service names."
 )
-public class ContextAttributesAction extends WebInfoAction<String>{
+public class ContextAttributesAction extends ServletContextAction<String> {
 
     @Override
     public String execute() throws Exception {

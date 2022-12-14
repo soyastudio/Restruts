@@ -1,0 +1,59 @@
+package soya.framework.action.servlet.actions;
+
+import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionProperty;
+import soya.framework.action.MediaType;
+import soya.framework.action.ParameterType;
+
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletRegistration;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+@ActionDefinition(
+        domain = "web",
+        name = "filter-info",
+        path = "/filter-info",
+        method = ActionDefinition.HttpMethod.GET,
+        produces = MediaType.APPLICATION_JSON,
+        displayName = "Service Names",
+        description = "Print runtime service names."
+)
+public class FilterInfoAction extends ServletContextAction<String> {
+
+    @ActionProperty(
+            parameterType = ParameterType.HEADER_PARAM,
+            option = "n",
+            required = true,
+            description = {}
+    )
+    private String name;
+
+    @Override
+    public String execute() throws Exception {
+        FilterRegistration registration = servletContext.getFilterRegistration(name);
+        if(registration != null) {
+            return GSON.toJson(new FilterInfo(registration));
+        }
+
+        return null;
+    }
+
+    static class FilterInfo {
+        private String name;
+        private String className;
+        private Collection<String> servletNameMappings;
+        private Collection<String> urlPatternMappings;
+        private Map<String, String> initParams;
+
+        public FilterInfo(FilterRegistration filterRegistration) {
+            this.name = filterRegistration.getName();
+            this.className = filterRegistration.getClassName();
+            this.servletNameMappings = filterRegistration.getServletNameMappings();
+            this.urlPatternMappings = filterRegistration.getUrlPatternMappings();
+            this.initParams = filterRegistration.getInitParameters();
+        }
+    }
+}

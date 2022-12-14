@@ -15,6 +15,7 @@ import org.springframework.core.env.MutablePropertySources;
 import soya.framework.action.*;
 import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.action.dispatch.proxy.ActionProxyPattern;
+import soya.framework.action.mvc.StateMachineServlet;
 import soya.framework.action.servlet.*;
 
 import javax.servlet.ServletContext;
@@ -110,9 +111,8 @@ public class ActionContextAutoConfiguration {
     @Bean
     ActionMappings actionMapping(ActionContext actionContext, ServletContext servletContext) {
         ActionMappings mappings = new ActionMappings();
-        for (String domainName : ActionClass.domains()) {
-            Domain domain = ActionClass.domainType(domainName).getAnnotation(Domain.class);
-            mappings.addDomain(domain.name(), domain.path(), domain.title(), domain.description());
+        for (ActionDomain domain : ActionDomain.domains()) {
+            mappings.addDomain(domain.getName(), domain.getPath(), domain.getTitle(), domain.getDescription());
         }
 
         for (ActionName actionName : ActionClass.actions()) {

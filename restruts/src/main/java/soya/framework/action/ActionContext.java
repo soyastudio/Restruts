@@ -36,10 +36,8 @@ public final class ActionContext {
 
         }
 
-        List<Class<?>> domainList = new ArrayList<>(domains);
-        Collections.sort(domainList, (o1, o2) -> o1.getAnnotation(Domain.class).path().compareTo(o2.getAnnotation(Domain.class).path()));
-        domainList.forEach(e -> {
-            ActionClass.addDomain(e);
+        domains.forEach(e -> {
+            ActionDomain.builder().fromAnnotation(e.getAnnotation(Domain.class)).create();
         });
 
         actions.forEach(e -> {

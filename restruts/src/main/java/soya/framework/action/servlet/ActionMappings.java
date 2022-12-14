@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class ActionMappings {
-    public static String ACTION_MAPPINGS_ATTRIBUTE = "SOYA_FRAMEWORK_ACTION_MAPPINGS";
+    public static String ACTION_MAPPINGS_ATTRIBUTE = "soya.framework.action.ActionMappings";
 
     private Map<String, DomainMapping> domains = new HashMap<>();
     private Set<ActionMapping> actions = new HashSet<>();

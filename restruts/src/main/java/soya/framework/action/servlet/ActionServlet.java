@@ -39,8 +39,9 @@ public class ActionServlet extends HttpServlet {
         this.registration = config.getServletContext().getServletRegistration(getServletName());
         this.actionMappings = (ActionMappings) config.getServletContext().getAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE);
 
-        initStreamHandlers(config);
         initSwagger(actionMappings);
+
+        initStreamHandlers(config);
     }
 
     @Override
@@ -163,8 +164,9 @@ public class ActionServlet extends HttpServlet {
     }
 
     protected void initSwagger(ActionMappings mappings) {
-        Swagger.SwaggerBuilder builder = Swagger.builder();
+        logger.info("initializing swagger");
 
+        Swagger.SwaggerBuilder builder = Swagger.builder();
         String path = this.getServletInfo();
         for (String e : registration.getMappings()) {
             if (e.endsWith("/*")) {

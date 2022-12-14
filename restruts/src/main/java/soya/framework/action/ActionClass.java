@@ -7,9 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class ActionClass implements Serializable {
-
-    private static Map<String, Class<?>> DOMAINS = new LinkedHashMap<>();
-
     private static Map<ActionName, ActionClass> ACTION_CLASSES = new HashMap<>();
     private static Map<Class<? extends ActionCallable>, ActionClass> ACTION_TYPES = new HashMap<>();
 
@@ -218,24 +215,6 @@ public final class ActionClass implements Serializable {
         AtomicLong count = COUNTS.get(actionName);
         Objects.requireNonNull(count, "Action '" + actionName + "' is not defined.");
         return count.get();
-    }
-
-    static void addDomain(Class<?> domainClass) {
-        Domain domain = domainClass.getAnnotation(Domain.class);
-        Objects.requireNonNull(domain, "Class is not annotated as 'Domain': " + domainClass.getName());
-
-        if (DOMAINS.containsKey(domain.name())) {
-            throw new IllegalArgumentException("Domain name already exist: " + domain.name());
-        }
-        DOMAINS.put(domain.name(), domainClass);
-    }
-
-    public static String[] domains() {
-        return DOMAINS.keySet().toArray(new String[DOMAINS.size()]);
-    }
-
-    public static Class<?> domainType(String domain) {
-        return DOMAINS.get(domain);
     }
 
     public static ActionName[] actions() {

@@ -1,4 +1,4 @@
-package soya.framework.action.servlet;
+package soya.framework.action.mvc;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

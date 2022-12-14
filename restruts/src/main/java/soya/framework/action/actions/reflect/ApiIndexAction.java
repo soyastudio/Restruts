@@ -18,11 +18,10 @@ public class ApiIndexAction extends Action<String> {
     public String execute() throws Exception {
         CodeBuilder builder = CodeBuilder.newInstance();
 
-        for (String dm : ActionClass.domains()) {
-            Domain domain = ActionClass.domainType(dm).getAnnotation(Domain.class);
-            builder.append(domain.name()).appendLine(":");
+        for (ActionDomain domain : ActionDomain.domains()) {
+            builder.append(domain.getName()).appendLine(":");
 
-            for (ActionName actionName : ActionClass.actions(dm)) {
+            for (ActionName actionName : ActionClass.actions(domain.getName())) {
                 ActionClass actionClass = ActionClass.get(actionName);
                 Class<? extends ActionCallable> cls = actionClass.getActionType();
 
