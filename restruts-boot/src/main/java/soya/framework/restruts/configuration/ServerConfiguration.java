@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import soya.framework.action.dispatch.DispatchScheduler;
+import soya.framework.action.dispatch.DynaActionRegistry;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
 
@@ -16,6 +17,11 @@ import java.util.concurrent.Executors;
 @Configuration
 public class ServerConfiguration {
     private static String HEARTBEAT_EVENT_ADDRESS = "timer://heartbeat";
+
+    @Bean
+    DynaActionRegistry dynaActionRegistry() {
+        return new DynaActionRegistry();
+    }
 
     @Bean
     ActionEventBus actionEventBus() {

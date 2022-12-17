@@ -1,0 +1,1482 @@
+{
+  "payloadPart": "COMPLETE",
+  "pageNum": 1,
+  "totalPages": 1,
+  "entityId": "1014312047",
+  "payLoadType": "application/json",
+  "entityType": "OFFER_REQUEST",
+  "sourceAction": "SUBMIT_WITH_SAVE",
+  "payload": {
+    "id": 1014312047,
+    "deliveryChannel": "IS",
+    "deliveryChannelDesc": "In Store",
+    "pluTriggerBarcode": "",
+    "brandAndSize": "Test",
+    "customerSegment": "Any Customer",
+    "billingOptions": "",
+    "programCode": "SC",
+    "programCodeDesc": "Store Coupon",
+    "nopaAssignStatus": "NOT_ASSIGNED",
+    "offerEffectiveStartDate": "2023-01-01T07:00:00Z",
+    "offerEffectiveEndDate": "2023-01-31T07:00:00Z",
+    "createTs": "2022-12-16T00:29:34.712Z",
+    "createdApplicationId": "OMS",
+    "createdUserId": "lpoth00",
+    "lastUpdatedApplicationId": "OMS",
+    "lastUpdatedUserId": "lpoth00",
+    "lastUpdateTs": "2022-12-16T00:31:12.906Z",
+    "offerRequestType": "MEAL_DEAL",
+    "offerRequestOffers": [
+      {
+        "id": 2112237249,
+        "storeGroupVersion": {
+          "id": 2112237248,
+          "displayOrder": 1,
+          "offerPrototype": "MEAL_DEAL",
+          "offerPrototypeDesc": "Meal Deal",
+          "storeGroup": {
+            "podStoreGroups": [],
+            "nonDigitalRedemptionStoreGroups": [
+              {
+                "id": 526343977,
+                "name": "testSG"
+              },
+              {
+                "id": 1362100628,
+                "name": "Testing oms"
+              },
+              {
+                "id": 154953179,
+                "name": "test only  Cherry k\u0026b"
+              },
+              {
+                "id": 1931160433,
+                "name": "LB Facility Test"
+              },
+              {
+                "id": 1148361800,
+                "name": "TestRegStores"
+              }
+            ],
+            "digitalRedemptionStoreGroups": []
+          },
+          "productGroupVersions": [
+            {
+              "displayOrder": 2,
+              "id": 2112237273,
+              "productGroup": {
+                "id": 387437045,
+                "name": "PG_BC_IntTest_Update_accept5202",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 3.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237272,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237279,
+                    "benefitValueType": "PRICE_POINT_ITEMS",
+                    "benefitValueTypeDesc": "Price Point (Items)",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 387437045,
+                    "includeProductGroupName": "PG_BC_IntTest_Update_accept5202",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 4.0,
+                        "itemLimit": 5
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 1,
+              "id": 2112237255,
+              "isGiftCard": false,
+              "productGroup": {
+                "id": 387074045,
+                "name": "productgrptest",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "minPurchaseAmount": 0.0,
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 2.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237254,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237253,
+                    "benefitValueType": "PRICE_POINT_ITEMS",
+                    "benefitValueTypeDesc": "Price Point (Items)",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 387074045,
+                    "includeProductGroupName": "productgrptest",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "itemLimit": 3
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 3,
+              "id": 2112237278,
+              "productGroup": {
+                "id": 387437045,
+                "name": "PG_BC_IntTest_Update_accept5202",
+                "quantityUnitType": "WEIGHT_VOLUME",
+                "quantityUnitDesc": "Weight/Volume",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237277,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237276,
+                    "benefitValueType": "PRICE_POINT_WEIGHT_VOLUME",
+                    "benefitValueTypeDesc": "Price Point (Per Lb)",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 387437045,
+                    "includeProductGroupName": "PG_BC_IntTest_Update_accept5202",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "itemLimit": 3,
+                        "weightLimit": 4.0
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 4,
+              "id": 2112237252,
+              "productGroup": {
+                "id": 387424421,
+                "name": "PG_BC_IntTest_Update_accept88611235",
+                "quantityUnitType": "DOLLARS",
+                "quantityUnitDesc": "Dollars",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237275,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237274,
+                    "benefitValueType": "PRICE_POINT_ITEMS",
+                    "benefitValueTypeDesc": "Price Point (Items)",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 387424421,
+                    "includeProductGroupName": "PG_BC_IntTest_Update_accept88611235",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 3.0,
+                        "itemLimit": 4
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            }
+          ]
+        },
+        "offers": [
+          {
+            "storeGroupVersion": 2112237248,
+            "productGroupVersion": 2112237255,
+            "discountVersion": 2112237254,
+            "genericDiscountId": 2112237253,
+            "offerId": 74215566,
+            "externalOfferId": "74215566-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237248,
+            "productGroupVersion": 2112237252,
+            "discountVersion": 2112237275,
+            "genericDiscountId": 2112237274,
+            "offerId": 49514965,
+            "externalOfferId": "49514965-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237248,
+            "productGroupVersion": 2112237278,
+            "discountVersion": 2112237277,
+            "genericDiscountId": 2112237276,
+            "offerId": 80656290,
+            "externalOfferId": "80656290-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237248,
+            "productGroupVersion": 2112237273,
+            "discountVersion": 2112237272,
+            "genericDiscountId": 2112237279,
+            "offerId": 56176895,
+            "externalOfferId": "56176895-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          }
+        ]
+      },
+      {
+        "id": 2112237239,
+        "storeGroupVersion": {
+          "id": 2112237238,
+          "displayOrder": 5,
+          "offerPrototype": "MEAL_DEAL",
+          "offerPrototypeDesc": "Meal Deal",
+          "storeGroup": {
+            "podStoreGroups": [],
+            "nonDigitalRedemptionStoreGroups": [
+              {
+                "id": 453031383,
+                "name": "TestDelStr17"
+              },
+              {
+                "id": 1760393574,
+                "name": "TestReg21Jan2022"
+              }
+            ],
+            "digitalRedemptionStoreGroups": []
+          },
+          "productGroupVersions": [
+            {
+              "displayOrder": 2,
+              "id": 2112237258,
+              "productGroup": {
+                "id": 1333978336,
+                "name": "testhier@45",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 3.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237257,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237256,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1333978336,
+                    "includeProductGroupName": "testhier@45",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 3.0,
+                        "upTo": 4.0,
+                        "itemLimit": 5
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 3,
+              "id": 2112237260,
+              "productGroup": {
+                "id": 149414818,
+                "name": "RA Chic ROG TEST",
+                "quantityUnitType": "WEIGHT_VOLUME",
+                "quantityUnitDesc": "Weight/Volume",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237251,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237250,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 149414818,
+                    "includeProductGroupName": "RA Chic ROG TEST",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "upTo": 3.0,
+                        "itemLimit": 4
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 1,
+              "id": 2112237263,
+              "isGiftCard": false,
+              "productGroup": {
+                "id": 1580478885,
+                "name": "Dept Test",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "minPurchaseAmount": 0.0,
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 2.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237262,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237261,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1580478885,
+                    "includeProductGroupName": "Dept Test",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "upTo": 3.0,
+                        "itemLimit": 4
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 4,
+              "id": 2112237237,
+              "productGroup": {
+                "id": 632435588,
+                "name": "Ranjtest3new",
+                "quantityUnitType": "DOLLARS",
+                "quantityUnitDesc": "Dollars",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237236,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237259,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 632435588,
+                    "includeProductGroupName": "Ranjtest3new",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 1.0,
+                        "upTo": 2.0,
+                        "itemLimit": 3
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            }
+          ]
+        },
+        "offers": [
+          {
+            "storeGroupVersion": 2112237238,
+            "productGroupVersion": 2112237263,
+            "discountVersion": 2112237262,
+            "genericDiscountId": 2112237261,
+            "offerId": 92447774,
+            "externalOfferId": "92447774-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237238,
+            "productGroupVersion": 2112237258,
+            "discountVersion": 2112237257,
+            "genericDiscountId": 2112237256,
+            "offerId": 56779518,
+            "externalOfferId": "56779518-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237238,
+            "productGroupVersion": 2112237260,
+            "discountVersion": 2112237251,
+            "genericDiscountId": 2112237250,
+            "offerId": 87013070,
+            "externalOfferId": "87013070-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237238,
+            "productGroupVersion": 2112237237,
+            "discountVersion": 2112237236,
+            "genericDiscountId": 2112237259,
+            "offerId": 96095334,
+            "externalOfferId": "96095334-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          }
+        ]
+      },
+      {
+        "id": 2112237267,
+        "storeGroupVersion": {
+          "id": 2112237266,
+          "displayOrder": 6,
+          "offerPrototype": "MEAL_DEAL",
+          "offerPrototypeDesc": "Meal Deal",
+          "storeGroup": {
+            "podStoreGroups": [],
+            "nonDigitalRedemptionStoreGroups": [
+              {
+                "id": 453031383,
+                "name": "TestDelStr17"
+              },
+              {
+                "id": 1760393574,
+                "name": "TestReg21Jan2022"
+              }
+            ],
+            "digitalRedemptionStoreGroups": []
+          },
+          "productGroupVersions": [
+            {
+              "displayOrder": 2,
+              "id": 2112237291,
+              "productGroup": {
+                "id": 1423174766,
+                "name": "OMSMFPG92593851 0624test",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 3.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237290,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237289,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1423174766,
+                    "includeProductGroupName": "OMSMFPG92593851 0624test",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 3.0,
+                        "upTo": 4.0,
+                        "itemLimit": 5
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 1,
+              "id": 2112237265,
+              "isGiftCard": false,
+              "productGroup": {
+                "id": 387437045,
+                "name": "PG_BC_IntTest_Update_accept5202",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "minPurchaseAmount": 0.0,
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 2.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237264,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237271,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 387437045,
+                    "includeProductGroupName": "PG_BC_IntTest_Update_accept5202",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "upTo": 3.0,
+                        "itemLimit": 4
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 4,
+              "id": 2112237270,
+              "productGroup": {
+                "id": 641912147,
+                "name": "TestAddItemPdtGrp11",
+                "quantityUnitType": "DOLLARS",
+                "quantityUnitDesc": "Dollars",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237269,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237268,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 641912147,
+                    "includeProductGroupName": "TestAddItemPdtGrp11",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 1.0,
+                        "upTo": 2.0,
+                        "itemLimit": 3
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 3,
+              "id": 2112237288,
+              "productGroup": {
+                "id": 149414818,
+                "name": "RA Chic ROG TEST",
+                "quantityUnitType": "WEIGHT_VOLUME",
+                "quantityUnitDesc": "Weight/Volume",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237295,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237294,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 149414818,
+                    "includeProductGroupName": "RA Chic ROG TEST",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "upTo": 3.0,
+                        "itemLimit": 4
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            }
+          ]
+        },
+        "offers": [
+          {
+            "storeGroupVersion": 2112237266,
+            "productGroupVersion": 2112237270,
+            "discountVersion": 2112237269,
+            "genericDiscountId": 2112237268,
+            "offerId": 58098502,
+            "externalOfferId": "58098502-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237266,
+            "productGroupVersion": 2112237291,
+            "discountVersion": 2112237290,
+            "genericDiscountId": 2112237289,
+            "offerId": 64712555,
+            "externalOfferId": "64712555-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237266,
+            "productGroupVersion": 2112237288,
+            "discountVersion": 2112237295,
+            "genericDiscountId": 2112237294,
+            "offerId": 97172155,
+            "externalOfferId": "97172155-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237266,
+            "productGroupVersion": 2112237265,
+            "discountVersion": 2112237264,
+            "genericDiscountId": 2112237271,
+            "offerId": 53294877,
+            "externalOfferId": "53294877-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          }
+        ]
+      },
+      {
+        "id": 2112237227,
+        "storeGroupVersion": {
+          "id": 2112237226,
+          "displayOrder": 4,
+          "offerPrototype": "MEAL_DEAL",
+          "offerPrototypeDesc": "Meal Deal",
+          "storeGroup": {
+            "podStoreGroups": [],
+            "nonDigitalRedemptionStoreGroups": [
+              {
+                "id": 364155955,
+                "name": "P13 testStore"
+              },
+              {
+                "id": 353722412,
+                "name": "testgroup"
+              }
+            ],
+            "digitalRedemptionStoreGroups": []
+          },
+          "productGroupVersions": [
+            {
+              "displayOrder": 1,
+              "id": 2112237219,
+              "isGiftCard": false,
+              "productGroup": {
+                "id": 1583658700,
+                "name": "TM retest department code",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "minPurchaseAmount": 0.0,
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 2.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237218,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237217,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1583658700,
+                    "includeProductGroupName": "TM retest department code",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "upTo": 3.0,
+                        "itemLimit": 4
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 4,
+              "id": 2112237216,
+              "productGroup": {
+                "id": 1343524024,
+                "name": "pgtest@1489",
+                "quantityUnitType": "DOLLARS",
+                "quantityUnitDesc": "Dollars",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237223,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237222,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1343524024,
+                    "includeProductGroupName": "pgtest@1489",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 1.0,
+                        "upTo": 2.0,
+                        "itemLimit": 3
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 3,
+              "id": 2112237225,
+              "productGroup": {
+                "id": 155301379,
+                "name": "test PG 10294 122",
+                "quantityUnitType": "WEIGHT_VOLUME",
+                "quantityUnitDesc": "Weight/Volume",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237224,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237231,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 155301379,
+                    "includeProductGroupName": "test PG 10294 122",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "upTo": 3.0,
+                        "itemLimit": 4
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 2,
+              "id": 2112237230,
+              "productGroup": {
+                "id": 881949897,
+                "name": "PG_BC_IntTest_Update_accept6074",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 3.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237229,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237228,
+                    "benefitValueType": "PERCENT_OFF_ITEMS",
+                    "benefitValueTypeDesc": "Percent Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 881949897,
+                    "includeProductGroupName": "PG_BC_IntTest_Update_accept6074",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 3.0,
+                        "upTo": 4.0,
+                        "itemLimit": 5
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            }
+          ]
+        },
+        "offers": [
+          {
+            "storeGroupVersion": 2112237226,
+            "productGroupVersion": 2112237216,
+            "discountVersion": 2112237223,
+            "genericDiscountId": 2112237222,
+            "offerId": 97715997,
+            "externalOfferId": "97715997-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237226,
+            "productGroupVersion": 2112237230,
+            "discountVersion": 2112237229,
+            "genericDiscountId": 2112237228,
+            "offerId": 75335738,
+            "externalOfferId": "75335738-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237226,
+            "productGroupVersion": 2112237219,
+            "discountVersion": 2112237218,
+            "genericDiscountId": 2112237217,
+            "offerId": 70618873,
+            "externalOfferId": "70618873-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237226,
+            "productGroupVersion": 2112237225,
+            "discountVersion": 2112237224,
+            "genericDiscountId": 2112237231,
+            "offerId": 77355864,
+            "externalOfferId": "77355864-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          }
+        ]
+      },
+      {
+        "id": 2112237221,
+        "storeGroupVersion": {
+          "id": 2112237220,
+          "displayOrder": 2,
+          "offerPrototype": "MEAL_DEAL",
+          "offerPrototypeDesc": "Meal Deal",
+          "storeGroup": {
+            "podStoreGroups": [],
+            "nonDigitalRedemptionStoreGroups": [
+              {
+                "id": 1006968035,
+                "name": "cap test store 4160"
+              }
+            ],
+            "digitalRedemptionStoreGroups": []
+          },
+          "productGroupVersions": [
+            {
+              "displayOrder": 4,
+              "id": 2112237240,
+              "productGroup": {
+                "id": 1833283580,
+                "name": "PG_BC_IntTest_Update_accept5840",
+                "quantityUnitType": "DOLLARS",
+                "quantityUnitDesc": "Dollars",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237247,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237246,
+                    "benefitValueType": "AMOUNT_OFF_WEIGHT_VOLUME",
+                    "benefitValueTypeDesc": "Cents Off (Per Lb)",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1833283580,
+                    "includeProductGroupName": "PG_BC_IntTest_Update_accept5840",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 4.0,
+                        "itemLimit": 5,
+                        "weightLimit": 2.0
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 1,
+              "id": 2112237243,
+              "isGiftCard": false,
+              "productGroup": {
+                "id": 63028011,
+                "name": "RTA Starbucks Test Items",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "minPurchaseAmount": 0.0,
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 2.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237242,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237241,
+                    "benefitValueType": "AMOUNT_OFF",
+                    "benefitValueTypeDesc": "Cents Off",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 63028011,
+                    "includeProductGroupName": "RTA Starbucks Test Items",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "itemLimit": 3
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 2,
+              "id": 2112237245,
+              "productGroup": {
+                "id": 1848108404,
+                "name": "testpgacceptprodgrp@1",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 3.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237244,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237235,
+                    "benefitValueType": "AMOUNT_OFF_WEIGHT_VOLUME",
+                    "benefitValueTypeDesc": "Cents Off (Per Lb)",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1848108404,
+                    "includeProductGroupName": "testpgacceptprodgrp@1",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "itemLimit": 3,
+                        "weightLimit": 4.0
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 3,
+              "id": 2112237234,
+              "productGroup": {
+                "id": 800924471,
+                "name": "PGTestAutomationUPCGroup23_accept",
+                "quantityUnitType": "WEIGHT_VOLUME",
+                "quantityUnitDesc": "Weight/Volume",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237233,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237232,
+                    "benefitValueType": "AMOUNT_OFF_WEIGHT_VOLUME",
+                    "benefitValueTypeDesc": "Cents Off (Per Lb)",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 800924471,
+                    "includeProductGroupName": "PGTestAutomationUPCGroup23_accept",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "amount": 2.0,
+                        "itemLimit": 3,
+                        "weightLimit": 5.0
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            }
+          ]
+        },
+        "offers": [
+          {
+            "storeGroupVersion": 2112237220,
+            "productGroupVersion": 2112237240,
+            "discountVersion": 2112237247,
+            "genericDiscountId": 2112237246,
+            "offerId": 67430740,
+            "externalOfferId": "67430740-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237220,
+            "productGroupVersion": 2112237243,
+            "discountVersion": 2112237242,
+            "genericDiscountId": 2112237241,
+            "offerId": 85303109,
+            "externalOfferId": "85303109-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237220,
+            "productGroupVersion": 2112237245,
+            "discountVersion": 2112237244,
+            "genericDiscountId": 2112237235,
+            "offerId": 79236074,
+            "externalOfferId": "79236074-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237220,
+            "productGroupVersion": 2112237234,
+            "discountVersion": 2112237233,
+            "genericDiscountId": 2112237232,
+            "offerId": 45780014,
+            "externalOfferId": "45780014-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          }
+        ]
+      },
+      {
+        "id": 2112237293,
+        "storeGroupVersion": {
+          "id": 2112237292,
+          "displayOrder": 3,
+          "offerPrototype": "MEAL_DEAL",
+          "offerPrototypeDesc": "Meal Deal",
+          "storeGroup": {
+            "podStoreGroups": [],
+            "nonDigitalRedemptionStoreGroups": [
+              {
+                "id": 1818158770,
+                "name": "KP Test SG 12"
+              },
+              {
+                "id": 626437219,
+                "name": "Allstores@test"
+              }
+            ],
+            "digitalRedemptionStoreGroups": []
+          },
+          "productGroupVersions": [
+            {
+              "displayOrder": 1,
+              "id": 2112237306,
+              "isGiftCard": false,
+              "productGroup": {
+                "id": 633722060,
+                "name": "PG_BC_IntTest_Update_accept3157",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "minPurchaseAmount": 0.0,
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 2.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237305,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237304,
+                    "benefitValueType": "FREE",
+                    "benefitValueTypeDesc": "Free",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 633722060,
+                    "includeProductGroupName": "PG_BC_IntTest_Update_accept3157",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "itemLimit": 2
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 3,
+              "id": 2112237280,
+              "productGroup": {
+                "id": 1356368562,
+                "name": "testpg1008",
+                "quantityUnitType": "WEIGHT_VOLUME",
+                "quantityUnitDesc": "Weight/Volume",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237287,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237286,
+                    "benefitValueType": "FREE",
+                    "benefitValueTypeDesc": "Free",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1356368562,
+                    "includeProductGroupName": "testpg1008",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "itemLimit": 3
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 4,
+              "id": 2112237285,
+              "productGroup": {
+                "id": 155301379,
+                "name": "test PG 10294 122",
+                "quantityUnitType": "DOLLARS",
+                "quantityUnitDesc": "Dollars",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 4.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237284,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237307,
+                    "benefitValueType": "FREE",
+                    "benefitValueTypeDesc": "Free",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 155301379,
+                    "includeProductGroupName": "test PG 10294 122",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "itemLimit": 4
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            },
+            {
+              "displayOrder": 2,
+              "id": 2112237283,
+              "productGroup": {
+                "id": 1584139672,
+                "name": "TM PG update retest1",
+                "quantityUnitType": "ITEMS",
+                "quantityUnitDesc": "Items",
+                "tiers": [
+                  {
+                    "level": 1,
+                    "amount": 3.0
+                  }
+                ]
+              },
+              "discountVersion": {
+                "id": 2112237282,
+                "discounts": [
+                  {
+                    "displayOrder": 1,
+                    "id": 2112237281,
+                    "benefitValueType": "FREE",
+                    "benefitValueTypeDesc": "Free",
+                    "discountType": "ITEM_LEVEL",
+                    "discountTypeDesc": "Item Level",
+                    "includeProductGroupId": 1584139672,
+                    "includeProductGroupName": "TM PG update retest1",
+                    "tiers": [
+                      {
+                        "level": 1,
+                        "itemLimit": 1
+                      }
+                    ]
+                  }
+                ],
+                "airMiles": []
+              }
+            }
+          ]
+        },
+        "offers": [
+          {
+            "storeGroupVersion": 2112237292,
+            "productGroupVersion": 2112237280,
+            "discountVersion": 2112237287,
+            "genericDiscountId": 2112237286,
+            "offerId": 46138036,
+            "externalOfferId": "46138036-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237292,
+            "productGroupVersion": 2112237306,
+            "discountVersion": 2112237305,
+            "genericDiscountId": 2112237304,
+            "offerId": 80699568,
+            "externalOfferId": "80699568-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237292,
+            "productGroupVersion": 2112237283,
+            "discountVersion": 2112237282,
+            "genericDiscountId": 2112237281,
+            "offerId": 65458068,
+            "externalOfferId": "65458068-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          },
+          {
+            "storeGroupVersion": 2112237292,
+            "productGroupVersion": 2112237285,
+            "discountVersion": 2112237284,
+            "genericDiscountId": 2112237307,
+            "offerId": 47788527,
+            "externalOfferId": "47788527-ND",
+            "offerStatus": "I",
+            "offerStatusDesc": "Draft",
+            "isApplicableToJ4U": false,
+            "distinctIdentifier": "DEFAULT"
+          }
+        ]
+      }
+    ],
+    "adType": "NA",
+    "digitalStatus": "NA",
+    "nonDigitalStatus": "S",
+    "nonDigitalStatusDesc": "Submitted",
+    "createdUser": {
+      "userId": "lpoth00",
+      "firstName": "Lali",
+      "lastName": "Krishnamma"
+    },
+    "updatedUser": {
+      "userId": "lpoth00",
+      "firstName": "Lali",
+      "lastName": "Krishnamma"
+    },
+    "justification": "",
+    "groupId": "19",
+    "groupName": "Portland",
+    "department": "Food Service",
+    "isBilled": false,
+    "regions": [],
+    "templateType": "OR",
+    "isOfferTemplate": false,
+    "fulfillmentChannel": {
+      "delivery": true,
+      "dug": true,
+      "inStorePurchase": true,
+      "wug": true
+    },
+    "isApplyPC": false,
+    "usageLimitTypePerUser": "Once Per Transaction",
+    "groupCode": "PT"
+  },
+  "lastUpdateTs": "2022-12-16T00:31:12.906Z"
+}

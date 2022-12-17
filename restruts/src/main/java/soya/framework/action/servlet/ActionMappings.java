@@ -9,17 +9,43 @@ import java.util.*;
 public class ActionMappings {
     public static String ACTION_MAPPINGS_ATTRIBUTE = "soya.framework.action.ActionMappings";
 
+    private long lastUpdateTime;
+
     private Map<String, DomainMapping> domains = new HashMap<>();
     private Set<ActionMapping> actions = new HashSet<>();
 
-    private ActionFactory defaultFactory;
-    private Set<ActionFactory> factories = new LinkedHashSet<>();
-    private Map<ActionName, ActionFactory> creators = new HashMap<>();
-
-    private long lastUpdateTime;
+    private DefaultActionFactory defaultFactory;
+    private Set<ActionRegistry> registries = new HashSet<>();
 
     public ActionMappings() {
         defaultFactory = new DefaultActionFactory();
+        for (ActionDomain domain : ActionDomain.domains()) {
+            addDomain(domain.getName(), domain.getPath(), domain.getTitle(), domain.getDescription());
+        }
+
+        for (ActionName actionName : ActionClass.actions()) {
+            if (!containsDomain(actionName.getDomain())) {
+                addDomain(actionName.getDomain());
+            }
+
+            ActionClass actionClass = ActionClass.get(actionName);
+            ActionDefinition definition = actionClass.getActionType().getAnnotation(ActionDefinition.class);
+            ActionMapping mapping = add(actionName, definition.method().name(), definition.path(), definition.produces()[0]);
+
+            mapping.addDescriptions(definition.description());
+            mapping.addDescriptions("- Action name: " + actionName);
+            mapping.addDescriptions("- Action class: " + actionClass.getActionType().getName());
+
+            for (Field field : actionClass.getActionFields()) {
+                ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
+                ParameterMapping pm = new ParameterMapping(field.getName(), actionProperty.parameterType());
+                pm.addDescriptions(actionProperty.description());
+
+                mapping.getParameters().add(pm);
+            }
+
+        }
+
         touch();
     }
 
@@ -27,9 +53,8 @@ public class ActionMappings {
         return lastUpdateTime;
     }
 
-    public void addActionFactory(ActionFactory actionFactory) {
-        factories.add(actionFactory);
-        touch();
+    public void register(ActionRegistry registry) {
+        registries.add(registry);
     }
 
     public List<DomainMapping> domains() {
@@ -54,7 +79,6 @@ public class ActionMappings {
 
     public void addDomain(String name, String path, String title, String description) {
         domains.put(name, new DomainMapping(name, path, title, description));
-
         touch();
     }
 
@@ -102,42 +126,35 @@ public class ActionMappings {
 
     private ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
         ActionName actionName = mapping.getActionName();
-
-        ActionFactory factory = null;
-        if (defaultFactory.contains(actionName)) {
-            factory = defaultFactory;
-
-        } else if (creators.containsKey(actionName)) {
-            factory = creators.get(actionName);
-
-        } else {
-            for (ActionFactory f : factories) {
-                if (f.contains(actionName)) {
-                    creators.put(actionName, f);
-                    factory = f;
-                    break;
-                }
-            }
+        if (defaultFactory.actions().contains(actionName)) {
+            return defaultFactory.create(mapping, request);
         }
 
-        if (factory == null) {
-            throw new ActionCreationException("Cannot find ActionFactory for action: " + actionName);
-        }
-
-
-
-
-        return factory.create(mapping, request);
+        return null;
     }
 
-    static class DefaultActionFactory implements ActionFactory {
+    static class DefaultActionFactory implements ActionRegistry, ActionFactory {
+        private Collection<ActionName> actionNames;
 
-        @Override
-        public boolean contains(ActionName actionName) {
-            return ActionClass.get(actionName) != null;
+        DefaultActionFactory() {
+            actionNames = new LinkedHashSet<>(Arrays.asList(ActionClass.actions()));
         }
 
         @Override
+        public Collection<ActionName> actions() {
+            return actionNames;
+        }
+
+        @Override
+        public ActionFactory actionFactory() {
+            return this;
+        }
+
+        @Override
+        public ActionCallable create(ActionName actionName) {
+            return ActionClass.get(actionName).newInstance();
+        }
+
         public ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
             ActionClass actionClass = ActionClass.get(mapping.getActionName());
             ActionCallable action = actionClass.newInstance();

@@ -15,8 +15,9 @@ import org.springframework.core.env.MutablePropertySources;
 import soya.framework.action.*;
 import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.action.dispatch.proxy.ActionProxyPattern;
-import soya.framework.action.mvc.StateMachineServlet;
+import soya.framework.action.mvc.*;
 import soya.framework.action.servlet.*;
+import soya.framework.commons.util.ReflectUtils;
 
 import javax.servlet.ServletContext;
 import java.lang.reflect.Field;
@@ -111,35 +112,7 @@ public class ActionContextAutoConfiguration {
     @Bean
     ActionMappings actionMapping(ActionContext actionContext, ServletContext servletContext) {
         ActionMappings mappings = new ActionMappings();
-        for (ActionDomain domain : ActionDomain.domains()) {
-            mappings.addDomain(domain.getName(), domain.getPath(), domain.getTitle(), domain.getDescription());
-        }
-
-        for (ActionName actionName : ActionClass.actions()) {
-            if (!mappings.containsDomain(actionName.getDomain())) {
-                mappings.addDomain(actionName.getDomain());
-            }
-
-            ActionClass actionClass = ActionClass.get(actionName);
-            ActionDefinition definition = actionClass.getActionType().getAnnotation(ActionDefinition.class);
-            ActionMapping mapping = mappings.add(actionName, definition.method().name(), definition.path(), definition.produces()[0]);
-
-            mapping.addDescriptions(definition.description());
-            mapping.addDescriptions("- Action name: " + actionName);
-            mapping.addDescriptions("- Action class: " + actionClass.getActionType().getName());
-
-            for (Field field : actionClass.getActionFields()) {
-                ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
-                ParameterMapping pm = new ParameterMapping(field.getName(), actionProperty.parameterType());
-                pm.addDescriptions(actionProperty.description());
-
-                mapping.getParameters().add(pm);
-            }
-
-        }
-
         servletContext.setAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE, mappings);
-
         return mappings;
 
     }
@@ -167,6 +140,21 @@ public class ActionContextAutoConfiguration {
         bean.setLoadOnStartup(5);
 
         return bean;
+    }
+
+    @Bean
+    MvcMappings mvcMappings() {
+        MvcMappings mappings = new MvcMappings();
+        ReflectUtils.scanForAnnotation(MvcDefinition.class).forEach(e -> {
+            if(MvcAction.class.isAssignableFrom(e)) {
+                MvcDefinition definition = e.getAnnotation(MvcDefinition.class);
+                for(MvcPath from: definition.from()) {
+
+                }
+            }
+        });
+
+        return mappings;
     }
 
     @Bean

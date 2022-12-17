@@ -6,10 +6,12 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface MvcDefinition {
-    String[] from();
+    String name();
 
-    String method();
+    String scope();
 
-    String[] to();
+    MvcPath[] from();
+
+    MvcForward[] to();
 
 }

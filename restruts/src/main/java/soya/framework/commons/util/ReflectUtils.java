@@ -21,6 +21,10 @@ public class ReflectUtils {
         return new Reflections(packageName).getSubTypesOf(type);
     }
 
+    public static Set<Class<?>> scanForAnnotation(Class<? extends Annotation> type) {
+        return new Reflections().getTypesAnnotatedWith(type);
+    }
+
     public static Set<Class<?>> scanForAnnotation(String packageName , Class<? extends Annotation> type) {
         return new Reflections(packageName).getTypesAnnotatedWith(type);
     }
