@@ -4,9 +4,9 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
@@ -18,19 +18,19 @@ import java.util.concurrent.TimeoutException;
         produces = MediaType.APPLICATION_JSON)
 public class ProduceAction extends KafkaAction<RecordMetadata> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     protected String topic;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM)
     protected Integer partition;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM)
     protected String keySerializer;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM)
     protected String valueSerializer;
 
-    @ActionProperty(parameterType = ParameterType.PAYLOAD, description = "Message for produce", required = true)
+    @ActionProperty(parameterType = ActionParameterType.PAYLOAD, description = "Message for produce", required = true)
     protected String message;
 
     @Override

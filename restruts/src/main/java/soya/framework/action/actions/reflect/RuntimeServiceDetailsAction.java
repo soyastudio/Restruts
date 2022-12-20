@@ -14,7 +14,7 @@ import soya.framework.action.*;
 public class RuntimeServiceDetailsAction extends Action<ServiceInfo> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "s",
             description = "Service name or type."

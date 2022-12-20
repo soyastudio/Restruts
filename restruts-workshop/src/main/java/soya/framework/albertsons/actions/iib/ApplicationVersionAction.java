@@ -5,7 +5,7 @@ import com.samskivert.mustache.Mustache;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
-import soya.framework.action.ParameterType;
+import soya.framework.action.ActionParameterType;
 
 import java.io.*;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.Map;
         description = "Create IIB Application based on template.")
 public class ApplicationVersionAction extends IIBDevAction<String> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String version;
 
     @Override

@@ -12,7 +12,7 @@ import soya.framework.commons.util.CodeBuilder;
         description = "EDM Create View")
 public class EdmCreateViewAction extends Action<String> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, displayOrder = 1)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, displayOrder = 1)
     private String view;
 
 

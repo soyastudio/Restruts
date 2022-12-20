@@ -1,9 +1,9 @@
 package soya.framework.albertsons.actions.iib;
 
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 
 @ActionDefinition(domain = "albertsons",
         name = "init-iib-application",
@@ -14,7 +14,7 @@ import soya.framework.action.ParameterType;
         description = "Initialize IIB Application based on template and bod.json settings.")
 public class ApplicationUpdateAction extends IIBDevAction<String> {
 
-    @ActionProperty(parameterType = ParameterType.PAYLOAD,
+    @ActionProperty(parameterType = ActionParameterType.PAYLOAD,
             description = "",
             contentType = MediaType.APPLICATION_JSON,
             required = true)

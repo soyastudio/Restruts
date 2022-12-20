@@ -1,9 +1,9 @@
 package soya.framework.ant.actions;
 
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 import soya.framework.ant.ProjectSession;
 
 import java.io.File;
@@ -21,13 +21,13 @@ import java.nio.file.Paths;
         description = "Base64 Encode")
 public class BuildAction extends AntAction {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, option = "t")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, option = "t")
     protected String target;
 
-    @ActionProperty(parameterType = ParameterType.PAYLOAD, option = "s", contentType = MediaType.APPLICATION_XML)
+    @ActionProperty(parameterType = ActionParameterType.PAYLOAD, option = "s", contentType = MediaType.APPLICATION_XML)
     protected String script;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, option = "l")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, option = "l")
     protected boolean printLog;
 
 

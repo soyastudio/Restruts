@@ -1,9 +1,9 @@
 package soya.framework.restruts.pattern;
 
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 import soya.framework.action.dispatch.ActionDispatchAction;
 import soya.framework.action.dispatch.ActionDispatchPattern;
 
@@ -22,7 +22,7 @@ import soya.framework.action.dispatch.ActionDispatchPattern;
 public class ActionDispatchExample extends ActionDispatchAction {
 
     @ActionProperty(
-            parameterType = ParameterType.PAYLOAD,
+            parameterType = ActionParameterType.PAYLOAD,
             required = true,
             option = "m",
             description = "Execution method. The method must take no arguments."

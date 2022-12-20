@@ -1,7 +1,7 @@
 package soya.framework.action.servlet;
 
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,21 +11,21 @@ import java.util.Objects;
 
 public class ParameterMapping implements Serializable {
     private final String name;
-    private final ParameterType parameterType;
+    private final ActionParameterType actionParameterType;
     private List<String> descriptions = new ArrayList<>();
     private String contentType = MediaType.TEXT_PLAIN;
 
-    public ParameterMapping(String name, ParameterType parameterType) {
+    public ParameterMapping(String name, ActionParameterType actionParameterType) {
         this.name = name;
-        this.parameterType = parameterType;
+        this.actionParameterType = actionParameterType;
     }
 
     public String getName() {
         return name;
     }
 
-    public ParameterType getParameterType() {
-        return parameterType;
+    public ActionParameterType getParameterType() {
+        return actionParameterType;
     }
 
     public void addDescriptions(String... lines) {

@@ -1,7 +1,7 @@
 package soya.framework.document.actions.xmlbeans;
 
 import org.apache.xmlbeans.SchemaTypeSystem;
-import soya.framework.action.ParameterType;
+import soya.framework.action.ActionParameterType;
 import soya.framework.commons.knowledge.KnowledgeTree;
 import soya.framework.commons.knowledge.KnowledgeTreeNode;
 import soya.framework.commons.util.CodeBuilder;
@@ -18,7 +18,7 @@ import soya.framework.action.ActionProperty;
         produces = MediaType.TEXT_PLAIN)
 public class XPathSchemaAction extends XmlBeansAction<String> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM)
     protected String uri;
 
     @Override

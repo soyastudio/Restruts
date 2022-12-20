@@ -16,13 +16,13 @@ public class FragmentProcessAction extends Action<String> {
     @ActionProperty(
             description = {
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "f")
     private String fragment;
 
     @ActionProperty(
-            parameterType = ParameterType.PAYLOAD,
+            parameterType = ActionParameterType.PAYLOAD,
             required = true,
             option = "d"
     )

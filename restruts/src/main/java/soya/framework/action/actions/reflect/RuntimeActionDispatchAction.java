@@ -21,7 +21,7 @@ import java.util.List;
 public class RuntimeActionDispatchAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.PAYLOAD,
+            parameterType = ActionParameterType.PAYLOAD,
             required = true,
             option = "c",
             description = "Action execution command in yaml, commandline or uri format."

@@ -2,9 +2,9 @@ package soya.framework.action.servlet.actions;
 
 import com.google.gson.GsonBuilder;
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 
 @ActionDefinition(
         domain = "web",
@@ -18,7 +18,7 @@ import soya.framework.action.ParameterType;
 public class ContextAttributeAction extends ServletContextAction<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "a",
             required = true,
             description = {}

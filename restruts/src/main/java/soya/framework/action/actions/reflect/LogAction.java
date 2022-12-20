@@ -16,7 +16,7 @@ import java.util.Locale;
 public class LogAction extends Action<Void> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             defaultValue = "INFO",
             option = "l",
@@ -32,7 +32,7 @@ public class LogAction extends Action<Void> {
     protected String level = "INFO";
 
     @ActionProperty(
-            parameterType = ParameterType.PAYLOAD,
+            parameterType = ActionParameterType.PAYLOAD,
             required = true,
             option = "m",
             description = "Log message."

@@ -17,10 +17,10 @@ import java.io.File;
 public class IIBDevMappingsParseAction extends IIBDevAction<String> {
     private static final String COLUMNS = "Target, DataType, Cardinality, Mapping, Source, Version";
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String fileName;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String sheetName;
 
     @Override

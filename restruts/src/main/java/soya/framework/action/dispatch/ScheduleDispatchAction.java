@@ -1,7 +1,6 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
-import soya.framework.action.dispatch.DispatchScheduler;
 
 @ActionDefinition(domain = "dispatch",
         name = "schedule-dispatch-task",
@@ -16,7 +15,7 @@ public class ScheduleDispatchAction extends Action<Void> {
             description = {
                     "Task name"
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "n",
             displayOrder = 4
@@ -31,7 +30,7 @@ public class ScheduleDispatchAction extends Action<Void> {
             "- param(exp): evaluate value from payload input in json format using expression: exp",
             "- ref(exp): evaluate value from context using expression: exp, available for multiple action dispatch patterns such as pipeline, eventbus etc."
     },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "t",
             displayOrder = 5)
@@ -41,7 +40,7 @@ public class ScheduleDispatchAction extends Action<Void> {
             description = {
                     "Period in milliseconds."
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "p",
             displayOrder = 6)
@@ -51,7 +50,7 @@ public class ScheduleDispatchAction extends Action<Void> {
             description = {
                     "Delay in milliseconds."
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "d",
             displayOrder = 7)

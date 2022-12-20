@@ -1,21 +1,21 @@
 package soya.framework.ant.actions;
 
 import soya.framework.action.Action;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
-import soya.framework.action.ParameterType;
 import soya.framework.ant.ProjectSession;
 
 import java.io.File;
 
 public abstract class AntAction extends Action<Object> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, option = "h")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, option = "h")
     protected String home;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, option = "b")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, option = "b")
     protected String basedir = ".";
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, option = "o")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, option = "o")
     protected String resultName;
 
     protected ProjectSession project;

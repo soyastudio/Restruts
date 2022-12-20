@@ -23,7 +23,7 @@ public class GenericActionDispatchAction extends GenericDispatchAction<Object> {
             "- param(exp): evaluate value from payload input in json format using expression: exp",
             "- ref(exp): evaluate value from context using expression: exp, available for multiple action dispatch patterns such as pipeline, eventbus etc."
     },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "d")
     protected URI uri;

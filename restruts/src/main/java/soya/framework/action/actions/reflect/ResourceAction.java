@@ -14,7 +14,7 @@ import soya.framework.action.*;
 public class ResourceAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "u",
             description = {

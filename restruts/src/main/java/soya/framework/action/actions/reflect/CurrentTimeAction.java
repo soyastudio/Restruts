@@ -18,7 +18,7 @@ import java.util.Date;
 public class CurrentTimeAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "f",
             description = "Time format."
 

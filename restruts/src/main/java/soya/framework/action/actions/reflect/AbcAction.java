@@ -14,7 +14,7 @@ import soya.framework.action.*;
 public class AbcAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.PATH_PARAM,
+            parameterType = ActionParameterType.PATH_PARAM,
             required = true,
             option = "k",
             description = {

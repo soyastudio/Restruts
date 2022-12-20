@@ -18,27 +18,27 @@ public class ActionMappings {
 
     public ActionMappings(ActionRegistrationService registrationService) {
 
-        for (ActionDomain domain : ActionClass.registry().domains()) {
+        for (ActionDomain domain : registrationService.domains()) {
             addDomain(domain.getName(), domain.getPath(), domain.getTitle(), domain.getDescription());
         }
 
-        for (ActionName actionName : ActionClass.actions()) {
+        for (ActionName actionName : registrationService.actions()) {
             if (!containsDomain(actionName.getDomain())) {
                 addDomain(actionName.getDomain());
             }
 
-            ActionClass actionClass = ActionClass.get(actionName);
-            ActionDefinition definition = actionClass.getActionType().getAnnotation(ActionDefinition.class);
-            ActionMapping mapping = add(actionName, definition.method().name(), definition.path(), definition.produces()[0]);
+            ActionDescription actionDescription = registrationService.action(actionName);
 
-            mapping.addDescriptions(definition.description());
+            ActionMapping mapping = add(actionName, actionDescription.getHttpMethod(), actionDescription.getPath(), actionDescription.getProduces()[0]);
+
+            mapping.addDescriptions(actionDescription.getDescription());
             mapping.addDescriptions("- Action name: " + actionName);
-            mapping.addDescriptions("- Action class: " + actionClass.getActionType().getName());
+            mapping.addDescriptions("- Action type: " + actionDescription.getActionType());
+            mapping.addDescriptions("- Action details: " + actionDescription.getImplementation());
 
-            for (Field field : actionClass.getActionFields()) {
-                ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
-                ParameterMapping pm = new ParameterMapping(field.getName(), actionProperty.parameterType());
-                pm.addDescriptions(actionProperty.description());
+            for(ActionPropertyDescription prop : actionDescription.getProperties()) {
+                ParameterMapping pm = new ParameterMapping(prop.getName(), prop.getParameterType());
+                pm.addDescriptions(prop.getDescription());
 
                 mapping.getParameters().add(pm);
             }

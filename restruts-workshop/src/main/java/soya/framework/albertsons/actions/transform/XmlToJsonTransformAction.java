@@ -2,9 +2,9 @@ package soya.framework.albertsons.actions.transform;
 
 import org.w3c.dom.Document;
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,12 +23,12 @@ import java.util.Map;
 public class XmlToJsonTransformAction extends TransformAction {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "r",
             required = true)
     private String rule;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM,
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM,
             description = "Message for converting",
             option = "r",
             required = true)

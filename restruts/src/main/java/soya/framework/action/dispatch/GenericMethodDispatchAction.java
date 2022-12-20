@@ -20,7 +20,7 @@ public class GenericMethodDispatchAction extends GenericDispatchAction<Object> {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "c",
             description = "Class name or service name."
@@ -28,7 +28,7 @@ public class GenericMethodDispatchAction extends GenericDispatchAction<Object> {
     private String className;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "m",
             description = {

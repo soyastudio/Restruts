@@ -17,7 +17,7 @@ public class EventPublishAction extends Action<String> {
     @ActionProperty(description = {
 
     },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "a")
     private String address;
@@ -25,7 +25,7 @@ public class EventPublishAction extends Action<String> {
     @ActionProperty(description = {
 
     },
-            parameterType = ParameterType.PAYLOAD,
+            parameterType = ActionParameterType.PAYLOAD,
             required = true,
             option = "p")
     private String payload;

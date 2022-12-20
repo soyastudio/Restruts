@@ -14,7 +14,7 @@ import soya.framework.action.*;
 public class EchoAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.PAYLOAD,
+            parameterType = ActionParameterType.PAYLOAD,
             required = true,
             option = "m",
             description = "Message for echoing."

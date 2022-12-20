@@ -17,7 +17,7 @@ import java.util.List;
 public class ApiSearchAction extends Action<String[]> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "k",
             description = {
@@ -30,7 +30,7 @@ public class ApiSearchAction extends Action<String[]> {
     public String[] execute() throws Exception {
         String token = keyword.toUpperCase();
         List<String> results = new ArrayList<>();
-        ActionName[] actionNames = ActionClass.actions(null);
+        ActionName[] actionNames = ActionContext.getInstance().getActionRegistrationService().actions();
         for(ActionName name: actionNames) {
             if(name.toString().toUpperCase().contains(token)) {
                 results.add(name.toString());

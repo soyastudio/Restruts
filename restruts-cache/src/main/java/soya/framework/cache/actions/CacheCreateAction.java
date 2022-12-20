@@ -1,9 +1,9 @@
 package soya.framework.cache.actions;
 
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class CacheCreateAction extends CacheAction<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "n",
             required = true,
             description = "Cache name",
@@ -31,7 +31,7 @@ public class CacheCreateAction extends CacheAction<String> {
     private String name;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "k",
             defaultValue = "java.lang.String",
             description = "Key type, default value is 'java.lang.String'.",
@@ -40,7 +40,7 @@ public class CacheCreateAction extends CacheAction<String> {
     private String keyType;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "v",
             defaultValue = "java.lang.Object",
             description = "Value type, default value is 'java.lang.Object'.",
@@ -50,7 +50,7 @@ public class CacheCreateAction extends CacheAction<String> {
     private String valueType;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "r",
             description = "Is read through.",
             displayOrder = 4
@@ -58,7 +58,7 @@ public class CacheCreateAction extends CacheAction<String> {
     private boolean isReadThrough;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "w",
             description = "Is write through",
             displayOrder = 4
@@ -66,21 +66,21 @@ public class CacheCreateAction extends CacheAction<String> {
     private boolean isWriteThrough;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "x",
             description = "Is statistics enabled."
     )
     private boolean isStatisticsEnabled;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "b",
             description = "Is store by value."
     )
     private boolean isStoreByValue;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "m",
             description = "Is management enabled."
     )

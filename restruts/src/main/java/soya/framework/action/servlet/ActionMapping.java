@@ -1,7 +1,7 @@
 package soya.framework.action.servlet;
 
 import soya.framework.action.ActionName;
-import soya.framework.action.ParameterType;
+import soya.framework.action.ActionParameterType;
 import soya.framework.commons.util.StreamUtils;
 
 import javax.servlet.http.Cookie;
@@ -77,7 +77,7 @@ public class ActionMapping implements Comparable<ActionMapping>, Serializable {
 
     public Object getParameterValue(HttpServletRequest request, ParameterMapping parameterMapping) {
         String paramName = parameterMapping.getName();
-        ParameterType paramType = parameterMapping.getParameterType();
+        ActionParameterType paramType = parameterMapping.getParameterType();
         String contentType = parameterMapping.getContentType();
 
         switch (paramType) {

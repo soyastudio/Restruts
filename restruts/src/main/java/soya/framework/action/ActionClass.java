@@ -211,6 +211,10 @@ public final class ActionClass implements Serializable {
         return fields.toArray(new Field[fields.size()]);
     }
 
+    static ActionRegistry registry() {
+        return registry;
+    }
+
     public static long totalExecutedActionCount() {
         return TOTAL_ACTION_COUNT.get();
     }
@@ -219,16 +223,6 @@ public final class ActionClass implements Serializable {
         AtomicLong count = COUNTS.get(actionName);
         Objects.requireNonNull(count, "Action '" + actionName + "' is not defined.");
         return count.get();
-    }
-
-    public static ActionName[] actions() {
-        List<ActionName> list = new ArrayList<>(ACTION_CLASSES.keySet());
-        Collections.sort(list);
-        return list.toArray(new ActionName[list.size()]);
-    }
-
-    public static ActionRegistry registry() {
-        return registry;
     }
 
     public static ActionDomain createActionDomain(Class<?> cls) {
@@ -244,26 +238,6 @@ public final class ActionClass implements Serializable {
         DOMAINS.put(domain.name(), ActionDomain.builder().fromAnnotation(domain).create());
 
         return DOMAINS.get(domain.name());
-    }
-
-    public static ActionDomain getDomain(String name) {
-        return DOMAINS.get(name);
-    }
-
-    public static ActionName[] actions(String domain) {
-        List<ActionName> list = new ArrayList<>();
-        if (domain == null) {
-            list.addAll(ACTION_CLASSES.keySet());
-        } else {
-            ACTION_CLASSES.keySet().forEach(e -> {
-                if (e.getDomain().equals(domain)) {
-                    list.add(e);
-                }
-            });
-        }
-
-        Collections.sort(list);
-        return list.toArray(new ActionName[list.size()]);
     }
 
     public static ActionClass get(ActionName actionName) {
@@ -290,8 +264,8 @@ public final class ActionClass implements Serializable {
                 ActionProperty a1 = o1.getAnnotation(ActionProperty.class);
                 ActionProperty a2 = o2.getAnnotation(ActionProperty.class);
 
-                int result = ParameterType.index(a1.parameterType())
-                        - ParameterType.index(a2.parameterType());
+                int result = ActionParameterType.index(a1.parameterType())
+                        - ActionParameterType.index(a2.parameterType());
                 if (result != 0) {
                     return result;
                 }
@@ -400,7 +374,7 @@ public final class ActionClass implements Serializable {
         public Collection<ActionDescription> actions() {
             Set<ActionDescription> set = new HashSet<>();
             ACTION_CLASSES.entrySet().forEach(e -> {
-                set.add(ActionDescription.builder().fromActionClass(e.getValue().actionType).create());
+                set.add(ActionDescription.builder().fromActionClass(e.getValue()).create());
             });
             return set;
         }

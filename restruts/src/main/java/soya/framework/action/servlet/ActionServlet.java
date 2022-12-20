@@ -3,18 +3,14 @@ package soya.framework.action.servlet;
 import org.reflections.Reflections;
 import soya.framework.action.*;
 import soya.framework.action.servlet.api.Swagger;
-import soya.framework.commons.util.URIUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Logger;
@@ -221,21 +217,21 @@ public class ActionServlet extends HttpServlet {
                 if (pathBuilder != null) {
                     for (ParameterMapping pm : am.getParameters()) {
                         String name = pm.getName();
-                        ParameterType paramType = pm.getParameterType();
+                        ActionParameterType paramType = pm.getParameterType();
 
-                        if (ParameterType.PATH_PARAM.equals(paramType)) {
+                        if (ActionParameterType.PATH_PARAM.equals(paramType)) {
                             pathBuilder.parameterBuilder(name, "path", pm.getDescription()).build();
 
-                        } else if (ParameterType.QUERY_PARAM.equals(paramType)) {
+                        } else if (ActionParameterType.QUERY_PARAM.equals(paramType)) {
                             pathBuilder.parameterBuilder(name, "query", pm.getDescription()).build();
 
-                        } else if (ParameterType.HEADER_PARAM.equals(paramType)) {
+                        } else if (ActionParameterType.HEADER_PARAM.equals(paramType)) {
                             pathBuilder.parameterBuilder(name, "header", pm.getDescription()).build();
 
-                        } else if (ParameterType.COOKIE_PARAM.equals(paramType)) {
+                        } else if (ActionParameterType.COOKIE_PARAM.equals(paramType)) {
                             pathBuilder.parameterBuilder(name, "cookie", pm.getDescription()).build();
 
-                        } else if (ParameterType.PAYLOAD.equals(paramType)) {
+                        } else if (ActionParameterType.PAYLOAD.equals(paramType)) {
                             pathBuilder.bodyParameterBuilder(name, pm.getDescription())
                                     .build()
                                     .consumes(pm.getContentType());

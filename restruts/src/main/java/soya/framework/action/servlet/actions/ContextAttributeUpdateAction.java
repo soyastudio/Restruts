@@ -3,7 +3,7 @@ package soya.framework.action.servlet.actions;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
+import soya.framework.action.ActionParameterType;
 
 @ActionDefinition(
         domain = "web",
@@ -17,7 +17,7 @@ import soya.framework.action.ParameterType;
 public class ContextAttributeUpdateAction extends ServletContextAction<Void> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "a",
             required = true,
             description = {}

@@ -28,7 +28,7 @@ public class GenericCommandDispatchAction extends GenericDispatchAction<Object> 
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "u",
             description = {

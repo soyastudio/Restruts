@@ -3,7 +3,7 @@ package soya.framework.action.servlet.actions;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
+import soya.framework.action.ActionParameterType;
 
 import javax.servlet.ServletRegistration;
 import java.util.*;
@@ -20,7 +20,7 @@ import java.util.*;
 public class ServletInfoAction extends ServletContextAction<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "n",
             required = true,
             description = {}

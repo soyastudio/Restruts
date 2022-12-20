@@ -3,7 +3,7 @@ package soya.framework.action.dispatch.proxy;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
+import soya.framework.action.ActionParameterType;
 import soya.framework.commons.util.CodeBuilder;
 
 import java.lang.reflect.Method;
@@ -20,7 +20,7 @@ public class ProxyInterfaceDetailsAction extends ProxyInterfaceGenerator {
     @ActionProperty(
             description = {
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "c")
     private String className;

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.DynaBean;
-import soya.framework.action.ParameterType;
+import soya.framework.action.ActionParameterType;
 import soya.framework.document.actions.DocumentAction;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
@@ -23,13 +23,13 @@ import java.util.Map;
         produces = MediaType.APPLICATION_JSON)
 public class SpreadSheetAction extends DocumentAction<String> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, displayOrder = 1)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, displayOrder = 1)
     private String uri;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, displayOrder = 2)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, displayOrder = 2)
     private String sheet;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, displayOrder = 3)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, displayOrder = 3)
     private String columns;
 
     @Override

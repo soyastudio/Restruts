@@ -12,16 +12,16 @@ import soya.framework.action.*;
 )
 public class CreateScheduledDispatchJob extends QuartzSchedulerAction<String> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, option = "j")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, option = "j")
     private String jobId;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, option = "t")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, option = "t")
     private String triggerId;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, option = "x")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, option = "x")
     private String cronExpression;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, option = "a")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, option = "a")
     private String actionDispatch;
 
     @Override

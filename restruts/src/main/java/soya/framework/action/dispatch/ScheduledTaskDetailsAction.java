@@ -1,7 +1,6 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
-import soya.framework.action.dispatch.DispatchScheduler;
 
 @ActionDefinition(domain = "dispatch",
         name = "scheduled-task-details",
@@ -16,7 +15,7 @@ public class ScheduledTaskDetailsAction extends Action<String> {
             description = {
                     "Task name."
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "n"
     )

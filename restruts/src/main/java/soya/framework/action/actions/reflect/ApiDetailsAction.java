@@ -17,7 +17,7 @@ import java.net.URI;
 public class ApiDetailsAction extends ApiAction {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "a",
             description = {

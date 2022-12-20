@@ -21,7 +21,7 @@ import java.util.List;
 public class TypeScanAction extends Action<String[]> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "t",
             description = "Class name for search."
@@ -29,14 +29,14 @@ public class TypeScanAction extends Action<String[]> {
     private String type;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "p",
             description = "Package name under which to search."
     )
     protected String packageName;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "a",
             displayOrder = 6,
             description = "If abstract classes are included."

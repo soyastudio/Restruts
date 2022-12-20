@@ -15,7 +15,7 @@ public class DomainProxyInterfaceAction extends ProxyInterfaceGenerator {
     @ActionProperty(
             description = {
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "c")
     private String className;
@@ -23,7 +23,7 @@ public class DomainProxyInterfaceAction extends ProxyInterfaceGenerator {
     @ActionProperty(
             description = {
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "d")
     private String domain;
@@ -42,7 +42,7 @@ public class DomainProxyInterfaceAction extends ProxyInterfaceGenerator {
 
         printInterfaceStart(simpleName, builder);
 
-        ActionName[] actionNames = ActionClass.actions(domain);
+        ActionName[] actionNames = ActionContext.getInstance().getActionRegistrationService().actions(domain);
         for (ActionName actionName : actionNames) {
             printMethod(ActionClass.get(actionName), builder);
         }

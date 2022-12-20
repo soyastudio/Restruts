@@ -5,7 +5,7 @@ import com.azure.storage.blob.models.ListBlobsOptions;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
-import soya.framework.action.ParameterType;
+import soya.framework.action.ActionParameterType;
 
 @ActionDefinition(
         domain = "azure-blob-storage",
@@ -16,10 +16,10 @@ import soya.framework.action.ParameterType;
 )
 public class AzureBlobDeleteAllBlobsAction extends AzureBlobAction<Integer> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String container;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String prefix;
 
     private int count;

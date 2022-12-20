@@ -1,9 +1,9 @@
 package soya.framework.albertsons.actions.iib;
 
 import soya.framework.action.ActionDefinition;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.action.ParameterType;
 import soya.framework.commons.util.StreamUtils;
 
 import java.io.File;
@@ -18,7 +18,7 @@ import java.io.InputStream;
         description = "Update README file.")
 public class IIBDevUpdateReadmeAction extends IIBDevAction<String> {
 
-    @ActionProperty(parameterType = ParameterType.PAYLOAD,
+    @ActionProperty(parameterType = ActionParameterType.PAYLOAD,
             description = "README.md contents",
             contentType = MediaType.TEXT_PLAIN,
             required = true)

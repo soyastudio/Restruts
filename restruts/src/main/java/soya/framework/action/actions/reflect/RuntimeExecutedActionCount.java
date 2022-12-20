@@ -16,7 +16,7 @@ import java.net.URI;
 public class RuntimeExecutedActionCount extends Action<Long> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "a",
             description = "Prefix for filtering."

@@ -2,10 +2,10 @@ package soya.framework.azure.actions;
 
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.specialized.BlockBlobClient;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
-import soya.framework.action.ParameterType;
 import soya.framework.commons.util.StreamUtils;
 
 import java.io.InputStream;
@@ -19,10 +19,10 @@ import java.io.InputStream;
 )
 public class AzureBlobDownloadAction extends AzureBlobAction<byte[]> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String container;
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String filename;
 
     @Override

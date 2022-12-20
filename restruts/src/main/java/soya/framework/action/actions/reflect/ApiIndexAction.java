@@ -12,16 +12,16 @@ import soya.framework.commons.util.CodeBuilder;
         displayName = "API Index",
         description = "Print action apis index in yaml format."
 )
-public class ApiIndexAction extends Action<String> {
+public class ApiIndexAction extends ApiAction {
 
     @Override
     public String execute() throws Exception {
         CodeBuilder builder = CodeBuilder.newInstance();
 
-        for (ActionDomain domain : ActionClass.registry().domains()) {
+        for (ActionDomain domain : registrationService().domains()) {
             builder.append(domain.getName()).appendLine(":");
 
-            for (ActionName actionName : ActionClass.actions(domain.getName())) {
+            for (ActionName actionName : registrationService().actions(domain.getName())) {
                 ActionClass actionClass = ActionClass.get(actionName);
                 Class<? extends ActionCallable> cls = actionClass.getActionType();
 

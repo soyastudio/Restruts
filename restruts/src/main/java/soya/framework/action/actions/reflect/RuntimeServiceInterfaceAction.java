@@ -24,7 +24,7 @@ import java.util.Map;
 public class RuntimeServiceInterfaceAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "i",
             description = "Service interface class name."

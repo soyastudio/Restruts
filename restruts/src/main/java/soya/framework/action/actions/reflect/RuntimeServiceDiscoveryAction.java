@@ -17,7 +17,7 @@ import java.util.List;
 public class RuntimeServiceDiscoveryAction extends Action<ServiceInfo[]> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "t",
             description = "Service type."

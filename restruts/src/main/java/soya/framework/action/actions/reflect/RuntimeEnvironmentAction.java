@@ -19,7 +19,7 @@ import java.util.Map;
 public class RuntimeEnvironmentAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             option = "p",
             description = "Prefix for filtering."
 

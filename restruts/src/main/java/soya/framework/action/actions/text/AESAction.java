@@ -1,7 +1,7 @@
 package soya.framework.action.actions.text;
 
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
-import soya.framework.action.ParameterType;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -27,7 +27,7 @@ public abstract class AESAction extends TextUtilAction {
             "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
     };
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, option = "k")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, option = "k")
     protected String secret;
 
     protected String encrypt(String message, String secret) throws Exception {

@@ -16,7 +16,7 @@ import soya.framework.action.*;
 public class DynamicPipelineAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.PAYLOAD
+            parameterType = ActionParameterType.PAYLOAD
     )
     private String message;
 

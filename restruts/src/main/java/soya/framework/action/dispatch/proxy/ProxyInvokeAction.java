@@ -20,7 +20,7 @@ public class ProxyInvokeAction extends Action<String> {
     @ActionProperty(
             description = {
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "c")
     private String className;
@@ -28,7 +28,7 @@ public class ProxyInvokeAction extends Action<String> {
     @ActionProperty(
             description = {
             },
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "m")
     private String methodName;
@@ -36,7 +36,7 @@ public class ProxyInvokeAction extends Action<String> {
     @ActionProperty(
             description = {
             },
-            parameterType = ParameterType.PAYLOAD,
+            parameterType = ActionParameterType.PAYLOAD,
             contentType = MediaType.APPLICATION_JSON,
             option = "i")
     private String inputs;

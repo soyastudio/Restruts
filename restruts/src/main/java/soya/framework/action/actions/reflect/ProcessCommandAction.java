@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 public class ProcessCommandAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "c",
             description = "Command for executing. The command is system specified."
@@ -35,7 +35,7 @@ public class ProcessCommandAction extends Action<String> {
     private String command;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "d",
             description = "Directory under which the command is executed. If not specified, 'user.home' is used."
@@ -43,7 +43,7 @@ public class ProcessCommandAction extends Action<String> {
     private String directory;
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             defaultValue = "10",
             option = "t",
             description = "Execution timeout in second."

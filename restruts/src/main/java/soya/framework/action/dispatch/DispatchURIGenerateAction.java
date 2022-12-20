@@ -1,7 +1,6 @@
 package soya.framework.action.dispatch;
 
 import soya.framework.action.*;
-import soya.framework.action.dispatch.AssignmentType;
 import soya.framework.commons.util.CodeBuilder;
 
 import java.lang.reflect.Field;
@@ -17,7 +16,7 @@ import java.net.URI;
 public class DispatchURIGenerateAction extends Action<String> {
 
     @ActionProperty(
-            parameterType = ParameterType.HEADER_PARAM,
+            parameterType = ActionParameterType.HEADER_PARAM,
             required = true,
             option = "a")
 

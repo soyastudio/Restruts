@@ -11,7 +11,7 @@ import soya.framework.action.*;
         description = "Print article.")
 public class ArticleReadAction extends Action<String> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true, option = "l")
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true, option = "l")
     private String link;
 
     @Override

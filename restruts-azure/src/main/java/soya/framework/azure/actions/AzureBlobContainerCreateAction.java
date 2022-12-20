@@ -1,9 +1,9 @@
 package soya.framework.azure.actions;
 
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
-import soya.framework.action.ParameterType;
 
 @ActionDefinition(
         domain = "azure-blob-storage",
@@ -14,7 +14,7 @@ import soya.framework.action.ParameterType;
 )
 public class AzureBlobContainerCreateAction extends AzureBlobAction<Boolean> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String name;
 
     @Override

@@ -19,7 +19,7 @@ public @interface ActionProperty {
 
     String defaultValue() default "";
 
-    ParameterType parameterType();
+    ActionParameterType parameterType();
 
     String contentType() default MediaType.TEXT_PLAIN;
 

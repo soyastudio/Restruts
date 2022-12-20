@@ -7,12 +7,16 @@ import soya.framework.commons.util.URIUtils;
 import java.lang.reflect.Field;
 
 public abstract class ApiAction extends Action<String> {
+    protected ActionRegistrationService registrationService() {
+        return ActionContext.getInstance().getActionRegistrationService();
+    }
+
     protected void render(ActionClass actionClass, CodeBuilder builder) {
 
         Class<? extends ActionCallable> cls = actionClass.getActionType();
         ActionDefinition operation = cls.getAnnotation(ActionDefinition.class);
 
-        ActionDomain domain = ActionClass.getDomain(operation.domain());
+        ActionDomain domain = registrationService().domain(operation.domain());
         String domainPath = domain.getPath();
 
         builder.append("## ACTION: ").appendLine(operation.displayName().isEmpty() ? operation.name() : operation.displayName());

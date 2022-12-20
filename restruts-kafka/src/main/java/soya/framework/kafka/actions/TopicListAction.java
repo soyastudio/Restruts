@@ -1,10 +1,10 @@
 package soya.framework.kafka.actions;
 
 import org.apache.kafka.clients.admin.AdminClient;
+import soya.framework.action.ActionParameterType;
 import soya.framework.action.MediaType;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
-import soya.framework.action.ParameterType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
         produces = MediaType.APPLICATION_JSON)
 public class TopicListAction extends KafkaAction<String[]> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM)
     private String query;
 
     @Override

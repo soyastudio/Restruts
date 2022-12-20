@@ -13,7 +13,7 @@ import soya.framework.document.actions.xmlbeans.XPathSchemaAction;
         description = "Generate XPath Schema based on CMM XSD file.")
 public class IIBDevXPathSchemaAction extends WorkshopAction<String> {
 
-    @ActionProperty(parameterType = ParameterType.HEADER_PARAM, required = true)
+    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
     private String cmm;
 
     @Override
