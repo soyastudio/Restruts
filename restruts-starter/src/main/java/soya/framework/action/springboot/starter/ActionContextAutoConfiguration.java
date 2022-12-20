@@ -111,7 +111,7 @@ public class ActionContextAutoConfiguration {
 
     @Bean
     ActionMappings actionMapping(ActionContext actionContext, ServletContext servletContext) {
-        ActionMappings mappings = new ActionMappings();
+        ActionMappings mappings = new ActionMappings(actionContext.getActionRegistrationService());
         servletContext.setAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE, mappings);
         return mappings;
 

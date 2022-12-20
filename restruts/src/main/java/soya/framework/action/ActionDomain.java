@@ -9,8 +9,6 @@ public final class ActionDomain implements Comparable<ActionDomain>, Serializabl
     private final String title;
     private final String description;
 
-    private static Map<String, ActionDomain> DOMAINS = new HashMap<>();
-
     private ActionDomain(String name, String path, String title, String description) {
         this.name = name;
         this.path = path;
@@ -50,16 +48,6 @@ public final class ActionDomain implements Comparable<ActionDomain>, Serializabl
     @Override
     public int compareTo(ActionDomain o) {
         return this.path.compareTo(o.path);
-    }
-
-    public static ActionDomain get(String name) {
-        return DOMAINS.get(name);
-    }
-
-    public static ActionDomain[] domains() {
-        List<ActionDomain> list = new ArrayList<>(DOMAINS.values());
-        Collections.sort(list);
-        return list.toArray(new ActionDomain[list.size()]);
     }
 
     public static Builder builder() {
@@ -105,10 +93,6 @@ public final class ActionDomain implements Comparable<ActionDomain>, Serializabl
 
         public ActionDomain create() {
             Objects.requireNonNull(name, "Domain name is required.");
-            if (DOMAINS.containsKey(name)) {
-                throw new IllegalArgumentException("Domain '" + name + "' is already defined.");
-            }
-
             if (path == null) {
                 path = "/" + name;
             }
@@ -122,7 +106,6 @@ public final class ActionDomain implements Comparable<ActionDomain>, Serializabl
             }
 
             ActionDomain domain = new ActionDomain(name, path, title, description);
-            DOMAINS.put(name, domain);
 
             return domain;
         }

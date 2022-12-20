@@ -7,8 +7,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class ActionClass implements Serializable {
+
+    private static Map<String, ActionDomain> DOMAINS = new HashMap<>();
     private static Map<ActionName, ActionClass> ACTION_CLASSES = new HashMap<>();
     private static Map<Class<? extends ActionCallable>, ActionClass> ACTION_TYPES = new HashMap<>();
+
+    private static Registry registry = new Registry();
 
     private static Map<ActionName, AtomicLong> COUNTS = new ConcurrentHashMap<>();
     private static final AtomicLong TOTAL_ACTION_COUNT = new AtomicLong();
@@ -223,6 +227,29 @@ public final class ActionClass implements Serializable {
         return list.toArray(new ActionName[list.size()]);
     }
 
+    public static ActionRegistry registry() {
+        return registry;
+    }
+
+    public static ActionDomain createActionDomain(Class<?> cls) {
+        Domain domain = cls.getAnnotation(Domain.class);
+        if(domain == null) {
+            throw new IllegalArgumentException("Class '" + cls.getName() + "' is not annotated as Domain.");
+        }
+
+        if(DOMAINS.containsKey(domain.name())) {
+            throw new IllegalArgumentException("Domain '" + domain.name() + "' already exists.");
+        }
+
+        DOMAINS.put(domain.name(), ActionDomain.builder().fromAnnotation(domain).create());
+
+        return DOMAINS.get(domain.name());
+    }
+
+    public static ActionDomain getDomain(String name) {
+        return DOMAINS.get(name);
+    }
+
     public static ActionName[] actions(String domain) {
         List<ActionName> list = new ArrayList<>();
         if (domain == null) {
@@ -344,6 +371,48 @@ public final class ActionClass implements Serializable {
         @Override
         public boolean success() {
             return false;
+        }
+    }
+
+    private static final class Registry implements ActionRegistry, ActionFactory {
+        private long lastUpdatedTime;
+
+        private Registry() {
+            this.lastUpdatedTime = System.currentTimeMillis();
+        }
+
+        @Override
+        public String id() {
+            return null;
+        }
+
+        @Override
+        public long lastUpdatedTime() {
+            return lastUpdatedTime;
+        }
+
+        @Override
+        public Collection<ActionDomain> domains() {
+            return DOMAINS.values();
+        }
+
+        @Override
+        public Collection<ActionDescription> actions() {
+            Set<ActionDescription> set = new HashSet<>();
+            ACTION_CLASSES.entrySet().forEach(e -> {
+                set.add(ActionDescription.builder().fromActionClass(e.getValue().actionType).create());
+            });
+            return set;
+        }
+
+        @Override
+        public ActionFactory actionFactory() {
+            return this;
+        }
+
+        @Override
+        public ActionCallable create(ActionName actionName) {
+            return ACTION_CLASSES.get(actionName).newInstance();
         }
     }
 }

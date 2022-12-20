@@ -1,7 +1,5 @@
 package soya.framework.action;
 
-import org.reflections.Reflections;
-
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,37 +10,14 @@ public final class ActionContext {
 
     private final ExecutorService executorService;
     private final ServiceLocator serviceLocator;
+    private final ActionRegistrationService actionRegistrationService;
 
     protected Properties properties = new Properties();
 
     protected ActionContext(ServiceLocator serviceLocator, Set<String> scanPackages) {
         this.serviceLocator = serviceLocator;
         this.executorService = createExecutorService();
-
-        Set<Class<?>> domains = new HashSet<>();
-        Set<Class<?>> actions = new HashSet<>();
-
-        if (scanPackages.isEmpty()) {
-            Reflections reflections = new Reflections();
-            domains.addAll(reflections.getTypesAnnotatedWith(Domain.class));
-            actions.addAll(reflections.getTypesAnnotatedWith(ActionDefinition.class));
-
-        } else {
-            scanPackages.forEach(pkg -> {
-                Reflections reflections = new Reflections(pkg.trim());
-                domains.addAll(reflections.getTypesAnnotatedWith(Domain.class));
-                actions.addAll(reflections.getTypesAnnotatedWith(ActionDefinition.class));
-            });
-
-        }
-
-        domains.forEach(e -> {
-            ActionDomain.builder().fromAnnotation(e.getAnnotation(Domain.class)).create();
-        });
-
-        actions.forEach(e -> {
-            new ActionClass((Class<? extends ActionCallable>) e);
-        });
+        this.actionRegistrationService = new ActionRegistrationService(scanPackages);
 
         INSTANCE = this;
     }
@@ -82,6 +57,10 @@ public final class ActionContext {
 
     public ExecutorService getExecutorService() {
         return executorService;
+    }
+
+    public ActionRegistrationService getActionRegistrationService() {
+        return actionRegistrationService;
     }
 
     public String[] serviceNames() {

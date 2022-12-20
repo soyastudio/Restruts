@@ -18,7 +18,7 @@ public class ApiIndexAction extends Action<String> {
     public String execute() throws Exception {
         CodeBuilder builder = CodeBuilder.newInstance();
 
-        for (ActionDomain domain : ActionDomain.domains()) {
+        for (ActionDomain domain : ActionClass.registry().domains()) {
             builder.append(domain.getName()).appendLine(":");
 
             for (ActionName actionName : ActionClass.actions(domain.getName())) {

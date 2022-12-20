@@ -14,12 +14,11 @@ public class ActionMappings {
     private Map<String, DomainMapping> domains = new HashMap<>();
     private Set<ActionMapping> actions = new HashSet<>();
 
-    private DefaultActionFactory defaultFactory;
     private Set<ActionRegistry> registries = new HashSet<>();
 
-    public ActionMappings() {
-        defaultFactory = new DefaultActionFactory();
-        for (ActionDomain domain : ActionDomain.domains()) {
+    public ActionMappings(ActionRegistrationService registrationService) {
+
+        for (ActionDomain domain : ActionClass.registry().domains()) {
             addDomain(domain.getName(), domain.getPath(), domain.getTitle(), domain.getDescription());
         }
 
@@ -125,37 +124,9 @@ public class ActionMappings {
     }
 
     private ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
+
         ActionName actionName = mapping.getActionName();
-        if (defaultFactory.actions().contains(actionName)) {
-            return defaultFactory.create(mapping, request);
-        }
-
-        return null;
-    }
-
-    static class DefaultActionFactory implements ActionRegistry, ActionFactory {
-        private Collection<ActionName> actionNames;
-
-        DefaultActionFactory() {
-            actionNames = new LinkedHashSet<>(Arrays.asList(ActionClass.actions()));
-        }
-
-        @Override
-        public Collection<ActionName> actions() {
-            return actionNames;
-        }
-
-        @Override
-        public ActionFactory actionFactory() {
-            return this;
-        }
-
-        @Override
-        public ActionCallable create(ActionName actionName) {
-            return ActionClass.get(actionName).newInstance();
-        }
-
-        public ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
+        if (ActionClass.get(actionName) != null) {
             ActionClass actionClass = ActionClass.get(mapping.getActionName());
             ActionCallable action = actionClass.newInstance();
 
@@ -175,6 +146,8 @@ public class ActionMappings {
 
             return action;
         }
+
+        return null;
     }
 
 }

@@ -3,7 +3,13 @@ package soya.framework.action;
 import java.util.Collection;
 
 public interface ActionRegistry {
-    Collection<ActionName> actions();
+    String id();
+
+    long lastUpdatedTime();
+
+    Collection<ActionDomain> domains();
+
+    Collection<ActionDescription> actions();
 
     ActionFactory actionFactory();
 
