@@ -17,6 +17,7 @@ public final class ActionContext {
     protected ActionContext(ServiceLocator serviceLocator, Set<String> scanPackages) {
         this.serviceLocator = serviceLocator;
         this.executorService = createExecutorService();
+
         this.actionRegistrationService = new ActionRegistrationService(scanPackages);
 
         INSTANCE = this;

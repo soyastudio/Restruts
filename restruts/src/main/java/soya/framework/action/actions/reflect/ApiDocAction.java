@@ -24,7 +24,7 @@ public class ApiDocAction extends ApiAction {
 
             builder.appendLine();
 
-            for (ActionName actionName : registrationService().actions(domain.getName())) {
+            for (ActionName actionName : registrationService().actions()) {
                 ActionClass actionClass = ActionClass.get(actionName);
                 render(actionClass, builder);
                 builder.appendLine();

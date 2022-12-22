@@ -36,7 +36,8 @@ public class ActionMappings {
             mapping.addDescriptions("- Action type: " + actionDescription.getActionType());
             mapping.addDescriptions("- Action details: " + actionDescription.getImplementation());
 
-            for(ActionPropertyDescription prop : actionDescription.getProperties()) {
+            for (String propName : actionDescription.getActionPropertyNames()) {
+                ActionPropertyDescription prop = actionDescription.getActionPropertyDescription(propName);
                 ParameterMapping pm = new ParameterMapping(prop.getName(), prop.getParameterType());
                 pm.addDescriptions(prop.getDescription());
 
@@ -124,30 +125,17 @@ public class ActionMappings {
     }
 
     private ActionCallable create(ActionMapping mapping, HttpServletRequest request) {
-
         ActionName actionName = mapping.getActionName();
-        if (ActionClass.get(actionName) != null) {
-            ActionClass actionClass = ActionClass.get(mapping.getActionName());
-            ActionCallable action = actionClass.newInstance();
+        ActionBean bean = ActionRegistrationService.getInstance().create(actionName);
+        mapping.getParameters().forEach(pm -> {
+            Class<?> propType = bean.getPropertyType(pm.getName());
+            Object value = ConvertUtils.convert(mapping.getParameterValue(request, pm), propType);
+            if(value != null) {
+               bean.set(pm.getName(), value);
+            }
+        });
 
-            mapping.getParameters().forEach(pm -> {
-                Field field = actionClass.getActionField(pm.getName());
-                Object value = ConvertUtils.convert(mapping.getParameterValue(request, pm), field.getType());
-
-                field.setAccessible(true);
-                try {
-                    field.set(action, value);
-
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-
-                }
-            });
-
-            return action;
-        }
-
-        return null;
+        return bean.getAction();
     }
 
 }

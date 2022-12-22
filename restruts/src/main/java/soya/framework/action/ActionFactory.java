@@ -1,5 +1,5 @@
 package soya.framework.action;
 
 public interface ActionFactory {
-    ActionCallable create(ActionName actionName);
+    ActionBean create(ActionName actionName);
 }

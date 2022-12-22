@@ -2,9 +2,7 @@ package soya.framework.action;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class ActionDescription implements Comparable<ActionDescription>, Serializable {
 
@@ -19,7 +17,7 @@ public final class ActionDescription implements Comparable<ActionDescription>, S
     private String actionType;
     private String implementation;
 
-    private ActionPropertyDescription[] properties;
+    private Map<String, ActionPropertyDescription> properties;
 
     private ActionDescription(
             ActionName actionName,
@@ -43,7 +41,10 @@ public final class ActionDescription implements Comparable<ActionDescription>, S
         this.externalLink = externalLink;
         this.actionType = actionType;
         this.implementation = implementation;
-        this.properties = properties;
+        this.properties = new LinkedHashMap();
+        for(ActionPropertyDescription prop: properties) {
+            this.properties.put(prop.getName(), prop);
+        }
     }
 
     public ActionName getActionName() {
@@ -82,8 +83,12 @@ public final class ActionDescription implements Comparable<ActionDescription>, S
         return implementation;
     }
 
-    public ActionPropertyDescription[] getProperties() {
-        return properties;
+    public String[] getActionPropertyNames() {
+        return properties.keySet().toArray(new String[properties.size()]);
+    }
+
+    public ActionPropertyDescription getActionPropertyDescription(String propName) {
+        return properties.get(propName);
     }
 
     @Override
@@ -112,6 +117,56 @@ public final class ActionDescription implements Comparable<ActionDescription>, S
         private Builder() {
         }
 
+        public Builder actionName(ActionName actionName) {
+            this.actionName = actionName;
+            return this;
+        }
+
+        public Builder path(String path) {
+            this.path = path;
+            return this;
+        }
+
+        public Builder httpMethod(String httpMethod) {
+            this.httpMethod = httpMethod;
+            return this;
+        }
+
+        public Builder produces(String... produces) {
+            this.produces = produces;
+            return this;
+        }
+
+        public Builder displayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        public Builder description(String... description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder externalLink(String externalLink) {
+            this.externalLink = externalLink;
+            return this;
+        }
+
+        public Builder actionType(String actionType) {
+            this.actionType = actionType;
+            return this;
+        }
+
+        public Builder implementation(String implementation) {
+            this.implementation = implementation;
+            return this;
+        }
+
+        public Builder addProperty(ActionPropertyDescription property) {
+            this.properties.add(property);
+            return this;
+        }
+
         public Builder fromActionClass(ActionClass actionClass) {
             Class<? extends ActionCallable> cls = actionClass.getActionType();
             ActionDefinition definition = cls.getAnnotation(ActionDefinition.class);
@@ -124,7 +179,7 @@ public final class ActionDescription implements Comparable<ActionDescription>, S
             this.description = definition.description();
             this.externalLink = definition.externalLink();
 
-            this.actionType = "ACTION_CLASS";
+            this.actionType = ActionClass.class.getName();
             this.implementation = "class://" + cls.getName();
 
             for (Field field : actionClass.getActionFields()) {

@@ -1,9 +1,9 @@
 package soya.framework.action.dispatch;
 
+
 import soya.framework.action.*;
 import soya.framework.commons.util.URIUtils;
 
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -65,28 +65,22 @@ public final class ActionDispatch {
     }
 
     public ActionResult dispatch(Object context, AssignmentEvaluator evaluator) throws ActionDispatchException {
-        ActionClass actionClass = ActionClass.get(actionName);
-        ActionCallable action = actionClass.newInstance();
+        ActionRegistrationService actionRegistrationService = ActionContext.getInstance().getActionRegistrationService();
 
-        for (Field field : actionClass.getActionFields()) {
-            Assignment assignment = getAssignment(field.getName());
-
+        ActionBean bean = actionRegistrationService.create(actionName);
+        for (String propName : bean.getPropertyNames()) {
+            Assignment assignment = getAssignment(propName);
             if (assignment == null) {
-                assignment = new Assignment(AssignmentType.PARAMETER.toString(field.getName()));
+                assignment = new Assignment(AssignmentType.PARAMETER.toString(propName));
             }
 
-            Object value = evaluator.evaluate(assignment, context, field.getType());
+            Object value = evaluator.evaluate(assignment, context, bean.getPropertyType(propName));
             if (value != null) {
-                field.setAccessible(true);
-                try {
-                    field.set(action, ConvertUtils.convert(value, field.getType()));
-                } catch (IllegalAccessException e) {
-                    throw new ActionDispatchException(e);
-                }
+                bean.set(propName, value);
             }
         }
 
-        ActionResult actionResult = action.call();
+        ActionResult actionResult = bean.getAction().call();
 
         if (fragment != null) {
             actionResult = Fragment.process(actionResult, fragment);

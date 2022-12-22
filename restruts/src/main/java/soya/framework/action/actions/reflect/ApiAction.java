@@ -7,6 +7,7 @@ import soya.framework.commons.util.URIUtils;
 import java.lang.reflect.Field;
 
 public abstract class ApiAction extends Action<String> {
+
     protected ActionRegistrationService registrationService() {
         return ActionContext.getInstance().getActionRegistrationService();
     }

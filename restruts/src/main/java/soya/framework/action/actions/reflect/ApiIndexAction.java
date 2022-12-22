@@ -17,25 +17,31 @@ public class ApiIndexAction extends ApiAction {
     @Override
     public String execute() throws Exception {
         CodeBuilder builder = CodeBuilder.newInstance();
+        builder.appendLine("# ========== ACTION_CLASS ==========");
 
         for (ActionDomain domain : registrationService().domains()) {
             builder.append(domain.getName()).appendLine(":");
 
-            for (ActionName actionName : registrationService().actions(domain.getName())) {
-                ActionClass actionClass = ActionClass.get(actionName);
-                Class<? extends ActionCallable> cls = actionClass.getActionType();
+            for (ActionName actionName : registrationService().actions()) {
+                if(actionName.getDomain().equals(domain.getName())) {
+                    ActionDescription actionDescription = registrationService().action(actionName);
 
-                String name = actionClass.getActionName().getName();
-                int spaces = (60 - name.length());
-                if (spaces > 0) {
-                    builder.append("- ", 1).append(name).appendToken(' ', spaces).append("# class://").appendLine(cls.getName());
+                    String name = actionName.getName();
+                    int spaces = (60 - name.length());
+                    if (spaces > 0) {
+                        builder.append("- ", 1).append(name).appendToken(' ', spaces).append("# ").appendLine(actionDescription.getImplementation());
 
-                } else {
-                    builder.append("- ", 1).append(name).append("# class://", 2).appendLine(cls.getName());
+                    } else {
+                        builder.append("- ", 1).append(name).append("# ", 2).appendLine(actionDescription.getImplementation());
+                    }
                 }
             }
 
             builder.appendLine();
+        }
+
+        for(String registry: registrationService().registers()) {
+            builder.append("# ========== ").append(registry).appendLine(" ==========");
         }
 
         return builder.toString();

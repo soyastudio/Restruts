@@ -385,8 +385,9 @@ public final class ActionClass implements Serializable {
         }
 
         @Override
-        public ActionCallable create(ActionName actionName) {
-            return ACTION_CLASSES.get(actionName).newInstance();
+        public ActionBean create(ActionName actionName) {
+            ActionClass actionClass = ACTION_CLASSES.get(actionName);
+            return new ActionBean(actionClass.newInstance(), ActionDescription.builder().fromActionClass(actionClass).create());
         }
     }
 }

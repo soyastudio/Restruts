@@ -21,8 +21,9 @@ public class ActionServlet extends HttpServlet {
     public static final String INIT_PARAM_STREAM_HANDLER = "soya.framework.action.STREAM_HANDLER";
 
     private ServletRegistration registration;
-    private ActionMappings actionMappings;
+    private ActionRegistrationService registrationService;
 
+    private ActionMappings actionMappings;
     private Swagger swagger;
 
     private Map<String, StreamWriter> readers = new HashMap<>();
@@ -33,11 +34,15 @@ public class ActionServlet extends HttpServlet {
         super.init(config);
 
         this.registration = config.getServletContext().getServletRegistration(getServletName());
-        this.actionMappings = (ActionMappings) config.getServletContext().getAttribute(ActionMappings.ACTION_MAPPINGS_ATTRIBUTE);
-
-        initSwagger(actionMappings);
+        this.registrationService = ActionContext.getInstance().getActionRegistrationService();
 
         initStreamHandlers(config);
+        initActionMappings(registrationService);
+    }
+
+    private void initActionMappings(ActionRegistrationService registrationService) {
+        this.actionMappings = new ActionMappings(registrationService);
+        initSwagger(actionMappings);
     }
 
     @Override

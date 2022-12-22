@@ -4,8 +4,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import soya.framework.action.ActionContext;
 import soya.framework.action.dispatch.DispatchScheduler;
-import soya.framework.action.dispatch.DynaActionRegistry;
+import soya.framework.action.dispatch.DynaDispatchActionRegistry;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
 
@@ -19,8 +20,13 @@ public class ServerConfiguration {
     private static String HEARTBEAT_EVENT_ADDRESS = "timer://heartbeat";
 
     @Bean
-    DynaActionRegistry dynaActionRegistry() {
-        return new DynaActionRegistry();
+    DynaDispatchActionRegistry dynaActionRegistry(ActionContext actionContext) {
+        DynaDispatchActionRegistry registry =  new DynaDispatchActionRegistry(DynaDispatchActionRegistry.NAME);
+
+        System.out.println("---------------------- TODO: load DynaDispatchAction Classes!");
+
+        actionContext.getActionRegistrationService().register(registry);
+        return registry;
     }
 
     @Bean
