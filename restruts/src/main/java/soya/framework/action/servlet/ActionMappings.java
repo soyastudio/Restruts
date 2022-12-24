@@ -9,12 +9,8 @@ import java.util.*;
 public class ActionMappings {
     public static String ACTION_MAPPINGS_ATTRIBUTE = "soya.framework.action.ActionMappings";
 
-    private long lastUpdateTime;
-
     private Map<String, DomainMapping> domains = new HashMap<>();
     private Set<ActionMapping> actions = new HashSet<>();
-
-    private Set<ActionRegistry> registries = new HashSet<>();
 
     public ActionMappings(ActionRegistrationService registrationService) {
 
@@ -45,16 +41,6 @@ public class ActionMappings {
             }
 
         }
-
-        touch();
-    }
-
-    public long getLastUpdateTime() {
-        return lastUpdateTime;
-    }
-
-    public void register(ActionRegistry registry) {
-        registries.add(registry);
     }
 
     public List<DomainMapping> domains() {
@@ -73,13 +59,10 @@ public class ActionMappings {
         String title = token;
         String description = token;
         addDomain(name, path, title, description);
-
-        touch();
     }
 
     public void addDomain(String name, String path, String title, String description) {
         domains.put(name, new DomainMapping(name, path, title, description));
-        touch();
     }
 
     public boolean containsDomain(String domainName) {
@@ -98,13 +81,7 @@ public class ActionMappings {
         domainMapping.add(mapping);
         actions.add(mapping);
 
-        touch();
-
         return mapping;
-    }
-
-    public synchronized void touch() {
-        this.lastUpdateTime = System.currentTimeMillis();
     }
 
     public ActionMapping getActionMapping(HttpServletRequest request) {

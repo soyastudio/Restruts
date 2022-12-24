@@ -25,6 +25,7 @@ public class ActionServlet extends HttpServlet {
 
     private ActionMappings actionMappings;
     private Swagger swagger;
+    private long lastUpdatedTime;
 
     private Map<String, StreamWriter> readers = new HashMap<>();
     private Map<String, StreamWriter> writers = new HashMap<>();
@@ -37,19 +38,24 @@ public class ActionServlet extends HttpServlet {
         this.registrationService = ActionContext.getInstance().getActionRegistrationService();
 
         initStreamHandlers(config);
+
         initActionMappings(registrationService);
     }
 
     private void initActionMappings(ActionRegistrationService registrationService) {
         this.actionMappings = new ActionMappings(registrationService);
         initSwagger(actionMappings);
+
+        this.lastUpdatedTime = System.currentTimeMillis();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getPathInfo().equals("/swagger.json")) {
-            if(actionMappings.getLastUpdateTime() > swagger.getCreatedTime()) {
-                initSwagger(actionMappings);
+
+            if(registrationService.refresh() > lastUpdatedTime) {
+                System.out.println("================= updated...");
+                initActionMappings(registrationService);
             }
 
             PrintWriter writer = resp.getWriter();

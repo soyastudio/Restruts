@@ -349,6 +349,7 @@ public final class ActionClass implements Serializable {
     }
 
     private static final class Registry implements ActionRegistry, ActionFactory {
+        private static final String ID = "ACTION_CLASS_REGISTRY";
         private long lastUpdatedTime;
 
         private Registry() {
@@ -357,7 +358,7 @@ public final class ActionClass implements Serializable {
 
         @Override
         public String id() {
-            return null;
+            return ID;
         }
 
         @Override

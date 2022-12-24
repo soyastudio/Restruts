@@ -11,6 +11,7 @@ public class ActionRegistrationService {
 
     private Registration defaultRegistration;
     private Map<String, Registration> registrations = new ConcurrentHashMap<>();
+    private final AtomicLong  lastUpdatedTime;
 
     ActionRegistrationService(Set<String> scanPackages) {
 
@@ -40,6 +41,14 @@ public class ActionRegistrationService {
         });
 
         this.defaultRegistration = new Registration(ActionClass.registry());
+        this.lastUpdatedTime = new AtomicLong(System.currentTimeMillis());
+
+        /*new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("========================== refresh registration");
+            }
+        }, 5000l, 5000l);*/
     }
 
     public static ActionRegistrationService getInstance() {
@@ -47,40 +56,50 @@ public class ActionRegistrationService {
     }
 
     public synchronized long lastUpdatedTime() {
-        AtomicLong timestamp = new AtomicLong(defaultRegistration.registry.lastUpdatedTime());
-        registrations.values().forEach(e -> {
-            timestamp.set(Math.max(timestamp.get(), e.registry.lastUpdatedTime()));
-        });
-
-        return timestamp.get();
+        return lastUpdatedTime.get();
     }
 
-    public synchronized boolean containsDomain(String name) {
+    public long refresh() {
+        registrations.entrySet().forEach(e -> {
+            Registration registration = e.getValue();
+            if(registration.changed()) {
+                registration.refresh();
+                lastUpdatedTime.set(registration.getRegisterTime());
+
+            } else if(lastUpdatedTime.get() < registration.registerTime) {
+                lastUpdatedTime.set(registration.registerTime);
+            }
+        });
+
+        return lastUpdatedTime.get();
+    }
+
+    public synchronized String containsDomain(String name) {
         if(defaultRegistration.containsDomain(name)) {
-            return true;
+            return defaultRegistration.registry.id();
         }
 
         for(Registration registration: registrations.values()) {
             if(registration.containsDomain(name)) {
-                return true;
+                return registration.registry.id();
             }
         }
 
-        return false;
+        return null;
     }
 
-    public synchronized boolean containsAction(ActionName actionName) {
+    public synchronized String containsAction(ActionName actionName) {
         if(defaultRegistration.containsAction(actionName)) {
-            return true;
+            return defaultRegistration.registry.id();
         }
 
         for(Registration registration: registrations.values()) {
             if(registration.containsAction(actionName)) {
-                return true;
+                return registration.registry.id();
             }
         }
 
-        return false;
+        return null;
     }
 
     public synchronized ActionBean create(ActionName actionName) {
@@ -95,26 +114,6 @@ public class ActionRegistrationService {
         }
 
         throw new IllegalArgumentException("Cannot find action with name: " + actionName);
-    }
-
-    public synchronized URI find(ActionName actionName) {
-        if (defaultRegistration.actionDescription(actionName) != null) {
-            return URI.create(actionName.toString());
-        }
-
-        for (Map.Entry<String, Registration> entry : registrations.entrySet()) {
-            if (entry.getValue().actionDescription(actionName) != null) {
-                return URI.create(
-                        new StringBuilder(actionName.getDomain())
-                                .append("://")
-                                .append(entry.getKey())
-                                .append("@")
-                                .append(actionName.getName())
-                                .toString());
-            }
-        }
-
-        return null;
     }
 
     // ------------------- Default Registry:
@@ -138,11 +137,13 @@ public class ActionRegistrationService {
     public synchronized void register(ActionRegistry registry) {
         Registration registration = new Registration(registry);
         registrations.put(registry.id(), registration);
+        lastUpdatedTime.set(registration.registerTime);
     }
 
     public synchronized void unregister(String registryId) {
         if (registrations.containsKey(registryId)) {
             registrations.remove(registryId);
+            lastUpdatedTime.set(System.currentTimeMillis());
         }
     }
 
@@ -189,38 +190,47 @@ public class ActionRegistrationService {
 
         private Map<String, ActionDomain> domains = new LinkedHashMap<>();
         private Map<ActionName, ActionDescription> actions = new LinkedHashMap<>();
+        private long registerTime;
 
         private Registration(ActionRegistry registry) {
             this.registry = registry;
-            refresh(registry);
+            refresh();
 
         }
 
-        public boolean containsDomain(String name) {
+        private long getRegisterTime() {
+            return registerTime;
+        }
+
+        private boolean containsDomain(String name) {
             return domains.containsKey(name);
         }
 
-        public ActionDomain[] domains() {
+        private ActionDomain[] domains() {
             return domains.values().toArray(new ActionDomain[domains.size()]);
         }
 
-        public ActionDomain domain(String name) {
+        private ActionDomain domain(String name) {
             return domains.get(name);
         }
 
-        public boolean containsAction(ActionName actionName) {
+        private boolean containsAction(ActionName actionName) {
             return actions.containsKey(actionName);
         }
 
-        public ActionName[] actions() {
+        private ActionName[] actions() {
             return actions.keySet().toArray(new ActionName[actions.size()]);
         }
 
-        public ActionDescription actionDescription(ActionName actionName) {
+        private ActionDescription actionDescription(ActionName actionName) {
             return actions.get(actionName);
         }
 
-        public void refresh(ActionRegistry registry) {
+        private boolean changed() {
+            return registry.lastUpdatedTime() > registerTime;
+        }
+
+        private void refresh() {
             this.domains.clear();
             List<ActionDomain> domainList = new ArrayList<>(registry.domains());
             Collections.sort(domainList);
@@ -234,6 +244,8 @@ public class ActionRegistrationService {
             actionList.forEach(e -> {
                 actions.put(e.getActionName(), e);
             });
+
+            this.registerTime = System.currentTimeMillis();
         }
     }
 }

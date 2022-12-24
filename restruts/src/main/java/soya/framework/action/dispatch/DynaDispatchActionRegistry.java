@@ -16,7 +16,7 @@ public class DynaDispatchActionRegistry implements ActionRegistry, ActionFactory
 
     public DynaDispatchActionRegistry(String id) {
         this.id = id;
-        this.lastUpdatedTime = System.currentTimeMillis();
+        touch();
 
     }
 
@@ -67,15 +67,17 @@ public class DynaDispatchActionRegistry implements ActionRegistry, ActionFactory
     public ActionBean create(ActionName actionName) {
         if(actionClasses.containsKey(actionName)) {
             ActionCallable action =  actionClasses.get(actionName).newInstance();
-
-
         }
 
         throw new IllegalArgumentException("Cannot find action class with name: " + actionName);
     }
 
     public boolean addDomain(ActionDomain domain) {
-        return domains.add(domain);
+        boolean boo = domains.add(domain);
+        if(boo) {
+            touch();
+        }
+        return boo;
     }
 
     public void create(ActionName actionName, String dispatch) {
@@ -84,10 +86,10 @@ public class DynaDispatchActionRegistry implements ActionRegistry, ActionFactory
         }
 
         actionClasses.put(actionName, new DynaDispatchActionClass(actionName, dispatch));
-
+        touch();
     }
 
-    protected void refresh() {
-
+    protected void touch() {
+        this.lastUpdatedTime = System.currentTimeMillis();
     }
 }

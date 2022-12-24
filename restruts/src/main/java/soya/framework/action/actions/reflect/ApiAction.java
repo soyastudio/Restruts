@@ -15,21 +15,21 @@ public abstract class ApiAction extends Action<String> {
     protected void render(ActionClass actionClass, CodeBuilder builder) {
 
         Class<? extends ActionCallable> cls = actionClass.getActionType();
-        ActionDefinition operation = cls.getAnnotation(ActionDefinition.class);
+        ActionDefinition desc = cls.getAnnotation(ActionDefinition.class);
 
-        ActionDomain domain = registrationService().domain(operation.domain());
+        ActionDomain domain = registrationService().domain(desc.domain());
         String domainPath = domain.getPath();
 
-        builder.append("## ACTION: ").appendLine(operation.displayName().isEmpty() ? operation.name() : operation.displayName());
-        builder.appendLine(URIUtils.merge(operation.description(), "\n"));
+        builder.append("## ACTION: ").appendLine(desc.displayName().isEmpty() ? desc.name() : desc.displayName());
+        builder.appendLine(URIUtils.merge(desc.description(), "\n"));
 
         builder.appendLine("### 1. Action Definition");
         builder.append("- class: ").appendLine(actionClass.getActionType().getName());
-        builder.append("- domain: ").appendLine(operation.domain());
-        builder.append("- name: ").appendLine(operation.name());
-        builder.append("- path: ").appendLine(domainPath + operation.path());
-        builder.append("- http method: ").appendLine(operation.method().name());
-        builder.append("- produce: ").appendLine(operation.produces()[0]);
+        builder.append("- domain: ").appendLine(desc.domain());
+        builder.append("- name: ").appendLine(desc.name());
+        builder.append("- path: ").appendLine(domainPath + desc.path());
+        builder.append("- http method: ").appendLine(desc.method().name());
+        builder.append("- produce: ").appendLine(desc.produces()[0]);
         builder.appendLine();
 
         builder.appendLine("### 2. Action Properties");
@@ -42,11 +42,11 @@ public abstract class ApiAction extends Action<String> {
                 builder.append("- ").appendLine(field.getName());
                 if (field.getAnnotation(ActionProperty.class) != null) {
                     ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
-                    builder.append("-- Description: ").appendLine(URIUtils.merge(actionProperty.description(), "\n"));
                     builder.append("-- Property Type: ").appendLine(field.getType().getName());
-                    builder.append("-- HTTP Input Type: ").appendLine(actionProperty.parameterType().name());
+                    builder.append("-- Parameter Type: ").appendLine(actionProperty.parameterType().name());
                     builder.append("-- Required: ").appendLine("" + actionProperty.required());
                     builder.append("-- Default Value: ").appendLine(actionProperty.defaultValue().isEmpty() ? "" : actionProperty.defaultValue());
+                    builder.appendLine("-- Description: ");
 
                 }
 
@@ -77,7 +77,7 @@ public abstract class ApiAction extends Action<String> {
 
         builder.appendLine("### 4. Commandline");
         builder.appendLine("```");
-        builder.append(operation.domain()).append("://").append(operation.name());
+        builder.append(desc.domain()).append("://").append(desc.name());
         for (Field field : fields) {
             if (field.getAnnotation(ActionProperty.class) != null) {
                 ActionProperty actionProperty = field.getAnnotation(ActionProperty.class);
