@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import soya.framework.action.ActionContext;
 import soya.framework.action.dispatch.DispatchScheduler;
-import soya.framework.action.dispatch.DynaDispatchActionRegistry;
+import soya.framework.action.dispatch.DynaActionDispatchActionRegistry;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
 
@@ -20,8 +20,8 @@ public class ServerConfiguration {
     private static String HEARTBEAT_EVENT_ADDRESS = "timer://heartbeat";
 
     @Bean
-    DynaDispatchActionRegistry dynaActionRegistry(ActionContext actionContext) {
-        DynaDispatchActionRegistry registry =  new DynaDispatchActionRegistry(DynaDispatchActionRegistry.NAME);
+    DynaActionDispatchActionRegistry dynaActionRegistry(ActionContext actionContext) {
+        DynaActionDispatchActionRegistry registry =  new DynaActionDispatchActionRegistry(DynaActionDispatchActionRegistry.NAME);
 
         System.out.println("---------------------- TODO: load DynaDispatchAction Classes!");
 

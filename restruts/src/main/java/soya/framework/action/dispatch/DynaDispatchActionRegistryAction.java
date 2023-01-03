@@ -6,5 +6,5 @@ import soya.framework.action.WiredService;
 public abstract class DynaDispatchActionRegistryAction<T> extends Action<T> {
 
     @WiredService
-    protected DynaDispatchActionRegistry registry;
+    protected DynaActionDispatchActionRegistry registry;
 }

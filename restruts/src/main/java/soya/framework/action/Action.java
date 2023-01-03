@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.util.logging.Logger;
 
 public abstract class Action<T> implements ActionCallable {
+    public ActionName actionName() {
+        return getActionClass().getActionName();
+    }
 
     @Override
     public ActionResult call() {
@@ -17,7 +20,7 @@ public abstract class Action<T> implements ActionCallable {
             prepare();
 
             T t = execute();
-            ActionResult result = getActionClass().createResult(this, t);
+            ActionResult result = ActionResults.create(this, t);
 
             logger().fine("executed successfully.");
             return result;
@@ -30,7 +33,7 @@ public abstract class Action<T> implements ActionCallable {
                     .append("]")
                     .toString());
 
-            return getActionClass().createResult(this, e);
+            return ActionResults.create(this, e);
         }
     }
 

@@ -14,10 +14,6 @@ public final class ActionClass implements Serializable {
 
     private static Registry registry = new Registry();
 
-    private static Map<ActionName, AtomicLong> COUNTS = new ConcurrentHashMap<>();
-    private static final AtomicLong TOTAL_ACTION_COUNT = new AtomicLong();
-    // private static final AtomicLong TOTAL_PRIMITIVE_ACTION_COUNT = new AtomicLong();
-
     private final transient Class<? extends ActionCallable> actionType;
     private transient List<Field> wiredFields = new ArrayList<>();
 
@@ -33,9 +29,6 @@ public final class ActionClass implements Serializable {
         Objects.requireNonNull(mapping, "Class is not annotated as 'OperationMapping': " + actionType.getName());
 
         ActionName actionName = ActionName.create(mapping.domain(), mapping.name());
-        if (COUNTS.containsKey(actionName)) {
-            throw new IllegalArgumentException("Action name '" + actionName + "' already exists.");
-        }
 
         this.actionName = actionName;
         this.actionType = actionType;
@@ -60,7 +53,6 @@ public final class ActionClass implements Serializable {
         // ------------
         ACTION_CLASSES.put(actionName, this);
         ACTION_TYPES.put(actionType, this);
-        COUNTS.put(actionName, new AtomicLong());
 
     }
 
@@ -156,32 +148,6 @@ public final class ActionClass implements Serializable {
         }
     }
 
-    ActionResult createResult(ActionCallable action, Object result) {
-        ActionClass actionClass = ACTION_TYPES.get(action.getClass());
-
-        TOTAL_ACTION_COUNT.getAndIncrement();
-
-        Map<String, Object> params = new LinkedHashMap<>();
-        for (Field field : actionClass.getActionFields()) {
-            field.setAccessible(true);
-            Object fieldValue = null;
-            try {
-                fieldValue = field.get(action);
-
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-
-            if (fieldValue != null) {
-                params.put(field.getName(), fieldValue);
-            }
-        }
-
-        return (result != null && result instanceof Throwable) ? new FailureResult(actionClass.getActionName(), COUNTS.get(actionName).getAndIncrement(), params, (Throwable) result)
-                : new SuccessResult(actionClass.getActionName(), COUNTS.get(actionName).getAndIncrement(), params, result);
-
-    }
-
     private Field[] findActionFields() {
         List<Field> fields = new ArrayList<>();
         Set<String> fieldNames = new HashSet<>();
@@ -215,16 +181,6 @@ public final class ActionClass implements Serializable {
         return registry;
     }
 
-    public static long totalExecutedActionCount() {
-        return TOTAL_ACTION_COUNT.get();
-    }
-
-    static long actionCount(ActionName actionName) {
-        AtomicLong count = COUNTS.get(actionName);
-        Objects.requireNonNull(count, "Action '" + actionName + "' is not defined.");
-        return count.get();
-    }
-
     public static ActionDomain createActionDomain(Class<?> cls) {
         Domain domain = cls.getAnnotation(Domain.class);
         if(domain == null) {
@@ -252,10 +208,6 @@ public final class ActionClass implements Serializable {
         return ACTION_TYPES.get(actionType);
     }
 
-    public static long getExecutedActionCount(ActionName actionName) {
-        return ActionClass.actionCount(actionName);
-    }
-
     private final class ParameterFieldComparator implements Comparator<Field> {
 
         @Override
@@ -277,74 +229,6 @@ public final class ActionClass implements Serializable {
             }
 
             return o1.getName().compareTo(o2.getName());
-        }
-    }
-
-    private static final class SuccessResult implements ActionResult {
-
-        private final ActionName actionName;
-        private final long timestamp;
-        private final long sequence;
-
-        private final Map<String, Object> parameters;
-        private final Object value;
-
-        private SuccessResult(ActionName actionName, long sequence, Map<String, Object> parameters, Object value) {
-            this.timestamp = System.currentTimeMillis();
-            this.actionName = actionName;
-            this.sequence = sequence;
-            this.parameters = parameters;
-            this.value = value;
-
-        }
-
-        public ActionName actionName() {
-            return actionName;
-        }
-
-        public Object get() {
-            return value;
-        }
-
-        public boolean success() {
-            return true;
-        }
-
-        public boolean empty() {
-            return value == null;
-        }
-    }
-
-    private static final class FailureResult implements ActionResult {
-
-        private final ActionName actionName;
-        private final long timestamp;
-        private final long sequence;
-
-        private final Map<String, Object> parameters;
-        private final Throwable exception;
-
-        private FailureResult(ActionName actionName, long sequence, Map<String, Object> parameters, Throwable exception) {
-            this.actionName = actionName;
-            this.timestamp = System.currentTimeMillis();
-            this.sequence = sequence;
-            this.parameters = parameters;
-            this.exception = exception;
-        }
-
-        @Override
-        public ActionName actionName() {
-            return actionName;
-        }
-
-        @Override
-        public Throwable get() {
-            return exception;
-        }
-
-        @Override
-        public boolean success() {
-            return false;
         }
     }
 

@@ -10,9 +10,17 @@ public final class ActionBean {
     private final ActionCallable action;
     private final ActionDescription actionDescription;
 
-    public ActionBean(ActionCallable action, ActionDescription desc) {
+    ActionBean(ActionCallable action, ActionDescription desc) {
         this.action = action;
         this.actionDescription = desc;
+    }
+
+    public ActionName getActionName() {
+        return actionDescription.getActionName();
+    }
+
+    public ActionDescription getActionDescription() {
+        return actionDescription;
     }
 
     public ActionCallable getAction() {
@@ -43,8 +51,8 @@ public final class ActionBean {
                 throw new RuntimeException(e);
             }
         }
-
     }
+
 
 
 }

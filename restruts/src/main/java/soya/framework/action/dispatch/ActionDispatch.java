@@ -12,17 +12,21 @@ import java.util.Map;
 
 public final class ActionDispatch {
 
-    private final ActionName actionName;
+    private final ActionBean actionBean;
     private final Map<String, Assignment> assignments;
     private final String[] parameterNames;
     private final String fragment;
 
     private ActionDispatch(ActionName actionName, Map<String, Assignment> assignments, String fragment) {
-        this.actionName = actionName;
+        this.actionBean = ActionContext.getInstance().getActionRegistrationService().create(actionName);
         this.assignments = assignments;
 
         List<String> params = new ArrayList<>();
         assignments.entrySet().forEach(e -> {
+            if(actionBean.getActionDescription().getActionPropertyDescription(e.getKey()) == null) {
+                throw new IllegalArgumentException("Property '" + e.getKey() + "' does not exist for action '" + actionBean.getActionName() + "'.");
+            }
+
             if (e.getValue().getAssignmentType().equals(AssignmentType.PARAMETER)) {
                 params.add(e.getValue().getExpression());
             }
@@ -33,7 +37,7 @@ public final class ActionDispatch {
     }
 
     public ActionName getActionName() {
-        return actionName;
+        return actionBean.getActionName();
     }
 
     public String[] getParameterNames() {
@@ -49,7 +53,7 @@ public final class ActionDispatch {
     }
 
     public String toURI() {
-        StringBuilder builder = new StringBuilder(actionName.toString());
+        StringBuilder builder = new StringBuilder(actionBean.getActionName().toString());
         if (assignments.size() > 0) {
             builder.append("?");
             assignments.entrySet().forEach(e -> {
@@ -65,22 +69,19 @@ public final class ActionDispatch {
     }
 
     public ActionResult dispatch(Object context, AssignmentEvaluator evaluator) throws ActionDispatchException {
-        ActionRegistrationService actionRegistrationService = ActionContext.getInstance().getActionRegistrationService();
-
-        ActionBean bean = actionRegistrationService.create(actionName);
-        for (String propName : bean.getPropertyNames()) {
+        for (String propName : actionBean.getPropertyNames()) {
             Assignment assignment = getAssignment(propName);
             if (assignment == null) {
                 assignment = new Assignment(AssignmentType.PARAMETER.toString(propName));
             }
 
-            Object value = evaluator.evaluate(assignment, context, bean.getPropertyType(propName));
+            Object value = evaluator.evaluate(assignment, context, actionBean.getPropertyType(propName));
             if (value != null) {
-                bean.set(propName, value);
+                actionBean.set(propName, value);
             }
         }
 
-        ActionResult actionResult = bean.getAction().call();
+        ActionResult actionResult = actionBean.getAction().call();
 
         if (fragment != null) {
             actionResult = Fragment.process(actionResult, fragment);

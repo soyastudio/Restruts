@@ -1,5 +1,7 @@
 package soya.framework.action;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import soya.framework.action.actions.reflect.EchoAction;
 import soya.framework.commons.util.URIUtils;
 
@@ -184,11 +186,15 @@ public final class ActionExecutor {
 
         //Toolkit.getDefaultToolkit().beep();
 
+        String msg = "{'username': 'wenqun', 'password': '123'}";
+
         Integer v = 123;
+        Model model = new Gson().fromJson("{}", Model.class);
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(model));
 
         System.out.println((v instanceof Number));
 
-        ActionContext.builder().create();
+        //ActionContext.builder().create();
 
         Object result = ActionExecutor
                 .executor(EchoAction.class)
@@ -204,5 +210,15 @@ public final class ActionExecutor {
 
         System.exit(0);
 
+    }
+
+    static class Model {
+        private final String username;
+        private final String password;
+
+        private Model(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
     }
 }

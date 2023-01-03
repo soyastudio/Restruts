@@ -2,6 +2,7 @@ package soya.framework.action;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Parameter;
 
 public final class ActionPropertyDescription implements Comparable<ActionPropertyDescription>, Serializable {
 

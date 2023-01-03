@@ -2,7 +2,6 @@ package soya.framework.action;
 
 import org.reflections.Reflections;
 
-import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -11,7 +10,7 @@ public class ActionRegistrationService {
 
     private Registration defaultRegistration;
     private Map<String, Registration> registrations = new ConcurrentHashMap<>();
-    private final AtomicLong  lastUpdatedTime;
+    private final AtomicLong lastUpdatedTime;
 
     ActionRegistrationService(Set<String> scanPackages) {
 
@@ -62,11 +61,11 @@ public class ActionRegistrationService {
     public long refresh() {
         registrations.entrySet().forEach(e -> {
             Registration registration = e.getValue();
-            if(registration.changed()) {
+            if (registration.changed()) {
                 registration.refresh();
                 lastUpdatedTime.set(registration.getRegisterTime());
 
-            } else if(lastUpdatedTime.get() < registration.registerTime) {
+            } else if (lastUpdatedTime.get() < registration.registerTime) {
                 lastUpdatedTime.set(registration.registerTime);
             }
         });
@@ -75,12 +74,12 @@ public class ActionRegistrationService {
     }
 
     public synchronized String containsDomain(String name) {
-        if(defaultRegistration.containsDomain(name)) {
+        if (defaultRegistration.containsDomain(name)) {
             return defaultRegistration.registry.id();
         }
 
-        for(Registration registration: registrations.values()) {
-            if(registration.containsDomain(name)) {
+        for (Registration registration : registrations.values()) {
+            if (registration.containsDomain(name)) {
                 return registration.registry.id();
             }
         }
@@ -89,12 +88,12 @@ public class ActionRegistrationService {
     }
 
     public synchronized String containsAction(ActionName actionName) {
-        if(defaultRegistration.containsAction(actionName)) {
+        if (defaultRegistration.containsAction(actionName)) {
             return defaultRegistration.registry.id();
         }
 
-        for(Registration registration: registrations.values()) {
-            if(registration.containsAction(actionName)) {
+        for (Registration registration : registrations.values()) {
+            if (registration.containsAction(actionName)) {
                 return registration.registry.id();
             }
         }
@@ -103,12 +102,12 @@ public class ActionRegistrationService {
     }
 
     public synchronized ActionBean create(ActionName actionName) {
-        if(defaultRegistration.containsAction(actionName)) {
+        if (defaultRegistration.containsAction(actionName)) {
             return defaultRegistration.registry.actionFactory().create(actionName);
         }
 
-        for(Registration registration : registrations.values()) {
-            if(registration.containsAction(actionName)) {
+        for (Registration registration : registrations.values()) {
+            if (registration.containsAction(actionName)) {
                 return registration.registry.actionFactory().create(actionName);
             }
         }
