@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <version>1.0-SNAPSHOT</version>
-    <groupId>soya.framework.restruts</groupId>
+    <groupId>soya.framework</groupId>
     <artifactId>restruts-starter</artifactId>
 
     <properties>
@@ -37,7 +37,7 @@
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts</artifactId>
             <version>${project.version}</version>
         </dependency>

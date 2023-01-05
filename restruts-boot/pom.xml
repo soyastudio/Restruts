@@ -57,55 +57,55 @@
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-about</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-ant</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-quartz</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-cache</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-mustache</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-document</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-kafka</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-azure</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-workshop</artifactId>
             <version>${project.version}</version>
         </dependency>
