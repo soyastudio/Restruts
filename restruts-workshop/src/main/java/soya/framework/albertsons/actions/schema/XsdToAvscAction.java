@@ -7,7 +7,7 @@ import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionProperty;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.document.actions.avro.XsdToAvsc;
-import soya.framework.document.actions.xmlbeans.xs.XmlBeansUtils;
+import soya.framework.xmlbeans.XmlBeansUtils;
 
 import java.io.File;
 

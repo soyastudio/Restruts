@@ -3,7 +3,7 @@ package soya.framework.document.actions.avro;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.xmlbeans.*;
-import soya.framework.document.actions.xmlbeans.xs.XmlBeansUtils;
+import soya.framework.xmlbeans.XmlBeansUtils;
 
 import java.io.File;
 import java.io.IOException;

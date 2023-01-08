@@ -1,5 +1,6 @@
 package soya.framework.restruts.configuration;
 
+import org.reflections.Reflections;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,10 +8,13 @@ import org.springframework.context.event.EventListener;
 import soya.framework.action.ActionContext;
 import soya.framework.action.dispatch.DispatchScheduler;
 import soya.framework.action.dispatch.DynaActionDispatchActionRegistry;
+import soya.framework.action.dispatch.proxy.ActionProxyFactory;
+import soya.framework.action.dispatch.proxy.ActionProxyPattern;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
 
 import javax.annotation.PostConstruct;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -32,6 +36,21 @@ public class ServerConfiguration {
     @Bean
     ActionEventBus actionEventBus() {
         return new DefaultActionEventBus();
+    }
+
+    @Bean
+    ActionProxyFactory actionProxyFactory() {
+        ActionProxyFactory proxyFactory = new ActionProxyFactory();
+
+        Reflections reflections = new Reflections();
+        Set<Class<?>> proxyInterfaces = reflections.getTypesAnnotatedWith(ActionProxyPattern.class);
+        proxyInterfaces.forEach(e -> {
+            if (e.isInterface()) {
+                proxyFactory.create(e);
+            }
+        });
+
+        return proxyFactory;
     }
 
 

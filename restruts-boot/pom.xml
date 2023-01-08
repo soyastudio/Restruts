@@ -51,8 +51,14 @@
         </dependency>
 
         <dependency>
-            <groupId>soya.framework.restruts</groupId>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>soya.framework</groupId>
+            <artifactId>restruts-dispatch</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -119,7 +125,7 @@
     </dependencies>
 
     <build>
-        <finalName>workshop</finalName>
+        <finalName>restruts</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

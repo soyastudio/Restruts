@@ -250,9 +250,12 @@
     </dependencyManagement>
 
     <modules>
+        <module>restruts-commons</module>
         <module>restruts</module>
-        <module>restruts-about</module>
         <module>restruts-starter</module>
+        <module>restruts-dispatch</module>
+
+        <module>restruts-about</module>
 
         <!-- command design pattern based -->
         <module>restruts-quartz</module>
@@ -271,8 +274,7 @@
         <module>restruts-workshop</module>
 
         <module>restruts-boot</module>
-        <module>restruts-csv</module>
-        <module>restruts-transform</module>
+        <module>albertsons</module>
     </modules>
 
 </project>

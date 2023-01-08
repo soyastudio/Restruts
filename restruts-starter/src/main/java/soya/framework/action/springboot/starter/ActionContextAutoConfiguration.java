@@ -1,6 +1,5 @@
 package soya.framework.action.springboot.starter;
 
-import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,19 +11,16 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
-import soya.framework.action.*;
-import soya.framework.action.dispatch.proxy.ActionProxyFactory;
-import soya.framework.action.dispatch.proxy.ActionProxyPattern;
+import soya.framework.action.ActionContext;
+import soya.framework.action.ServiceLocateException;
+import soya.framework.action.ServiceLocator;
 import soya.framework.action.mvc.*;
-import soya.framework.action.servlet.*;
+import soya.framework.action.servlet.ActionServlet;
 import soya.framework.commons.util.ReflectUtils;
 
-import javax.servlet.ServletContext;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.StreamSupport;
 
 @Configuration
@@ -110,21 +106,6 @@ public class ActionContextAutoConfiguration {
     }
 
     @Bean
-    ActionProxyFactory actionProxyFactory() {
-        ActionProxyFactory proxyFactory = new ActionProxyFactory();
-
-        Reflections reflections = new Reflections();
-        Set<Class<?>> proxyInterfaces = reflections.getTypesAnnotatedWith(ActionProxyPattern.class);
-        proxyInterfaces.forEach(e -> {
-            if (e.isInterface()) {
-                proxyFactory.create(e);
-            }
-        });
-
-        return proxyFactory;
-    }
-
-    @Bean
     ServletRegistrationBean actionServlet() {
 
         ServletRegistrationBean bean = new ServletRegistrationBean(new ActionServlet(),
@@ -138,9 +119,9 @@ public class ActionContextAutoConfiguration {
     MvcMappings mvcMappings() {
         MvcMappings mappings = new MvcMappings();
         ReflectUtils.scanForAnnotation(MvcDefinition.class).forEach(e -> {
-            if(MvcAction.class.isAssignableFrom(e)) {
+            if (MvcAction.class.isAssignableFrom(e)) {
                 MvcDefinition definition = e.getAnnotation(MvcDefinition.class);
-                for(MvcPath from: definition.from()) {
+                for (MvcPath from : definition.from()) {
 
                 }
             }

@@ -2,7 +2,7 @@ package soya.framework.albertsons.actions.schema;
 
 import soya.framework.action.*;
 import soya.framework.albertsons.actions.WorkshopAction;
-import soya.framework.document.actions.xmlbeans.XPathSchemaAction;
+import soya.framework.xmlbeans.XPathSchemaAction;
 
 @ActionDefinition(domain = "albertsons",
         name = "cmm-xpath-schema",

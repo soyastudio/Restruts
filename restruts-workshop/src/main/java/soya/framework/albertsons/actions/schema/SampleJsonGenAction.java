@@ -11,7 +11,7 @@ import soya.framework.action.MediaType;
 import soya.framework.albertsons.actions.WorkshopAction;
 import soya.framework.document.actions.avro.SampleAvroGenerator;
 import soya.framework.document.actions.avro.XsdToAvsc;
-import soya.framework.document.actions.xmlbeans.xs.XmlBeansUtils;
+import soya.framework.xmlbeans.XmlBeansUtils;
 
 import java.io.File;
 import java.util.Random;

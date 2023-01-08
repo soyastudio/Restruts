@@ -19,7 +19,19 @@
     <dependencies>
         <dependency>
             <groupId>soya.framework</groupId>
+            <artifactId>restruts-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>soya.framework</groupId>
+            <artifactId>restruts-dispatch</artifactId>
             <version>${project.version}</version>
         </dependency>
 
