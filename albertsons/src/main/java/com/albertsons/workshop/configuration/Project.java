@@ -20,4 +20,28 @@ public class Project {
         this.packageName = "com.albertsons." + name;
 
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSchemaFile() {
+        return schemaFile;
+    }
+
+    public String getMappingFile() {
+        return mappingFile;
+    }
+
+    public String getDefaultMappingSheet() {
+        return defaultMappingSheet;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
 }

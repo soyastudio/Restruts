@@ -9,7 +9,7 @@ import soya.framework.action.MediaType;
         path = "/project",
         method = ActionDefinition.HttpMethod.POST,
         produces = MediaType.APPLICATION_JSON)
-public class CreateProjectAction extends ProjectAction {
+public class ProjectCreateAction extends ProjectAction {
 
     @Override
     public String execute() throws Exception {

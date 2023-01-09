@@ -1,9 +1,7 @@
 package soya.framework.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.Charset;
 
 public class StreamUtils {
 
@@ -11,6 +9,20 @@ public class StreamUtils {
     private static final byte[] EMPTY_CONTENT = new byte[0];
 
     public StreamUtils() {
+    }
+
+    public static String read(File file) throws IOException {
+        InputStream inputStream = new FileInputStream(file);
+        byte[] bin = copyToByteArray(inputStream);
+        inputStream.close();
+        return new String(bin, Charset.defaultCharset());
+    }
+
+    public static void write(String contents, File file) throws IOException {
+        FileWriter writer = new FileWriter(file);
+        writer.write(contents);
+        writer.flush();
+        writer.close();
     }
 
     public static byte[] copyToByteArray(InputStream in) throws IOException {

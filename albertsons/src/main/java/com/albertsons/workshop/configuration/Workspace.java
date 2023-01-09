@@ -3,6 +3,7 @@ package com.albertsons.workshop.configuration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.IOUtils;
+import soya.framework.util.StreamUtils;
 
 import java.io.*;
 import java.util.Objects;
@@ -14,6 +15,14 @@ public class Workspace {
     public static final String HISTORY = "history";
     public static final String WORK = "work";
     public static final String DEPLOYMENT = "deployment";
+
+    public static final String MAPPING_FILE = "xpath-mappings.xlsx";
+    public static final String DEFAULT_MAPPING_SHEET = "Mappings";
+    public static final String[] MAPPING_COLUMNS = new String[]{"Target", "DataType", "Cardinality", "Mapping", "Source", "Version"};
+
+    public static final String XPATH_SCHEMA = "xpath-schema.properties";
+    public static final String XPATH_MAPPINGS = "xpath-mappings.properties";
+    public static final String XPATH_CONSTRUCT = "xpath-construct.properties";
 
     private File home;
     private File cmmHome;
@@ -62,25 +71,40 @@ public class Workspace {
 
         dir.mkdir();
 
+        // Documents
         File docDir = new File(dir, DOCUMENT);
         docDir.mkdir();
 
+        // Work
         File workDir = new File(dir, WORK);
         workDir.mkdir();
 
+        File xpathSchema = new File(workDir, XPATH_SCHEMA);
+        xpathSchema.createNewFile();
+
+        File xpathMappings = new File(workDir, XPATH_MAPPINGS);
+        xpathMappings.createNewFile();
+
+        File xpathConstruct = new File(workDir, XPATH_CONSTRUCT);
+        xpathConstruct.createNewFile();
+
+        // Deployments
         File deployDir = new File(dir, DEPLOYMENT);
         deployDir.mkdir();
 
+        // History
         File histDir = new File(dir, HISTORY);
         histDir.mkdir();
 
         Project project = new Project(name);
         File file = new File(dir, "project.json");
         file.createNewFile();
-        Writer writer = new FileWriter(file);
-        IOUtils.write(GSON.toJson(project), writer);
-        writer.flush();
-        writer.close();
+        StreamUtils.write(GSON.toJson(project), file);
+
+        File readme = new File(dir, "README.md");
+        readme.createNewFile();
+
+
 
         return project;
     }
