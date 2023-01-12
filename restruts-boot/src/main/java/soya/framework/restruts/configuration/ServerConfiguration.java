@@ -12,6 +12,7 @@ import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.action.dispatch.proxy.ActionProxyPattern;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
+import soya.framework.reflect.ClassPath;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
@@ -22,6 +23,18 @@ import java.util.concurrent.Executors;
 @Configuration
 public class ServerConfiguration {
     private static String HEARTBEAT_EVENT_ADDRESS = "timer://heartbeat";
+
+    @Bean
+    Set<String> classPath() {
+        long start = System.currentTimeMillis();
+        Set<String> set = ClassPath.scanForPaths(null);
+
+
+
+        System.out.println("+++++++++++++++++++  " + set.size() + " in " + (System.currentTimeMillis() - start));
+
+        return set;
+    }
 
     @Bean
     DynaActionDispatchActionRegistry dynaActionRegistry(ActionContext actionContext) {

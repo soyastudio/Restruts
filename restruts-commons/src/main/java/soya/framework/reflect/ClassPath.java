@@ -13,6 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ClassPath {
+
     private ClassPath() {
     }
 
@@ -23,14 +24,25 @@ public class ClassPath {
     public static Set<String> scanForPaths(String base) {
         Set<String> set = new LinkedHashSet<>();
         String[] paths = System.getProperty("java.class.path").split(";");
-        Arrays.stream(paths).forEach(e -> {
-            File file = new File(e);
-            if (file.isDirectory()) {
-                readFromDir(file, base, set);
-            } else if (e.endsWith(".jar")) {
-                readFromJar(new File(e), base, set);
+        if(paths.length == 1) {
+            String url = getURL(ClassPath.class).toString();
+            int index = url.indexOf('!');
+            if(index > 0) {
+
             }
-        });
+
+
+        } else {
+            Arrays.stream(paths).forEach(e -> {
+                File file = new File(e);
+                if (file.isDirectory()) {
+                    readFromDir(file, base, set);
+                } else if (e.endsWith(".jar")) {
+                    readFromJar(new File(e), base, set);
+                }
+            });
+
+        }
         return set;
     }
 

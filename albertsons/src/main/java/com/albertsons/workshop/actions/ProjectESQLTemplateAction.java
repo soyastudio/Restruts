@@ -1,24 +1,21 @@
 package com.albertsons.workshop.actions;
 
-import com.albertsons.workshop.configuration.Project;
 import com.albertsons.workshop.configuration.Workspace;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
 import soya.framework.action.MediaType;
-import soya.framework.bean.TreeNode;
 import soya.framework.poi.XlsxDynaClass;
 import soya.framework.xmlbeans.XmlSchemaTree;
-import soya.framework.xmlbeans.XsNode;
 
 import java.io.File;
 
 @ActionDefinition(domain = "workshop",
-        name = "project-esql-construct",
-        path = "/project/esql-construct",
-        method = ActionDefinition.HttpMethod.POST,
+        name = "project-esql-template",
+        path = "/project/esql-template",
+        method = ActionDefinition.HttpMethod.GET,
         produces = MediaType.TEXT_PLAIN)
-public class ProjectESQLGenAction extends ProjectAction {
+public class ProjectESQLTemplateAction extends ProjectAction {
     @ActionProperty(
             parameterType = ActionParameterType.HEADER_PARAM,
             displayOrder = 2

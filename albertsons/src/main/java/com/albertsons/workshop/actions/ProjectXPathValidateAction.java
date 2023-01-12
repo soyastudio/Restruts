@@ -47,13 +47,8 @@ public class ProjectXPathValidateAction extends ProjectAction {
                 .forEach(e -> {
                     if(e.get("Target") != null) {
                         String target = e.getAsString("Target");
-                        String rule = e.getAsString("Mapping");
-                        String source = e.getAsString("Source");
-
-                        if(!isEmpty(target) && !isEmpty(rule) && !isEmpty(source)) {
-                            if(!schemaTree.contains(target)) {
-                                builder.append(target).append("\n");
-                            }
+                        if(!schemaTree.contains(target)) {
+                            builder.append(target).append("\n");
                         }
 
                     }

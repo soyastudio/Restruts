@@ -1,13 +1,15 @@
 package com.albertsons.workshop.actions;
 
 import com.albertsons.workshop.configuration.Project;
+import com.google.common.base.CaseFormat;
 import soya.framework.bean.DynaBean;
 import soya.framework.bean.TreeNode;
 import soya.framework.commons.util.CodeBuilder;
 import soya.framework.xmlbeans.XmlSchemaTree;
 import soya.framework.xmlbeans.XsNode;
+import soya.framework.xmlbeans.XsUtils;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,27 @@ public abstract class Construct {
 
     private static String outputRootName;
     private static String outputRootVariable;
+
+    protected String variable;
+
+    protected String sourceVariable;
+    protected String sourceVariablePath;
+
+    public String getVariable() {
+        return variable;
+    }
+
+    public String getSourceVariable() {
+        return sourceVariable;
+    }
+
+    public void setSourceVariable(String sourceVariable) {
+        this.sourceVariable = sourceVariable;
+    }
+
+    public String getSourceVariablePath() {
+        return sourceVariablePath;
+    }
 
     public static void annotate(Project project, XmlSchemaTree tree, List<DynaBean> annotations) {
         ConstructContext context = new ConstructContext(project);
@@ -42,24 +65,145 @@ public abstract class Construct {
 
             }
         });
+
+        context.arrayMap.entrySet().forEach(e -> {
+            System.out.println(e.getKey());
+        });
     }
 
     private static void annotate(ConstructContext context, TreeNode<XsNode> node, String mapping, String source) {
-        node.annotate("construct", Construct.createAssignment(node, mapping, source));
+        if (node.getData().getNodeType().equals(XsNode.XsNodeType.Folder)) {
+            return;
+        }
 
+        Construct construct = Construct.createAssignment(node, mapping, source);
+        node.annotate("construct", construct);
 
         TreeNode<XsNode> parent = node.getParent();
         while (parent != null && parent.getAnnotation("construct") == null) {
             parent.annotate("construct", Construct.createComplexConstruct(parent, context));
-
             parent = parent.getParent();
+        }
+
+        // TODO:
+        String token = source;
+        if (token.endsWith("[*]")) {
+            token = token.substring(0, token.lastIndexOf("[*]"));
+        }
+
+        if (token.contains("[*]")) {
+            token = token.substring(0, token.lastIndexOf("[*]") + 3);
+            Array array = context.arrayMap.get(token);
+            if (array == null) {
+                TreeNode<XsNode> arrayParent = findArrayParent(node);
+                if (arrayParent == null) {
+                    throw new RuntimeException("Cannot find array parent for: " + node.getPath());
+                }
+
+                ComplexArrayConstruct arrayConstruct = (ComplexArrayConstruct) arrayParent.getAnnotation(CONSTRUCTION_NAMESPACE);
+                array = new Array(token, arrayParent);
+                arrayConstruct.arrays.put(token, array);
+                context.arrayMap.put(token, array);
+            }
+
         }
     }
 
-    public static String generateESQLTemplate(XmlSchemaTree tree, Project project) {
+    private static void annotate2(ConstructContext context, TreeNode<XsNode> node, String mapping, String source) {
+        Construct construct = Construct.createAssignment(node, mapping, source);
+        node.annotate("construct", construct);
 
-        String brokerSchema = project.getPackageName();
-        String module = project.getApplication() + "_Compute";
+        TreeNode<XsNode> parent = node.getParent();
+        while (parent != null && parent.getAnnotation("construct") == null) {
+            parent.annotate("construct", Construct.createComplexConstruct(parent, context));
+            parent = parent.getParent();
+        }
+
+        if (construct.sourceVariablePath != null) {
+            if (context.arrayMap.containsKey(construct.sourceVariablePath) && construct instanceof AssignmentConstruct) {
+                AssignmentConstruct assignment = (AssignmentConstruct) construct;
+                assignment.setSourceVariable(context.arrayMap.get(construct.sourceVariablePath).getSourceVariable());
+            } else if (!context.arrayMap.containsKey(construct.sourceVariablePath)) {
+                TreeNode<XsNode> arrayParent = findArrayParent(node);
+
+                if (arrayParent.getAnnotation(CONSTRUCTION_NAMESPACE) instanceof ComplexArrayConstruct) {
+                    AssignmentConstruct assignment = (AssignmentConstruct) construct;
+
+                    ComplexArrayConstruct arrayConstruct = (ComplexArrayConstruct) arrayParent.getAnnotation(CONSTRUCTION_NAMESPACE);
+
+                    String name = "ARR_" + CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, arrayConstruct.getVariable());
+                    String var = arrayConstruct.getVariable();
+                    if (arrayConstruct.arrays.size() > 1) {
+                        name = name + (arrayConstruct.arrays.size() - 1);
+                        var = var + (arrayConstruct.arrays.size() - 1);
+
+                    } else {
+                        name = name.substring(0, name.length() - 1);
+                    }
+
+                    String sourcePath = construct.sourceVariablePath;
+                    String sourceVariable = sourcePath.substring(0, sourcePath.lastIndexOf("[*]"));
+                    if (sourceVariable.contains(".")) {
+                        sourceVariable = sourceVariable.substring(sourceVariable.lastIndexOf('.') + 1);
+                    }
+
+                    sourceVariable = "_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, sourceVariable) + "_item";
+
+                    Array array = new Array(sourcePath, arrayParent);
+
+                    context.arrayMap.put(array.sourcePath, array);
+                    if (arrayConstruct instanceof ComplexArrayConstruct) {
+                        ComplexArrayConstruct cac = (ComplexArrayConstruct) arrayConstruct;
+                        cac.arrays.put(array.sourcePath, array);
+                    }
+
+                    String variable = context.arrayMap.get(assignment.sourceVariablePath).getSourceVariable();
+                    assignment.setSourceVariable(variable);
+
+                    String assign = assignment.getExpression();
+                    assign = context.arrayMap.get(assignment.sourceVariablePath).getSourceVariable() + assign.substring(assign.lastIndexOf("[*]") + 3);
+                }
+            }
+
+        }
+
+    }
+
+    private static TreeNode<XsNode> findArrayParent(TreeNode<XsNode> node) {
+        TreeNode<XsNode> parent = node.getParent();
+        while (parent != null && XsUtils.cardinality(parent.getData()).endsWith("-1")) {
+            parent = parent.getParent();
+        }
+
+        return parent;
+    }
+
+    public static Construct createAssignment(TreeNode<XsNode> node, String mapping, String source) {
+        String exp = source.trim();
+        if (node.getData().getMaxOccurs() != null && node.getData().getMaxOccurs().intValue() == 1) {
+            return new AssignmentConstruct(getAssignmentType(node, mapping, exp), exp);
+
+        } else {
+            return new SimpleArrayConstruct(source);
+        }
+    }
+
+    public static Construct createComplexConstruct(TreeNode<XsNode> node, ConstructContext context) {
+        XsNode xsNode = node.getData();
+        if (XsUtils.cardinality(xsNode).endsWith("-1")) {
+            return new ComplexTypeConstruct(node);
+
+        } else {
+            return new ComplexArrayConstruct(node);
+        }
+
+    }
+
+    public static String generateESQLTemplate(XmlSchemaTree tree) {
+
+        ConstructContext context = (ConstructContext) tree.getAnnotation(CONSTRUCTION_CONTEXT_NAMESPACE);
+        String brokerSchema = context.project.getPackageName();
+        String module = context.project.getApplication() + "_Compute";
 
         outputRootName = tree.root().getName();
         outputRootVariable = outputRootName + "_";
@@ -103,7 +247,7 @@ public abstract class Construct {
 
         //print node:
         tree.root().getChildren().forEach(e -> {
-            printNode(e, builder, 2);
+            printNode(context, e, builder, 2);
         });
 
         // closing
@@ -129,14 +273,14 @@ public abstract class Construct {
         builder.append("BEGIN").append("\n");
     }
 
-    private static void printNode(TreeNode<XsNode> node, CodeBuilder builder, int indent) {
+    private static void printNode(ConstructContext context, TreeNode<XsNode> node, CodeBuilder builder, int indent) {
         if (node.getAnnotation(CONSTRUCTION_NAMESPACE) != null) {
             Object construct = node.getAnnotation(CONSTRUCTION_NAMESPACE);
             if (construct instanceof ComplexTypeConstruct) {
-                printConstruction(node, builder, indent);
+                printConstruction(context, node, builder, indent);
 
             } else if (construct instanceof ComplexArrayConstruct) {
-                printComplexArray(node, builder, indent);
+                printComplexArray(context, node, builder, indent);
 
             } else if (construct instanceof SimpleArrayConstruct) {
                 printSimpleArray(node, builder, indent);
@@ -148,11 +292,10 @@ public abstract class Construct {
         }
     }
 
-    private static void printConstruction(TreeNode<XsNode> node, CodeBuilder builder, int indent) {
+    private static void printConstruction(ConstructContext context, TreeNode<XsNode> node, CodeBuilder builder, int indent) {
+        Construct construction = (Construct) node.getAnnotation(CONSTRUCTION_NAMESPACE);
+        Construct parent = (Construct) node.getParent().getAnnotation(CONSTRUCTION_NAMESPACE);
 
-        ComplexTypeConstruct construction = (ComplexTypeConstruct) node.getAnnotation(CONSTRUCTION_NAMESPACE);
-
-        ComplexTypeConstruct parent = (ComplexTypeConstruct) node.getParent().getAnnotation(CONSTRUCTION_NAMESPACE);
         String name = node.getName();
         if (namespace.equals(node.getData().getName().getNamespaceURI())) {
             name = "Abs:" + name;
@@ -174,44 +317,56 @@ public abstract class Construct {
                 .appendLine();
 
         node.getChildren().forEach(e -> {
-            printNode(e, builder, indent + 1);
+            printNode(context, e, builder, indent + 1);
         });
 
     }
 
-    private static void printComplexArray(TreeNode<XsNode> node, CodeBuilder builder, int indent) {
+    private static void printComplexArray(ConstructContext context, TreeNode<XsNode> node, CodeBuilder builder, int indent) {
         ComplexArrayConstruct construction = (ComplexArrayConstruct) node.getAnnotation(CONSTRUCTION_NAMESPACE);
+        if (construction.arrays.size() == 0) {
+            printConstruction(context, node, builder, indent);
 
-        Object parent = node.getParent().getAnnotation(CONSTRUCTION_NAMESPACE);
-        String parentVar = null;
-        if(parent instanceof ComplexTypeConstruct) {
-            parentVar = ((ComplexTypeConstruct) parent).getVariable();
         } else {
-            parentVar = ((ComplexArrayConstruct) parent).getVariable();
+            construction.arrays.values().forEach(e -> {
+                printArray(e, node, builder, indent);
+            });
         }
-        String name = node.getName();
-        if (namespace.equals(node.getData().getName().getNamespaceURI())) {
-            name = "Abs:" + name;
-        }
+    }
 
-        builder.append("-- ", indent).appendLine(node.getPath());
-        builder.append("DECLARE ", indent)
-                .append(construction.getVariable())
+    private static void printArray(Array array, TreeNode<XsNode> node, CodeBuilder builder, int indent) {
+        final String name = "Abs:" + node.getName();
+        Construct parent = (Construct) node.getParent().getAnnotation(CONSTRUCTION_NAMESPACE);
+        String arrayName = array.getName();
+        String item = array.getSourceVariable();
+
+        builder.append("-- LOOP ", indent).append(array.getSourcePath()).append(" TO ").append(node.getPath()).appendLine();
+        builder.append("DECLARE ", indent).append(item).append(" REFERENCE TO ").append(array.getSourcePath() + ".Item").appendLine(";");
+        builder.append(arrayName, indent).append(" : WHILE LASTMOVE(").append(item).appendLine(") DO").appendLine();
+
+        builder.append("-- ", indent + 1).appendLine(node.getPath());
+        builder.append("DECLARE ", indent + 1)
+                .append(node.getPath())
                 .append(" REFERENCE TO ")
-                .append(parentVar).appendLine(";");
+                .append(parent.getVariable()).appendLine(";");
 
-        builder.append("CREATE LASTCHILD OF ", indent)
-                .append(parentVar)
+        builder.append("CREATE LASTCHILD OF ", indent + 1)
+                .append(parent.getVariable())
                 .append(" AS ")
-                .append(construction.getVariable())
+                .append(parent.getVariable())
                 .append(" TYPE XMLNSC.Folder NAME '")
                 .append(name)
                 .appendLine("';")
                 .appendLine();
 
-        node.getChildren().forEach(e -> {
-            printNode(e, builder, indent + 1);
-        });
+
+        /*node.getChildren().forEach(e -> {
+            printNode(e, builder, indent + 2);
+        });*/
+
+        builder.append("MOVE ", indent).append(item).appendLine(" NEXTSIBLING;");
+        builder.append("END WHILE ", indent).append(arrayName).appendLine(";");
+        builder.appendLine("-- END LOOP", indent).appendLine();
     }
 
     private static void printSimpleArray(TreeNode<XsNode> node, CodeBuilder builder, int indent) {
@@ -220,7 +375,7 @@ public abstract class Construct {
 
     private static void printAssignment(TreeNode<XsNode> node, CodeBuilder builder, int indent) {
         AssignmentConstruct assignment = (AssignmentConstruct) node.getAnnotation(CONSTRUCTION_NAMESPACE);
-        ComplexTypeConstruct construction = (ComplexTypeConstruct) node.getParent().getAnnotation(CONSTRUCTION_NAMESPACE);
+        Construct parent = (Construct) node.getParent().getAnnotation(CONSTRUCTION_NAMESPACE);
 
         builder.append("-- ", indent).appendLine(node.getPath());
 
@@ -235,26 +390,11 @@ public abstract class Construct {
         }
 
         builder.append("SET ", indent)
-                .append(construction.getVariable()).append(".").append(type).append(name)
+                .append(parent.getVariable()).append(".").append(type).append(name)
                 .append(" = ")
                 .append(assign).appendLine(";")
                 .appendLine();
 
-    }
-
-    public static Construct createAssignment(TreeNode<XsNode> node, String mapping, String source) {
-        String exp = source.trim();
-        if (node.getData().getMaxOccurs() != null && node.getData().getMaxOccurs().intValue() == 1) {
-            return new AssignmentConstruct(getAssignmentType(node, mapping, exp), exp);
-
-        } else {
-            return new SimpleArrayConstruct();
-
-        }
-    }
-
-    public static Construct createComplexConstruct(TreeNode<XsNode> node, ConstructContext context) {
-        return new ComplexTypeConstruct(node);
     }
 
     private static AssignmentType getAssignmentType(TreeNode<XsNode> node, String mapping, String source) {
@@ -279,41 +419,52 @@ public abstract class Construct {
     }
 
     public static class ComplexTypeConstruct extends Construct {
-        private String variable;
-
         public ComplexTypeConstruct(TreeNode<XsNode> node) {
             this.variable = node.getName() + "_";
         }
 
-        public String getVariable() {
-            return variable;
-        }
-
         @Override
         public String toString() {
-            return "complex(" + variable +
+            return "COMPLEX(" + variable +
                     ")";
         }
     }
 
     public static class ComplexArrayConstruct extends Construct {
-        private String variable;
+        private Map<String, Array> arrays = new LinkedHashMap<>();
 
         public ComplexArrayConstruct(TreeNode<XsNode> node) {
             this.variable = node.getName() + "_";
         }
 
-        public String getVariable() {
-            return variable;
-        }
-
         @Override
         public String toString() {
-            return "array()";
+            if (arrays.size() == 0) {
+                return "ARRAY()";
+            } else {
+                StringBuilder builder = new StringBuilder();
+                arrays.values().forEach(e -> {
+                    builder.append(e);
+                });
+                return builder.toString();
+            }
         }
     }
 
     public static class SimpleArrayConstruct extends Construct {
+        private String sourcePath;
+        private String sourceVariable;
+
+        public SimpleArrayConstruct(String sourcePath) {
+            this.sourcePath = sourcePath;
+            String token = sourcePath.substring(0, sourcePath.length() - 3);
+
+            if (token.contains("[*]")) {
+                this.sourceVariable = token.substring(0, token.lastIndexOf("[*]")) + "[*]";
+                System.out.println("--------------- " + sourceVariable);
+            }
+        }
+
         @Override
         public String toString() {
             return "array()";
@@ -323,12 +474,22 @@ public abstract class Construct {
     public static class AssignmentConstruct extends Construct {
         private AssignmentType assignmentType;
         private String expression;
-        private String description;
 
         public AssignmentConstruct(AssignmentType assignmentType, String expression) {
             this.assignmentType = assignmentType;
+            this.expression = expression;
+
             if (AssignmentType.DIRECT.equals(assignmentType) && !expression.startsWith("$.")) {
-                this.expression = "$." + expression;
+                if (expression.contains("[*]")) {
+                    int index = expression.lastIndexOf("[*]");
+                    String token = expression.substring(0, +index);
+                    this.sourceVariablePath = token + "[*]";
+                    token = token.contains(".") ? token.substring(token.lastIndexOf('.') + 1) : token;
+
+                } else {
+                    this.expression = "$." + expression;
+
+                }
             } else {
                 this.expression = expression;
 
@@ -343,34 +504,103 @@ public abstract class Construct {
             return expression;
         }
 
-        public String getDescription() {
-            return description;
+        public String getAssignment() {
+            if (AssignmentType.UNKNOWN.equals(assignmentType)) {
+                return "???";
+
+            } else if (AssignmentType.DEFAULT.equals(assignmentType)) {
+                return expression;
+
+            } else {
+                if (sourceVariable != null) {
+                    System.out.println("================= " + sourceVariable + expression.substring(sourceVariablePath.length()));
+                    return sourceVariable + expression.substring(sourceVariablePath.length());
+                }
+
+                return expression;
+            }
         }
 
         @Override
         public String toString() {
-            StringBuilder builder = new StringBuilder();
-            builder.append("assign(");
-            if (assignmentType.equals(AssignmentType.DEFAULT)) {
-                builder.append("'").append(expression).append("'");
-            } else if (assignmentType.equals(AssignmentType.DIRECT)) {
-                builder.append(expression);
+            return new StringBuilder()
+                    .append("assign(")
+                    .append(getAssignment())
+                    .append(")")
+                    .toString();
+        }
+    }
+
+    public static class Array {
+
+        private String sourcePath;
+        private String sourceVariable;
+        private String name;
+        private String variable;
+
+        public Array(String sourcePath, TreeNode<XsNode> node) {
+            this.sourcePath = sourcePath;
+            ComplexArrayConstruct arrayConstruct = (ComplexArrayConstruct) node.getAnnotation(CONSTRUCTION_NAMESPACE);
+
+            this.name = "ARR_" + CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, arrayConstruct.getVariable());
+            this.variable = arrayConstruct.getVariable();
+            if (arrayConstruct.arrays.size() > 1) {
+                name = name + (arrayConstruct.arrays.size() - 1);
+                variable = variable + (arrayConstruct.arrays.size() - 1);
+
             } else {
-                builder.append("???");
+                name = name.substring(0, name.length() - 1);
             }
 
-            builder.append(")");
-            return builder.toString();
+            this.sourceVariable = sourcePath.substring(0, sourcePath.lastIndexOf("[*]"));
+            if (sourceVariable.contains(".")) {
+                sourceVariable = sourceVariable.substring(sourceVariable.lastIndexOf('.') + 1);
+            }
+
+            sourceVariable = "_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, sourceVariable) + "_item";
+
+            arrayConstruct.arrays.put(sourcePath, this);
+
+        }
+
+        public String getSourcePath() {
+            return sourcePath;
+        }
+
+        public String getSourceVariable() {
+            return sourceVariable;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getVariable() {
+            return variable;
+        }
+
+        @Override
+        public String toString() {
+            return new StringBuilder("ARRAY(")
+                    .append(sourcePath)
+                    .append(",")
+                    .append(sourceVariable)
+                    .append(",")
+                    .append(name)
+                    .append(",")
+                    .append(variable)
+                    .append(")").toString();
         }
     }
 
     public enum AssignmentType {
-        DEFAULT, DIRECT, CONDITION, UNKNOWN
+        DEFAULT, DIRECT, UNKNOWN
     }
 
     public static class ConstructContext extends Construct {
         private Project project;
-        private Map<String, String> sourceVariables = new HashMap<>();
+        private Map<String, Array> arrayMap = new LinkedHashMap<>();
+
 
         public ConstructContext(Project project) {
             this.project = project;

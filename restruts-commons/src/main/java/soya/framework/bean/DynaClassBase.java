@@ -81,13 +81,7 @@ public abstract class DynaClassBase extends AnnotatableFeature implements DynaCl
 
             Object value = values.get(name);
             DynaProperty property = dynaClass.getDynaProperty(name);
-            if(value instanceof String) {
-                return (String) value;
-
-            } else {
-                // FIXME:
-                return value.toString();
-            }
+            return String.valueOf(value);
         }
     }
 }

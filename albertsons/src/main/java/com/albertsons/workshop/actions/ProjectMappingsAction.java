@@ -54,7 +54,15 @@ public class ProjectMappingsAction extends ProjectAction {
     }
 
     private String getDataType(DynaBean<?> bean) {
-        String dataType = bean.get("DataType") == null ? "?" : bean.get("DataType").toString();
+        String dataType = bean.get("DataType") == null ? "?" : bean.getAsString("DataType").trim();
+        if(dataType.contains(" ")) {
+            dataType = dataType.substring(0, dataType.indexOf(" "));
+        }
+
+        if(dataType.contains("(")) {
+            dataType = dataType.substring(0, dataType.indexOf("("));
+        }
+
         return new StringBuilder("type(")
                 .append(dataType)
                 .append(")")
@@ -64,7 +72,7 @@ public class ProjectMappingsAction extends ProjectAction {
     private String getCardinality(DynaBean<?> bean) {
         String cardinality = bean.get("Cardinality") == null ? "?" : bean.get("Cardinality").toString();
         return new StringBuilder("cardinality(")
-                .append(cardinality)
+                .append(cardinality.toLowerCase())
                 .append(")")
                 .toString();
     }

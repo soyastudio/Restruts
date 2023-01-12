@@ -4,12 +4,21 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class Base64Utils {
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     private Base64Utils() {
+    }
+
+    public static boolean isBase64(String s) {
+        String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(s);
+        return m.find();
     }
 
     public static byte[] encode(byte[] src) {
