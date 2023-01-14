@@ -198,26 +198,6 @@ public class Orchestration {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        ActionContext.builder()
-                .scan("soya.framework")
-                .create();
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("msg", "Hello World");
-
-        Object result = null;
-
-        //result = executePipeline(data);
-
-        result = executeAggregate(data);
-
-        System.out.println(result);
-
-
-        System.exit(0);
-    }
-
     private static Object executeAggregate(Object input) throws ProcessException {
         return Aggregator.builder()
                 .name("Aggregator")

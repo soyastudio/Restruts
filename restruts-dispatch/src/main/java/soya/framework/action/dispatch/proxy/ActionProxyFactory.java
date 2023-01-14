@@ -1,5 +1,7 @@
 package soya.framework.action.dispatch.proxy;
 
+import soya.framework.action.ActionContext;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

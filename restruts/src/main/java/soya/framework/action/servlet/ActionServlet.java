@@ -1,10 +1,13 @@
 package soya.framework.action.servlet;
 
-import org.reflections.Reflections;
 import soya.framework.action.*;
 import soya.framework.action.servlet.api.Swagger;
+import soya.framework.action.servlet.io.GsonStreamHandler;
 
-import javax.servlet.*;
+import javax.servlet.AsyncContext;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +15,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class ActionServlet extends HttpServlet {
@@ -53,7 +57,7 @@ public class ActionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getPathInfo().equals("/swagger.json")) {
 
-            if(registrationService.refresh() > lastUpdatedTime) {
+            if (registrationService.refresh() > lastUpdatedTime) {
                 System.out.println("================= updated...");
                 initActionMappings(registrationService);
             }
@@ -148,26 +152,9 @@ public class ActionServlet extends HttpServlet {
     }
 
     protected void initStreamHandlers(ServletConfig config) {
-        Reflections reflections = new Reflections(getClass().getPackage().getName());
-        Set<Class<?>> classes = reflections.getTypesAnnotatedWith(StreamHandler.class);
-        classes.forEach(e -> {
-            StreamHandler handler = e.getAnnotation(StreamHandler.class);
-            String mediaType = handler.value();
-            try {
-                Object object = e.newInstance();
-                if (object instanceof StreamWriter) {
-                    writers.put(mediaType, (StreamWriter) object);
-                }
-
-                if (object instanceof StreamReader) {
-                    readers.put(mediaType, (StreamWriter) object);
-                }
-
-            } catch (InstantiationException | IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
-
-        });
+        GsonStreamHandler gsonStreamHandler = new GsonStreamHandler();
+        readers.put(MediaType.APPLICATION_JSON, gsonStreamHandler);
+        writers.put(MediaType.APPLICATION_JSON, gsonStreamHandler);
     }
 
     protected void initSwagger(ActionMappings mappings) {
@@ -222,8 +209,8 @@ public class ActionServlet extends HttpServlet {
                 }
 
                 pathBuilder.description(am.getDescription());
-                pathBuilder.addTag(dm.getTitle() != null && !dm.getTitle().isEmpty()? dm.getTitle() : dm.getName());
-                pathBuilder.produces( am.getProduce());
+                pathBuilder.addTag(dm.getTitle() != null && !dm.getTitle().isEmpty() ? dm.getTitle() : dm.getName());
+                pathBuilder.produces(am.getProduce());
 
                 if (pathBuilder != null) {
                     for (ParameterMapping pm : am.getParameters()) {

@@ -4,21 +4,20 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public final class ActionContext {
+public abstract class ActionContext {
 
     private static ActionContext INSTANCE;
 
+    private final Properties properties;
     private final ExecutorService executorService;
     private final ServiceLocator serviceLocator;
     private final ActionRegistrationService actionRegistrationService;
 
-    protected Properties properties = new Properties();
-
-    protected ActionContext(ServiceLocator serviceLocator, Set<String> scanPackages) {
-        this.serviceLocator = serviceLocator;
+    protected ActionContext(ActionContextInitializer initializer) {
+        this.properties = initializer.getProperties();
+        this.serviceLocator = initializer.getServiceLocator();
         this.executorService = createExecutorService();
-
-        this.actionRegistrationService = new ActionRegistrationService(scanPackages);
+        this.actionRegistrationService = new ActionRegistrationService(initializer);
 
         INSTANCE = this;
     }
@@ -88,46 +87,6 @@ public final class ActionContext {
         return INSTANCE;
     }
 
-    public static ActionContextBuilder builder() {
-        if (INSTANCE != null) {
-            throw new IllegalStateException("ActionContext is already created.");
-        }
 
-        return new ActionContextBuilder();
-    }
-
-    public static class ActionContextBuilder {
-        private ServiceLocator serviceLocator;
-        private Properties properties = new Properties();
-        private Set<String> scanPackages = new HashSet<>();
-
-        public ActionContextBuilder serviceLocator(ServiceLocator serviceLocator) {
-            this.serviceLocator = serviceLocator;
-            return this;
-        }
-
-        public ActionContextBuilder setProperty(String key, String value) {
-            this.properties.setProperty(key, value);
-            return this;
-        }
-
-        public ActionContextBuilder setProperties(Properties properties) {
-            this.properties.putAll(properties);
-            return this;
-        }
-
-        public ActionContextBuilder scan(String... pkg) {
-            for (String p : pkg) {
-                scanPackages.add(p);
-            }
-            return this;
-        }
-
-        public ActionContext create() {
-            ActionContext context = new ActionContext(serviceLocator, scanPackages);
-            context.properties = properties;
-            return context;
-        }
-    }
 
 }

@@ -16,3 +16,8 @@ spring:
 
 workspace:
   home: C:/Albertsons/workspace
+
+
+soya:
+  framework:
+    scanPackages: org.springframework

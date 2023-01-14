@@ -1,7 +1,5 @@
 package soya.framework.action;
 
-import org.reflections.Reflections;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,30 +10,14 @@ public class ActionRegistrationService {
     private Map<String, Registration> registrations = new ConcurrentHashMap<>();
     private final AtomicLong lastUpdatedTime;
 
-    ActionRegistrationService(Set<String> scanPackages) {
+    ActionRegistrationService(ActionContextInitializer initializer) {
 
-        Set<Class<?>> domains = new HashSet<>();
-        Set<Class<?>> actions = new HashSet<>();
-
-        if (scanPackages.isEmpty()) {
-            Reflections reflections = new Reflections();
-            domains.addAll(reflections.getTypesAnnotatedWith(Domain.class));
-            actions.addAll(reflections.getTypesAnnotatedWith(ActionDefinition.class));
-
-        } else {
-            scanPackages.forEach(pkg -> {
-                Reflections reflections = new Reflections(pkg.trim());
-                domains.addAll(reflections.getTypesAnnotatedWith(Domain.class));
-                actions.addAll(reflections.getTypesAnnotatedWith(ActionDefinition.class));
-            });
-        }
-
-        domains.forEach(e -> {
+        initializer.getAnnotatedClasses(Domain.class).forEach(e -> {
             ActionClass.createActionDomain(e);
 
         });
 
-        actions.forEach(e -> {
+        initializer.getAnnotatedClasses(ActionDefinition.class).forEach(e -> {
             new ActionClass((Class<? extends ActionCallable>) e);
         });
 

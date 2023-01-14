@@ -3,8 +3,6 @@ package soya.framework.action;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 public final class ActionClass implements Serializable {
 
@@ -183,11 +181,11 @@ public final class ActionClass implements Serializable {
 
     public static ActionDomain createActionDomain(Class<?> cls) {
         Domain domain = cls.getAnnotation(Domain.class);
-        if(domain == null) {
+        if (domain == null) {
             throw new IllegalArgumentException("Class '" + cls.getName() + "' is not annotated as Domain.");
         }
 
-        if(DOMAINS.containsKey(domain.name())) {
+        if (DOMAINS.containsKey(domain.name())) {
             throw new IllegalArgumentException("Domain '" + domain.name() + "' already exists.");
         }
 

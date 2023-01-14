@@ -1,6 +1,5 @@
 package soya.framework.restruts.configuration;
 
-import org.reflections.Reflections;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +11,9 @@ import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.action.dispatch.proxy.ActionProxyPattern;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
-import soya.framework.reflect.ClassPath;
+import soya.framework.util.IndexedClassStore;
 
 import javax.annotation.PostConstruct;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -25,24 +23,12 @@ public class ServerConfiguration {
     private static String HEARTBEAT_EVENT_ADDRESS = "timer://heartbeat";
 
     @Bean
-    Set<String> classPath() {
-        long start = System.currentTimeMillis();
-        Set<String> set = ClassPath.scanForPaths(null);
-
-
-
-        System.out.println("+++++++++++++++++++  " + set.size() + " in " + (System.currentTimeMillis() - start));
-
-        return set;
-    }
-
-    @Bean
-    DynaActionDispatchActionRegistry dynaActionRegistry(ActionContext actionContext) {
-        DynaActionDispatchActionRegistry registry =  new DynaActionDispatchActionRegistry(DynaActionDispatchActionRegistry.NAME);
+    DynaActionDispatchActionRegistry dynaActionRegistry() {
+        DynaActionDispatchActionRegistry registry = new DynaActionDispatchActionRegistry(DynaActionDispatchActionRegistry.NAME);
 
         System.out.println("---------------------- TODO: load DynaDispatchAction Classes!");
 
-        actionContext.getActionRegistrationService().register(registry);
+        ActionContext.getInstance().getActionRegistrationService().register(registry);
         return registry;
     }
 
@@ -54,10 +40,7 @@ public class ServerConfiguration {
     @Bean
     ActionProxyFactory actionProxyFactory() {
         ActionProxyFactory proxyFactory = new ActionProxyFactory();
-
-        Reflections reflections = new Reflections();
-        Set<Class<?>> proxyInterfaces = reflections.getTypesAnnotatedWith(ActionProxyPattern.class);
-        proxyInterfaces.forEach(e -> {
+        IndexedClassStore.getAnnotatedClasses(ActionProxyPattern.class).forEach(e -> {
             if (e.isInterface()) {
                 proxyFactory.create(e);
             }

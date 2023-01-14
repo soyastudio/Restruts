@@ -1,7 +1,5 @@
 package soya.framework.action.mvc;
 
-import soya.framework.commons.util.ReflectUtils;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,9 +15,6 @@ public class StateMachineServlet extends HttpServlet {
         super.init(config);
         this.mappings = new MvcMappings();
 
-        ReflectUtils.scanForAnnotation(MvcDefinition.class).forEach(e -> {
-            mappings.add((Class<? extends MvcAction>) e);
-        });
 
         config.getServletContext().setAttribute(MvcMappings.ATTRIBUTE_NAME, mappings);
     }

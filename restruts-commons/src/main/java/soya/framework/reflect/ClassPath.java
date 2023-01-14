@@ -4,6 +4,7 @@ package soya.framework.reflect;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -22,6 +23,7 @@ public class ClassPath {
     }
 
     public static Set<String> scanForPaths(String base) {
+
         Set<String> set = new LinkedHashSet<>();
         String[] paths = System.getProperty("java.class.path").split(";");
         if(paths.length == 1) {
@@ -41,8 +43,8 @@ public class ClassPath {
                     readFromJar(new File(e), base, set);
                 }
             });
-
         }
+
         return set;
     }
 
