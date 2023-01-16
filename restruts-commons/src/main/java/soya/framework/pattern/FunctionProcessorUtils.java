@@ -1,4 +1,4 @@
-package soya.framework.lang;
+package soya.framework.pattern;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -10,20 +10,20 @@ public final class FunctionProcessorUtils {
     private FunctionProcessorUtils() {
     }
 
-    public static void validate(Class<? extends FunctionProcessor> clazz) throws FunctionProcessorClassException {
+    public static void validate(Class<? extends FunctionalFilter> clazz) throws FunctionalFilterClassException {
         if(!clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers())) {
             Constructor[] constructors = clazz.getConstructors();
             if(constructors.length != 1) {
-                throw new FunctionProcessorClassException(clazz, "function processor can have only one constructor.");
+                throw new FunctionalFilterClassException(clazz, "function processor can have only one constructor.");
             }
 
             if(clazz.getAnnotation(Named.class) == null) {
-                throw new FunctionProcessorClassException(clazz, "function processor must be annotated as '" + Named.class.getName() + "'");
+                throw new FunctionalFilterClassException(clazz, "function processor must be annotated as '" + Named.class.getName() + "'");
             }
         }
     }
 
-    public static <T extends FunctionProcessor> T newInstance(String parameter, Class<T> clazz) {
+    public static <T extends FunctionalFilter> T newInstance(String parameter, Class<T> clazz) {
         validate(clazz);
         Constructor constructor = clazz.getConstructors()[0];
         Parameter[] parameters = constructor.getParameters();
@@ -34,7 +34,7 @@ public final class FunctionProcessorUtils {
             return (T) constructor.newInstance(args);
 
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new FunctionProcessorException(e);
+            throw new FunctionalFilterException(e);
         }
     }
 

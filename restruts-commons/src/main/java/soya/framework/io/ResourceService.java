@@ -1,7 +1,7 @@
 package soya.framework.io;
 
-import soya.framework.bean.ConvertService;
-import soya.framework.lang.Named;
+import soya.framework.convert.ConvertService;
+import soya.framework.pattern.Named;
 import soya.framework.reflect.ReflectUtils;
 import soya.framework.util.StreamUtils;
 
@@ -19,7 +19,7 @@ public abstract class ResourceService {
 
     private static ResourceService INSTANCE;
     protected Map<String, Resource> resourceMap = new HashMap<>();
-    protected Map<String, Class<? extends ResourceProcessor>> fragmentProcessors = new HashMap<>();
+    protected Map<String, Class<? extends ResourceFilter>> fragmentProcessors = new HashMap<>();
 
     protected ResourceService() {
         INSTANCE = this;
@@ -110,9 +110,9 @@ public abstract class ResourceService {
                             throw new ResourceException(e);
                         }
 
-                    } else if ((ResourceProcessor.class.isAssignableFrom(rt))) {
+                    } else if ((ResourceFilter.class.isAssignableFrom(rt))) {
                         if (!fragmentProcessors.containsKey(name)) {
-                            fragmentProcessors.put(name, (Class<? extends ResourceProcessor>) rt);
+                            fragmentProcessors.put(name, (Class<? extends ResourceFilter>) rt);
 
                         } else if (!fragmentProcessors.get(name).equals(rt)) {
                             throw new IllegalArgumentException("Fragment processor '" + name + "' already exists.");
@@ -126,7 +126,7 @@ public abstract class ResourceService {
 
     public static class FragmentProcessChain {
 
-        private List<ResourceProcessor> processors = new ArrayList<>();
+        private List<ResourceFilter> processors = new ArrayList<>();
 
         public FragmentProcessChain(String fragment) {
             if (fragment != null) {
@@ -142,7 +142,7 @@ public abstract class ResourceService {
                         String name = token.substring(0, separator);
                         String params = token.substring(separator + 1);
 
-                        Class<? extends ResourceProcessor> type = getInstance().fragmentProcessors.get(name);
+                        Class<? extends ResourceFilter> type = getInstance().fragmentProcessors.get(name);
                         if (type == null) {
                             throw new IllegalArgumentException("Cannot find resource processor named as: " + name);
                         }
@@ -154,14 +154,14 @@ public abstract class ResourceService {
             }
         }
 
-        private ResourceProcessor create(Class<? extends ResourceProcessor> type, String param) {
+        private ResourceFilter create(Class<? extends ResourceFilter> type, String param) {
 
             Constructor constructor = type.getConstructors()[0];
             Parameter[] parameters = constructor.getParameters();
             Object[] args = compile(param, parameters);
 
             try {
-                return (ResourceProcessor) constructor.newInstance(args);
+                return (ResourceFilter) constructor.newInstance(args);
 
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new IllegalArgumentException(e);
@@ -283,7 +283,7 @@ public abstract class ResourceService {
             }
 
             byte[] data = StreamUtils.copyToByteArray(in);
-            Queue<ResourceProcessor> queue = new LinkedBlockingDeque<>(processors);
+            Queue<ResourceFilter> queue = new LinkedBlockingDeque<>(processors);
             while (!queue.isEmpty()) {
                 data = queue.poll().process(data);
             }
@@ -298,7 +298,7 @@ public abstract class ResourceService {
             }
 
             byte[] data = in.getBytes(StandardCharsets.UTF_8);
-            Queue<ResourceProcessor> queue = new LinkedBlockingDeque<>(processors);
+            Queue<ResourceFilter> queue = new LinkedBlockingDeque<>(processors);
             while (!queue.isEmpty()) {
                 data = queue.poll().process(data);
             }

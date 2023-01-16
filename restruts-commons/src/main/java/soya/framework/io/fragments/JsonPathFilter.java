@@ -1,16 +1,16 @@
 package soya.framework.io.fragments;
 
-import soya.framework.io.ResourceProcessor;
-import soya.framework.lang.Named;
+import soya.framework.io.ResourceFilter;
+import soya.framework.pattern.Named;
 
 import java.util.Arrays;
 
 @Named("jsonpath")
-public class JsonPathProcessor implements ResourceProcessor {
+public class JsonPathFilter implements ResourceFilter {
     private String[] args;
     private String par;
 
-    public JsonPathProcessor(String[] args, String par) {
+    public JsonPathFilter(String[] args, String par) {
         this.args = args;
         this.par = par;
     }

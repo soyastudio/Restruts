@@ -3,7 +3,7 @@ package soya.framework.io.resources;
 import soya.framework.io.Resource;
 import soya.framework.io.ResourceException;
 import soya.framework.io.ResourceService;
-import soya.framework.lang.Named;
+import soya.framework.pattern.Named;
 import soya.framework.util.StreamUtils;
 
 import java.io.ByteArrayInputStream;

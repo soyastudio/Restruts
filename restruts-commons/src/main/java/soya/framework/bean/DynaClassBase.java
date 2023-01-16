@@ -1,5 +1,7 @@
 package soya.framework.bean;
 
+import soya.framework.convert.ConvertService;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -2,7 +2,7 @@ package soya.framework.io.resources;
 
 import soya.framework.io.Resource;
 import soya.framework.io.ResourceException;
-import soya.framework.lang.Named;
+import soya.framework.pattern.Named;
 
 import java.io.InputStream;
 import java.net.URI;

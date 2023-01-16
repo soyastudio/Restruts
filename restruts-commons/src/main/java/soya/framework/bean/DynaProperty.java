@@ -3,6 +3,7 @@ package soya.framework.bean;
 import java.io.Serializable;
 
 public final class DynaProperty extends AnnotatableFeature implements Serializable {
+
     private final String name;
     private transient Class<?> type;
 

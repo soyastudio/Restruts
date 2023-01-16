@@ -1,16 +1,16 @@
 package soya.framework.io.fragments;
 
 import soya.framework.io.ResourceException;
-import soya.framework.io.ResourceProcessor;
-import soya.framework.lang.Named;
+import soya.framework.io.ResourceFilter;
+import soya.framework.pattern.Named;
 
 @Named("process")
-public class DispatchProcessor implements ResourceProcessor {
-    private ResourceProcessor processor;
+public class DispatchFilter implements ResourceFilter {
+    private ResourceFilter processor;
 
-    public DispatchProcessor(String className) {
+    public DispatchFilter(String className) {
         try {
-            processor = (ResourceProcessor) Class.forName(className).newInstance();
+            processor = (ResourceFilter) Class.forName(className).newInstance();
 
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new IllegalArgumentException(e);
