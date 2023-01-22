@@ -1,4 +1,4 @@
-package soya.framework.convert;
+package soya.framework.util.convert;
 
 public class ClassConverter implements Converter<Class<?>> {
 
@@ -6,7 +6,6 @@ public class ClassConverter implements Converter<Class<?>> {
     public Class<?> convert(Class<Class<?>> type, Object value) throws ConvertException {
         ClassLoader classLoader = Thread.currentThread()
                 .getContextClassLoader();
-
         if(classLoader == null) {
             classLoader = ClassConverter.class.getClassLoader();
         }

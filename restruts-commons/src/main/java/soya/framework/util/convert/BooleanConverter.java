@@ -1,8 +1,8 @@
-package soya.framework.convert;
+package soya.framework.util.convert;
 
 public class BooleanConverter implements Converter<Boolean> {
-    protected String[] trueStrings = {"true", "yes", "y", "on", "1"};
-    protected String[] falseStrings = {"false", "no", "n", "off", "0"};
+    protected String[] trueStrings = {"TRUE", "T", "YES", "Y", "ON", "1"};
+    protected String[] falseStrings = {"FALSE", "F", "NO", "N", "OFF", "0"};
 
     public BooleanConverter() {
         super();
@@ -15,7 +15,8 @@ public class BooleanConverter implements Converter<Boolean> {
 
     @Override
     public Boolean convert(Class<Boolean> type, Object value) throws ConvertException {
-        final String stringValue = value.toString().toLowerCase();
+
+        final String stringValue = value.toString().toUpperCase();
         for (String trueString : trueStrings) {
             if (trueString.equals(stringValue)) {
                 return type.cast(Boolean.TRUE);

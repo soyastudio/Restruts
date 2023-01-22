@@ -1,4 +1,4 @@
-package soya.framework.reflect;
+package soya.framework.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -6,13 +6,24 @@ import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReflectUtils {
+
+    public static <T extends Annotation> T findAnnotationRecursively(Class<?> c, Class<T> a) {
+        Class<?> type = Objects.requireNonNull(c);
+        T annotation = c.getAnnotation(Objects.requireNonNull(a));
+        while (annotation == null && !type.equals(Object.class)) {
+            if(annotation != null) {
+                return annotation;
+            }
+            type = type.getSuperclass();
+            annotation = type.getAnnotation(a);
+        }
+
+        return null;
+    }
 
     public static Set<Class<?>> findClassesOfPackage(String packageName)  {
         InputStream stream = ClassLoader.getSystemClassLoader()

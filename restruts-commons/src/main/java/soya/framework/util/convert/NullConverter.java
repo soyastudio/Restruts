@@ -1,4 +1,4 @@
-package soya.framework.convert;
+package soya.framework.util.convert;
 
 public class NullConverter<T> implements Converter<T> {
 

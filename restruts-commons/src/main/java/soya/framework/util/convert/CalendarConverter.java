@@ -1,8 +1,9 @@
-package soya.framework.convert;
+package soya.framework.util.convert;
 
 import java.util.Calendar;
 
 public class CalendarConverter implements Converter<Calendar> {
+
     private final DateTimeConfiguration configuration;
 
     public CalendarConverter() {
@@ -15,6 +16,13 @@ public class CalendarConverter implements Converter<Calendar> {
 
     @Override
     public Calendar convert(Class<Calendar> type, Object value) throws ConvertException {
-        return null;
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(configuration.toDate(value));
+            return calendar;
+
+        } catch (Exception e) {
+            throw new ConvertException(type, value, e);
+        }
     }
 }

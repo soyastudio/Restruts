@@ -11,6 +11,22 @@ public class StreamUtils {
     public StreamUtils() {
     }
 
+    public static String copyToString(InputStream in, Charset charset) throws IOException {
+        if (in == null) {
+            return "";
+        }
+
+        StringBuilder out = new StringBuilder();
+        InputStreamReader reader = new InputStreamReader(in, charset);
+        char[] buffer = new char[BUFFER_SIZE];
+        int charsRead;
+        while ((charsRead = reader.read(buffer)) != -1) {
+            out.append(buffer, 0, charsRead);
+        }
+        return out.toString();
+    }
+
+
     public static String read(File file) throws IOException {
         InputStream inputStream = new FileInputStream(file);
         byte[] bin = copyToByteArray(inputStream);

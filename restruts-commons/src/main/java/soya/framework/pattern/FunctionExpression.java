@@ -1,5 +1,6 @@
 package soya.framework.pattern;
 
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +9,12 @@ public class FunctionExpression {
     private final String[] parameters;
 
     private FunctionExpression(String name, String[] parameters) {
+
         this.name = name;
         this.parameters = parameters;
+
+
+        ManagementFactory.getPlatformMBeanServer().getDomains();
     }
 
     public String getName() {

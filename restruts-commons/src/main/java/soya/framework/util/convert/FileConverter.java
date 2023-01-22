@@ -1,4 +1,4 @@
-package soya.framework.convert;
+package soya.framework.util.convert;
 
 import java.io.File;
 import java.net.URI;

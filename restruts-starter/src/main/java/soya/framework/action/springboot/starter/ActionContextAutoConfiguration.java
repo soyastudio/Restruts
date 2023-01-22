@@ -17,6 +17,7 @@ import soya.framework.action.ServiceLocateException;
 import soya.framework.action.ServiceLocator;
 import soya.framework.action.mvc.StateMachineServlet;
 import soya.framework.action.servlet.ActionServlet;
+import soya.framework.util.ClassIndexUtils;
 import soya.framework.util.IndexedClassStore;
 
 import javax.annotation.PostConstruct;
@@ -136,7 +137,7 @@ public class ActionContextAutoConfiguration implements ActionContextInitializer 
 
     @Override
     public Set<Class<?>> getAnnotatedClasses(Class<? extends Annotation> annotationType) {
-        return IndexedClassStore.getAnnotatedClasses(annotationType);
+        return ClassIndexUtils.getAnnotatedClasses(annotationType);
     }
 
     static class DefaultActionContext extends ActionContext {

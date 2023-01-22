@@ -1,9 +1,9 @@
 package soya.framework.io;
 
-import soya.framework.convert.ConvertService;
-import soya.framework.pattern.Named;
-import soya.framework.reflect.ReflectUtils;
+import soya.framework.annotation.Named;
+import soya.framework.util.ReflectUtils;
 import soya.framework.util.StreamUtils;
+import soya.framework.util.convert.ConvertService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

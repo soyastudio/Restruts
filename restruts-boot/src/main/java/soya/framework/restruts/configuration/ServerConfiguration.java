@@ -11,7 +11,9 @@ import soya.framework.action.dispatch.proxy.ActionProxyFactory;
 import soya.framework.action.dispatch.proxy.ActionProxyPattern;
 import soya.framework.action.orchestration.eventbus.ActionEvent;
 import soya.framework.action.orchestration.eventbus.ActionEventBus;
-import soya.framework.util.IndexedClassStore;
+import soya.framework.util.ClassIndexUtils;
+import soya.framework.util.LogUtils;
+import soya.framework.util.logging.Sl4jDelegateService;
 
 import javax.annotation.PostConstruct;
 import java.util.Timer;
@@ -22,11 +24,21 @@ import java.util.concurrent.Executors;
 public class ServerConfiguration {
     private static String HEARTBEAT_EVENT_ADDRESS = "timer://heartbeat";
 
+    @PostConstruct
+    void init() {
+        long start = LogUtils.logStartNanoTime();
+
+        //new JulLoggingService();
+        new Sl4jDelegateService();
+
+        LogUtils.logEndNanoTime(start, "method execute");
+    }
+
     @Bean
     DynaActionDispatchActionRegistry dynaActionRegistry() {
         DynaActionDispatchActionRegistry registry = new DynaActionDispatchActionRegistry(DynaActionDispatchActionRegistry.NAME);
 
-        System.out.println("---------------------- TODO: load DynaDispatchAction Classes!");
+        LogUtils.info("XYZ", "TODO: load DynaDispatchAction Classes!");
 
         ActionContext.getInstance().getActionRegistrationService().register(registry);
         return registry;
@@ -40,7 +52,7 @@ public class ServerConfiguration {
     @Bean
     ActionProxyFactory actionProxyFactory() {
         ActionProxyFactory proxyFactory = new ActionProxyFactory();
-        IndexedClassStore.getAnnotatedClasses(ActionProxyPattern.class).forEach(e -> {
+        ClassIndexUtils.getAnnotatedClasses(ActionProxyPattern.class).forEach(e -> {
             if (e.isInterface()) {
                 proxyFactory.create(e);
             }
@@ -49,14 +61,13 @@ public class ServerConfiguration {
         return proxyFactory;
     }
 
-
     @EventListener(classes = {ApplicationReadyEvent.class})
     public void onApplicationEvent(ApplicationReadyEvent event) {
         Timer timer = new Timer("Pipeline Scanner");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                //System.out.println("--------------------- !!!");
+                LogUtils.log(ServerConfiguration.class, "============ pipeline scanner");
             }
         }, 1000l, 5000l);
     }

@@ -1,6 +1,7 @@
 package soya.framework.pattern;
 
-import soya.framework.util.IndexedClassStore;
+import soya.framework.annotation.Named;
+import soya.framework.util.ClassIndexUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -135,7 +136,7 @@ public final class FunctionalFilterExecutor {
 
         @Override
         protected void init() {
-            IndexedClassStore
+            ClassIndexUtils
                     .getAnnotatedClasses(Named.class)
                     .stream()
                     .filter(c -> FunctionalFilter.class.isAssignableFrom(c))

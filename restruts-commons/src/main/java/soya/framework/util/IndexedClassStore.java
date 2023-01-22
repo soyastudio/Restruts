@@ -5,7 +5,8 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.reflections.scanners.Scanners.TypesAnnotated;
 
@@ -13,7 +14,7 @@ public abstract class IndexedClassStore {
 
     private static IndexedClassStore instance;
 
-    protected static IndexedClassStore getInstance() {
+    static IndexedClassStore getInstance() {
         if (instance == null) {
             new DefaultIndexedClassStore();
         }
@@ -28,16 +29,6 @@ public abstract class IndexedClassStore {
     protected abstract Set<String> getIndexes();
 
     protected abstract Set<Class<?>> getTypesWithAnnotation(Class<? extends Annotation> annotationType);
-
-    public static String[] indexes() {
-        List<String> list = new ArrayList<>(getInstance().getIndexes());
-        Collections.sort(list);
-        return list.toArray(new String[list.size()]);
-    }
-
-    public static Set<Class<?>> getAnnotatedClasses(Class<? extends Annotation> annotationType) {
-        return getInstance().getTypesWithAnnotation(annotationType);
-    }
 
     public static class DefaultIndexedClassStore extends IndexedClassStore {
         private Reflections reflections;

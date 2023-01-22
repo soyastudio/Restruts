@@ -1,5 +1,7 @@
 package soya.framework.pattern;
 
+import soya.framework.annotation.Named;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;

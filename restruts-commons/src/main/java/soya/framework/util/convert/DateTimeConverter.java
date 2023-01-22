@@ -1,4 +1,4 @@
-package soya.framework.convert;
+package soya.framework.util.convert;
 
 import java.util.Date;
 
@@ -12,9 +12,7 @@ public class DateTimeConverter<T extends Date> implements Converter<T> {
 
     public DateTimeConverter(DateTimeConfiguration configuration) {
         this.configuration = configuration;
-
     }
-
 
     @Override
     public T convert(Class<T> type, Object value) throws ConvertException {

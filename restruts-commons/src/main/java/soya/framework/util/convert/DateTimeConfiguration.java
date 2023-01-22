@@ -1,7 +1,9 @@
-package soya.framework.convert;
+package soya.framework.util.convert;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -89,6 +91,32 @@ public class DateTimeConfiguration {
             format.setTimeZone(timeZone);
         }
         return format;
+    }
+
+    public Date toDate(Object value) throws ParseException {
+        if (value instanceof Date) {
+            return (Date) value;
+
+        } else if (value instanceof Calendar) {
+            return  ((Calendar) value).getTime();
+
+        } else if (value instanceof Number) {
+            return new Date(((Number) value).longValue());
+        }
+
+        DateFormat format = null;
+        if (useLocaleFormat ) {
+            if (patterns != null && patterns.length > 0) {
+                format = getFormat(patterns[0]);
+            } else {
+                format = getFormat(locale, timeZone);
+            }
+
+        } else {
+            format = new SimpleDateFormat();
+        }
+
+        return format.parse(String.valueOf(value));
     }
 
 

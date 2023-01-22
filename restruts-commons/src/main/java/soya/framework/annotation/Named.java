@@ -1,4 +1,4 @@
-package soya.framework.pattern;
+package soya.framework.annotation;
 
 import java.lang.annotation.*;
 
