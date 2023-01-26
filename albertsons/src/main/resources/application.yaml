@@ -16,7 +16,6 @@ spring:
 
 soya:
   framework:
-    action:
       scanPackages: com.albertsons.workshop
 
 workspace:

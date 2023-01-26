@@ -42,11 +42,12 @@ public class ActionContextAutoConfiguration implements ActionContextInitializer 
     @PostConstruct
     void initialize() {
         Set<String> packages = new LinkedHashSet<>();
-        packages.add("soya.framework");
         if (properties.getScanPackages() != null) {
             Arrays.stream(properties.getScanPackages().split(",")).forEach(e -> {
                 packages.add(e.trim());
             });
+        } else {
+            packages.add("soya.framework");
         }
 
         new IndexedClassStore.DefaultIndexedClassStore(packages.toArray(new String[packages.size()]));

@@ -20,4 +20,4 @@ workspace:
 
 soya:
   framework:
-    scanPackages: org.springframework
+    scanPackages: soya.framework
