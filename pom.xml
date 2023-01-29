@@ -275,6 +275,7 @@
 
         <module>restruts-boot</module>
         <module>albertsons</module>
+        <module>restruts-beam</module>
     </modules>
 
 </project>

@@ -1,6 +1,7 @@
 package soya.framework.restruts.configuration;
 
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -45,7 +46,6 @@ public class ServerConfiguration {
 
             //System.out.printf("Component: %s\n", component.getBeanClassName());
         }
-
 
         long start = LogUtils.logStartNanoTime();
 
