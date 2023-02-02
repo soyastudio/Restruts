@@ -5,6 +5,7 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,6 +46,8 @@ public abstract class IndexedClassStore {
 
         public DefaultIndexedClassStore(String... packages) {
             super();
+
+            Arrays.stream(packages).forEach(e -> {System.out.println("----------------- " + e);});
 
             ConfigurationBuilder configuration = new ConfigurationBuilder()
                     .forPackages(packages)
