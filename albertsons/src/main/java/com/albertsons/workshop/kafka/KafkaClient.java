@@ -128,7 +128,6 @@ public class KafkaClient {
         return new KafkaConsumer(consumerProperties);
     }
 
-
     public <k, v> KafkaConsumer<k, v> consumer(Deserializer<k> keyDeserializer, Deserializer<v> valueDeserializer) {
         return new KafkaConsumer(consumerProperties, keyDeserializer, valueDeserializer);
     }

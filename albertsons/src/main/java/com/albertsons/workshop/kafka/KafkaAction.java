@@ -12,6 +12,7 @@ import org.apache.kafka.common.header.internals.RecordHeaders;
 import soya.framework.action.Action;
 import soya.framework.action.ActionParameterType;
 import soya.framework.action.ActionProperty;
+import soya.framework.action.WiredService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +33,15 @@ public abstract class KafkaAction<T> extends Action<T> {
     @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM)
     protected Long timeout;
 
-    @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM, required = true)
-    protected String configuration;
+    @ActionProperty(
+            parameterType = ActionParameterType.HEADER_PARAM,
+            required = true,
+            displayOrder = 1
+    )
+    protected String environment;
+
+    @WiredService
+    protected KafkaClientFactory kafkaClientFactory;
 
     protected AdminClient adminClient() throws IOException {
         return kafkaClient().adminClient();
@@ -47,16 +55,8 @@ public abstract class KafkaAction<T> extends Action<T> {
         return kafkaClient().consumer();
     }
 
-    protected KafkaClient kafkaClient() throws IOException {
-        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configuration + ".properties");
-        if (inputStream == null) {
-            throw new ConfigException("Configuration does not exist: " + configuration + ".properties");
-        }
-
-        Properties properties = new Properties();
-        properties.load(inputStream);
-
-        return KafkaClient.create(properties);
+    protected KafkaClient kafkaClient()  {
+        return kafkaClientFactory.get(environment);
     }
 
     protected Collection<TopicPartition> partitions(String topicName) throws IOException {
