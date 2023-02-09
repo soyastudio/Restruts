@@ -46,9 +46,6 @@ public abstract class IndexedClassStore {
 
         public DefaultIndexedClassStore(String... packages) {
             super();
-
-            Arrays.stream(packages).forEach(e -> {System.out.println("----------------- " + e);});
-
             ConfigurationBuilder configuration = new ConfigurationBuilder()
                     .forPackages(packages)
                     .setScanners(TypesAnnotated);

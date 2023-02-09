@@ -1,0 +1,10 @@
+[
+  {
+    "name": "OfferRequest",
+    "bod": "OfferRequest",
+    "produce": "EMOM_C02_OFFERREQUEST",
+    "consume": "ESED_C01_OfferRequest",
+    "input": "Test/OfferRequest/input.json",
+    "output": "Test/OfferRequest/output.xml"
+  }
+]

@@ -6,7 +6,6 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 import soya.framework.action.Action;
@@ -15,19 +14,17 @@ import soya.framework.action.ActionProperty;
 import soya.framework.action.WiredService;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 public abstract class KafkaAction<T> extends Action<T> {
 
-    public static final long DEFAULT_TIMEOUT = 30000l;
+    public static final long DEFAULT_TIMEOUT = 300000l;
     public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @ActionProperty(parameterType = ActionParameterType.HEADER_PARAM)
@@ -41,7 +38,7 @@ public abstract class KafkaAction<T> extends Action<T> {
     protected String environment;
 
     @WiredService
-    protected KafkaClientFactory kafkaClientFactory;
+    protected KafkaService kafkaService;
 
     protected AdminClient adminClient() throws IOException {
         return kafkaClient().adminClient();
@@ -56,7 +53,7 @@ public abstract class KafkaAction<T> extends Action<T> {
     }
 
     protected KafkaClient kafkaClient()  {
-        return kafkaClientFactory.get(environment);
+        return kafkaService.get(environment);
     }
 
     protected Collection<TopicPartition> partitions(String topicName) throws IOException {
