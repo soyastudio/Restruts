@@ -56,6 +56,8 @@
         <fuselet.version>0.0.8</fuselet.version>
         <fuse-shared.version>0.0.8</fuse-shared.version>
 
+        <itext.version>7.2.5</itext.version>
+
     </properties>
 
     <dependencyManagement>

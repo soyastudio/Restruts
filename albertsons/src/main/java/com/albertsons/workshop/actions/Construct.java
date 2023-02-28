@@ -196,8 +196,128 @@ public abstract class Construct {
         } else {
             return new ComplexArrayConstruct(node);
         }
-
     }
+
+    public static String generateESQLTemplate(XmlSchemaTree tree, String brokerSchema, String application) {
+
+        String module = application + "_Compute";
+
+        outputRootName = tree.root().getName();
+        outputRootVariable = outputRootName + "_";
+
+        outputRootName = tree.root().getName();
+        outputRootVariable = outputRootName + "_";
+
+        CodeBuilder builder = CodeBuilder.newInstance();
+        if (brokerSchema != null && brokerSchema.trim().length() > 0) {
+            builder.append("BROKER SCHEMA ").append(brokerSchema.trim()).append("\n\n");
+        }
+        builder.append("CREATE COMPUTE MODULE ").appendLine(module);
+        builder.appendLine();
+
+        // UDP:
+        builder.appendLine("-- Declare UDPs", 1);
+        builder.appendLine("DECLARE VERSION_ID EXTERNAL CHARACTER '1.0.0';", 1);
+        builder.appendLine("DECLARE SYSTEM_ENVIRONMENT_CODE EXTERNAL CHARACTER 'PROD';", 1);
+
+        builder.appendLine();
+
+        // Namespace
+        declareNamespace(builder);
+
+        builder.appendLine("CREATE FUNCTION Main() RETURNS BOOLEAN", 1);
+        begin(builder, 1);
+
+        // Declare Input Root
+        builder.appendLine("-- Declare Input Message Root", 2);
+        builder.appendLine("DECLARE " + inputRootVariable + " REFERENCE TO " + inputRootReference + ";", 2);
+        builder.appendLine();
+
+        // Declare Output Domain
+        builder.appendLine("-- Declare Output Message Root", 2);
+        builder.append("CREATE LASTCHILD OF OutputRoot DOMAIN ", 2).append("'XMLNSC'").appendLine(";").appendLine();
+
+        builder.append("DECLARE ", 2).append(outputRootVariable).append(" REFERENCE TO OutputRoot.XMLNSC.").append(outputRootName).appendLine(";");
+        builder.append("CREATE LASTCHILD OF OutputRoot.", 2).append("XMLNSC AS ").append(outputRootVariable).append(" TYPE XMLNSC.Folder NAME '").append(outputRootName).append("'").appendLine(";");
+        builder.append("SET OutputRoot.XMLNSC.", 2).append(outputRootName).appendLine(".(XMLNSC.NamespaceDecl)xmlns:Abs=Abs;");
+        builder.appendLine();
+
+        //print node:
+        tree.root().getChildren().forEach(e -> {
+            printNode(e, builder, 2);
+        });
+
+        // closing
+        builder.appendLine("RETURN TRUE;", 2);
+        builder.appendLine("END;", 1);
+        builder.appendLine();
+        builder.appendLine("END MODULE;");
+
+        return builder.toString();
+    }
+
+    private static void printNode(TreeNode<XsNode> node, CodeBuilder builder, int indent) {
+        XsNode xsNode = node.getData();
+
+        String name = node.getName();
+        String variable = name + "_";
+        String parentVariable = node.getParent().getName() + "_";
+
+        if (namespace.equals(xsNode.getName().getNamespaceURI())) {
+            name = "Abs:" + name;
+        }
+
+        if (xsNode.getNodeType().equals(XsNode.XsNodeType.Folder)) {
+
+            builder.append("-- ", indent).appendLine(node.getPath());
+            builder.append("DECLARE ", indent)
+                    .append(variable)
+                    .append(" REFERENCE TO ")
+                    .append(parentVariable).appendLine(";");
+
+            builder.append("CREATE LASTCHILD OF ", indent)
+                    .append(parentVariable)
+                    .append(" AS ")
+                    .append(variable)
+                    .append(" TYPE XMLNSC.Folder NAME '")
+                    .append(name)
+                    .appendLine("';")
+                    .appendLine();
+
+            for(TreeNode<XsNode> child : node.getChildren()) {
+                printNode(child, builder, indent + 1);
+            }
+
+        } else {
+            printSimpleSetting(node, builder, indent);
+        }
+    }
+
+    private static void printSimpleSetting(TreeNode<XsNode> node, CodeBuilder builder, int indent) {
+        XsNode xsNode = node.getData();
+
+        String name = node.getName();
+        if(name.startsWith("@")) {
+            name = name.substring(1);
+        }
+        String parentVariable = node.getParent().getName() + "_";
+
+        if (namespace.equals(xsNode.getName().getNamespaceURI())) {
+            name = "Abs:" + name;
+        }
+
+        builder.append("-- ", indent).appendLine(node.getPath());
+
+        String type = xsNode.getNodeType().equals(XsNode.XsNodeType.Field)? "(XMLNSC.Field)" : "(XMLNSC.Attribute)";
+        String assign = "'???'";
+
+        builder.append("SET ", indent)
+                .append(parentVariable).append(".").append(type).append(name)
+                .append(" = ")
+                .append(assign).appendLine(";")
+                .appendLine();
+    }
+
 
     public static String generateESQLTemplate(XmlSchemaTree tree) {
 

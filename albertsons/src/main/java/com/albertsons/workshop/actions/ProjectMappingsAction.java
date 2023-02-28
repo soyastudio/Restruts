@@ -42,12 +42,15 @@ public class ProjectMappingsAction extends ProjectAction {
                 Workspace.MAPPING_COLUMNS);
 
         dynaClass.getRows().forEach(e -> {
-            builder.append(e.get("Target"))
-                    .append("=")
-                    .append(getDataType(e))
-                    .append("::")
-                    .append(getCardinality(e))
-                    .append("\n");
+            if(e.get("Target") != null ) {
+                builder.append(e.get("Target"))
+                        .append("=")
+                        .append(getDataType(e))
+                        .append("::")
+                        .append(getCardinality(e))
+                        .append("\n");
+
+            }
         });
 
         return builder.toString();

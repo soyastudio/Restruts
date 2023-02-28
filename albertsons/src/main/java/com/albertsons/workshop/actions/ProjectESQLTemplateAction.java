@@ -1,5 +1,6 @@
 package com.albertsons.workshop.actions;
 
+import com.albertsons.workshop.configuration.Project;
 import com.albertsons.workshop.configuration.Workspace;
 import soya.framework.action.ActionDefinition;
 import soya.framework.action.ActionParameterType;
@@ -31,6 +32,12 @@ public class ProjectESQLTemplateAction extends ProjectAction {
     @Override
     public String execute() throws Exception {
         XmlSchemaTree tree = schemaTree();
+        Project project = getProject();
+        return Construct.generateESQLTemplate(tree, project.getPackageName(), project.getApplication());
+    }
+
+    public String execute2() throws Exception {
+        XmlSchemaTree tree = schemaTree();
 
         String mapping = mappingFile == null ? "work/" + Workspace.MAPPING_FILE : mappingFile;
         String sheet = mappingSheet == null ? Workspace.DEFAULT_MAPPING_SHEET : mappingSheet;
@@ -45,4 +52,6 @@ public class ProjectESQLTemplateAction extends ProjectAction {
 
         return Construct.generateESQLTemplate(tree);
     }
+
+
 }
