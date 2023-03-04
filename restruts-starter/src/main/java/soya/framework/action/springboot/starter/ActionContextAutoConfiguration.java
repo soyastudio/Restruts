@@ -22,7 +22,6 @@ import soya.framework.util.IndexedClassStore;
 
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
-import java.net.URLClassLoader;
 import java.util.*;
 import java.util.stream.StreamSupport;
 

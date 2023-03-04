@@ -34,6 +34,12 @@
 
         <dependency>
             <groupId>soya.framework</groupId>
+            <artifactId>restruts-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>soya.framework</groupId>
             <artifactId>restruts-document</artifactId>
             <version>${project.version}</version>
         </dependency>
