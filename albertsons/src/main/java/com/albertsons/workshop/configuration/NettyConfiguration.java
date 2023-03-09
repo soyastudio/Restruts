@@ -6,9 +6,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 import soya.framework.asm.visitors.DefaultClassVisitor;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +29,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NettyConfiguration {
 
     @PostConstruct
-    void init() throws IOException {
+    void init() throws Exception {
+        DispatcherServlet dispatcherServlet;
+        AnnotationConfigWebApplicationContext ctx;
+
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("soya/framework/action/actions/reflect/AbcAction.class");
 
         byte[] data = new byte[inputStream.available()];
@@ -38,6 +44,7 @@ public class NettyConfiguration {
         classReader.accept(new DefaultClassVisitor(), 0);
     }
 
+    @Bean
     ServerBootstrap serverBootstrap() {
 
         ClassReader classReader;

@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 
 @SpringBootApplication
 @EnableCaching
+
 public class RestrutsApplication {
     public static final String WORKSPACE_HOME = "workspace.home";
 
