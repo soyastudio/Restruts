@@ -1,5 +1,6 @@
 package soya.framework.restruts;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -16,7 +17,6 @@ import java.nio.file.Paths;
 
 @SpringBootApplication
 @EnableCaching
-
 public class RestrutsApplication {
     public static final String WORKSPACE_HOME = "workspace.home";
 
@@ -26,6 +26,7 @@ public class RestrutsApplication {
     }
 
     private static void init() {
+        System.out.println("-------------------- !!!");
         String url = RestrutsApplication.class.getProtectionDomain().getCodeSource().getLocation().toString();
         if(url.indexOf("!") > 0) {
             url = url.substring(0, url.indexOf("!"));

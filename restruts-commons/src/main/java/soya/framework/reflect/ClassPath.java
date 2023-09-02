@@ -32,7 +32,6 @@ public class ClassPath {
 
             }
 
-
         } else {
             Arrays.stream(paths).forEach(e -> {
                 File file = new File(e);

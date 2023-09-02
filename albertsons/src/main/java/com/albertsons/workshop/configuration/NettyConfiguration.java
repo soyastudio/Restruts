@@ -8,6 +8,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -19,6 +20,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.ReferenceQueue;
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,6 +32,13 @@ public class NettyConfiguration {
 
     @PostConstruct
     void init() throws Exception {
+
+        URLClassLoader classLoader;
+
+        System.out.println("========================== " + ClassLoader.getSystemClassLoader().getClass().getName());
+
+
+
         DispatcherServlet dispatcherServlet;
         AnnotationConfigWebApplicationContext ctx;
 

@@ -1,0 +1,14 @@
+patlaexander@google.com
+
+https://ce.qwiklabs.com/discovery
+
+You need additional access
+You need additional access to the project:  qwiklabs-gcp-02-7c4a7d91b7cf
+To request access, contact your project administrator and provide them a copy of the following information:
+
+Troubleshooting info:
+  Principal: vdesa08@safeway.com
+  Resource: qwiklabs-gcp-02-7c4a7d91b7cf
+  Troubleshooting URL: console.cloud.google.com/iam-admin/troubleshooter;permissions=resourcemanager.projects.get;principal=vdesa08@safeway.com;resources=%2F%2Fcloudresourcemanager.googleapis.com
+Patrick Alexander3:18 PM
+patlaexander@google.com

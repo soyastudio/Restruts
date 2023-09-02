@@ -1,0 +1,380 @@
+{
+  "DocumentData": {
+    "Document": {
+      "SystemEnvironmentCd": "PROD",
+      "VersionId": "2.7.1",
+      "DocumentID": "GROCERY_ORDER",
+      "DocumentNm": "PAYMENT_COMPLETED",
+      "CreationDt": "2023-05-17T16:36:03.256989-05:00",
+      "Description": "GroceryOrderDetail",
+      "SourceApplicationCd": "DTILL",
+      "TargetApplicationCd": "EDIS",
+      "SenderId": "SYSTEM",
+      "InternalFileTransferInd": "Y",
+      "MessageSequenceNbr": "7ee6dc32-eb3b-4410-9044-63c9a0efa84c",
+      "DataClassification": {
+        "DataClassificationLevel": {
+          "Code": "Internal"
+        },
+        "BusinessSensitivityLevel": {
+          "Code": "Low"
+        },
+        "PHIdataInd": "N",
+        "PCIdataInd": "Y",
+        "PIIdataInd": "Y"
+      }
+    },
+    "DocumentAction": {
+      "ActionTypeCd": "UPDATE",
+      "RecordTypeCd": "CHANGE"
+    }
+  },
+  "GroceryOrderData": {
+    "GroceryOrderHeader": {
+      "OrderId": "63360371",
+      "OrderCreateTS": "2023-05-16T02:45:27.271Z",
+      "OrderModifyTS": "2023-05-16T18:48:33.403Z",
+      "CompanyId": "1",
+      "VersionNbr": "1",
+      "OrderStatus": {
+        "StatusTypeCd": "PAYMENT_COMPLETED"
+      },
+      "EditCutoffDtTm": "2023-05-16T06:59:59.000Z",
+      "CancelCutOffTs": "2023-05-16T08:00:00.000Z",
+      "EditReasonType": {
+        "Code": "PAYMENT_COMPLETED"
+      },
+      "FulfillingFacility": {
+        "RetailStoreId": "1507",
+        "BannerCd": "Safeway",
+        "HybridStoreInd": "Y",
+        "MFCInd": "N",
+        "ERUMSEnabledInd": "Y",
+        "PremiumStoreInd": "Y",
+        "ThirdPartyDeliveryOnlyInd": "Y"
+      },
+      "GroceryOrderProfileType": {
+        "ProfileType": {
+          "Code": "MTO"
+        },
+        "ProfileValueInd": "N"
+      },
+      "RetailCustomer": {
+        "CustomerId": "520-000-0250042099628",
+        "CustomerAlternateId": {
+          "sequenceNbr": "250042099628"
+        },
+        "CustomerUUID": "98b7fe37-c323-406e-bee7-f0a578a74662",
+        "CustomerNm": {
+          "GivenNm": "TX0JyN",
+          "FamilyNm": "hTF4P"
+        },
+        "Contact": {
+          "Address": {
+            "AddressUsageTypeCd": "SHIP-TO",
+            "AddressLine1txt": "WhKA lTil9Yw6 bc",
+            "AddressLine2txt": "gAS7 j",
+            "CityNm": "San Francisco",
+            "PostalZoneCd": "94130-1229",
+            "StateCd": "CA",
+            "CountryCd": "USA"
+          }
+        },
+        "ClubCardNbr": "41035136610",
+        "CustomerPreference": {
+          "PreferenceType": {
+            "Code": "TEXT"
+          },
+          "OptInContactNbr": "4156020429",
+          "OptInInd": "true"
+        },
+        "CustomerSubscription": {
+          "OptInInd": "false"
+        }
+      },
+      "CurrencyCd": "USD",
+      "TotalAmt": "94.10",
+      "SNAPTotalAmt": "0.00",
+      "NonSNAPTotalAmt": "0.00",
+      "TotalBasePriceAmt": "94.64",
+      "EstimatedTotalPriceAmt": "83.17",
+      "EstimatedOrderTotalAmt": "101.82",
+      "TotalTaxFeeAmt": "10.93",
+      "MiscChargesType": {
+        "ChargeCd": "Container Deposit",
+        "ChargeAmt": "1.65"
+      },
+      "TaxInfo": {
+        "TaxTypeCd": "Sales Tax",
+        "TaxAmt": "4.97"
+      },
+      "CustomerOffers": {
+        "OfferId": "92302952",
+        "ReferenceOfferId": "92302952-ND",
+        "OfferSourceType": {
+          "Code": "OMS Non-Digital"
+        },
+        "OfferProgramType": {
+          "Code": "SC"
+        },
+        "OfferDiscountQty": "1",
+        "OfferStartTs": "2023-04-26T00:00:00.000Z",
+        "OfferEndTs": "2023-06-27T00:00:00.000Z",
+        "OfferCategoryId": "67",
+        "OfferCategoryNm": "001-Club Card Savings",
+        "OfferDsc": "Division Games points offer scorecard",
+        "OfferUsageInd": "false"
+      },
+      "CustomerPayment": {
+        "Tender": {
+          "TenderId": "NkWmeWD1lYJxIB1j",
+          "TenderTypeCd": "CREDITCARD",
+          "TenderSubTypeCd": "VISA",
+          "HolderNm": "n2hVg5 g kxC4rz",
+          "ExpireMonthYearTxt": "8Ob",
+          "BillingAddress": {
+            "PostalZoneCd": "94130"
+          },
+          "PostalCd": "94130",
+          "Token": {
+            "TokenId": "NkWmeWD1lYJxIB1j",
+            "TokenTypeCd": "CREDITCARD"
+          },
+          "Status": {
+            "StatusCd": "SETTLED"
+          },
+          "RequiredAuthAmt": "94.10",
+          "AuthCd": "05807B",
+          "AuthDt": "2023-05-16T18:48:33.403Z"
+        }
+      },
+      "CustomerSavings": {
+        "TotalCustomerSavingsAmt": "11.47",
+        "SavingsCategoryType": {
+          "SavingsCategoryNm": "Club Card Savings",
+          "SavingsAmt": "11.47"
+        }
+      },
+      "OrderRecordDateInfo": {
+        "CreateDtTm": "2023-05-16T02:45:27.271Z",
+        "CreateUserId": "CUSTOMER",
+        "UpdateDtTm": "2023-05-16T18:48:33.403Z",
+        "UpdateUserId": "PAYMENT_COMPLETED",
+        "OrderRecordSourceSystemType": {
+          "Code": "ECOMMERCE"
+        }
+      },
+      "OrderCreatedDeviceType": {
+        "Code": "WEB"
+      },
+      "OrderSourceSystemType": {
+        "Code": "ECOMMERCE"
+      },
+      "FulFillmentSystemType": {
+        "Code": "APS"
+      }
+    },
+    "GrocerySubOrder": {
+      "SubOrderType": {
+        "Code": "Wine",
+        "SubOrderTypeInd": "false"
+      },
+      "SubOrderNbr": "1",
+      "SubOrderStatus": {
+        "StatusTypeCd": "PAYMENT_COMPLETED"
+      },
+      "SubOrderEditReasonType": {
+        "Code": "PAYMENT_COMPLETED"
+      },
+      "SubOrderServiceLevelType": {
+        "Code": "REGULAR"
+      },
+      "SellerAddress": {
+        "AddressUsageTypeCd": "SHIP-FROM",
+        "AddressLine1txt": "2020 Market St",
+        "CityNm": "San Francisco",
+        "PostalZoneCd": "94114",
+        "StateCd": "CA"
+      },
+      "TaxInfoType": {
+        "TaxLocationId": "50759991",
+        "TaxCompanyId": "ABS_PARENT"
+      },
+      "GroceryOrderDetail": {
+        "CartLineNbr": "9",
+        "ItemId": {
+          "SystemSpecificItemId": "182030881",
+          "InternalItemId": "0021265100000",
+          "BaseProductNbr": "182030881",
+          "PLUCd": "0",
+          "ItemDescription": "Primo Taglio Roast Beef - 0.50 Lb"
+        },
+        "BasePriceAmt": "8.4900",
+        "UnitPriceAmt": "8.4900",
+        "ExtendedUnitPriceAmt": "16.9900",
+        "ExtendedItemPriceAmt": "8.5000",
+        "TotalPriceAmt": "8.4900",
+        "PricePerAmt": "16.9900",
+        "BasePricePerAmt": "16.9900",
+        "Quantity": "1.0000",
+        "UOM": {
+          "Quantity": "0.54"
+        },
+        "SellByWeightType": {
+          "Code": "P"
+        },
+        "AvgItemWeight": "0.5000",
+        "DiscountAllowedInd": "true",
+        "RewardAllowedInd": "true",
+        "SubstitutionType": {
+          "Code": "3",
+          "Description": "Best Available"
+        },
+        "CurrencyCd": "USD",
+        "RegulatedItemInd": "false",
+        "MadeToOrderItemInd": "false",
+        "PreparationTm": "0",
+        "PromotionPriceAmt": "8.5E+0",
+        "Department": {
+          "Code": "309"
+        },
+        "ServiceDepartment": {
+          "ServiceDepartmentId": "309",
+          "ServiceDepartmentNm": "Deli"
+        },
+        "DisplayType": {
+          "Code": "2"
+        },
+        "WICItemInd": "false",
+        "SNAPItemInd": "true",
+        "AutoReplenishmentOrderType": {
+          "AROLineInd": "false"
+        },
+        "DeliveredItem": {
+          "DeliveredItemLineNbr": "5008",
+          "FulfillmentOrderId": "63360371011",
+          "Item": {
+            "UPC": {
+              "UPCNbr": "021265160917",
+              "UPCTxt": "00021265160917"
+            },
+            "ScannedUPCNbr": "0212651609178",
+            "InternalItemScanCd": "0021265160917",
+            "SystemSpecificItemId": "182030881",
+            "InternalItemId": "0021265100000",
+            "PLUCd": "0",
+            "BaseProductNbr": "182030881"
+          },
+          "ItemSizeQty": "7.0000",
+          "ItemPackageQty": "1",
+          "SMICCd": "8203010103",
+          "SubstitutedItemInd": "false",
+          "Quantity": "1",
+          "UOM": {
+            "UOMCd": "WV"
+          },
+          "SellByWeightType": {
+            "Code": "P"
+          },
+          "AvgItemWeight": "0.5000",
+          "BasePriceAmt": "8.4900",
+          "ExtendedBasePriceAmt": "9.1700",
+          "UnitPriceAmt": "8.4900",
+          "ExtendedUnitPriceAmt": "16.9900",
+          "ItemPriceAmt": "8.4900",
+          "ExtendedItemPriceAmt": "9.1700",
+          "NetItemPriceAmt": "8.5000",
+          "PricePerAmt": "16.9900",
+          "BasePricePerAmt": "16.9900",
+          "TaxInfo": {
+            "ProductClassCd": "168",
+            "TotalTaxFeeAmt": "0.00",
+            "TaxDetailType": {
+              "TaxChargeCd": "Sales Tax",
+              "TaxAmt": "0.00"
+            }
+          },
+          "RegulatedItemInd": "false",
+          "PromotionPriceAmt": "9.17",
+          "RewardAllowedInd": "true",
+          "DiscountAllowedInd": "true",
+          "WICItemInd": "false",
+          "SNAPItemInd": "true",
+          "CustomerSavings": {
+            "TotalCustomerSavingsAmt": "0.00"
+          },
+          "AutoReplenishmentOrderType": {
+            "AROLineInd": "false"
+          }
+        },
+        "ItemSizeQty": "7.0000",
+        "ItemPackageQty": "1",
+        "SMICCd": "8203010103",
+        "OrderQty": "1.0000",
+        "FulfilledQty": "1.0000"
+      },
+      "FulFillmentType": {
+        "Code": "DELIVERY"
+      },
+      "PickupInfo": {},
+      "DeliveryInfo": {
+        "CustomerType": {
+          "Code": "RESIDENTIAL"
+        },
+        "DeliverySlotId": "1507TUE20230516REGULARDELIVERY12001600-2023-05-16",
+        "DeliverySlotType": {
+          "Code": "FOURHR"
+        },
+        "DeliveryServiceType": {
+          "Code": "ATTENDED"
+        },
+        "SlotPlan": {
+          "Code": "STANDARD"
+        },
+        "StartDttm": "2023-05-16T19:00:00.000Z",
+        "EndDttm": "2023-05-16T23:00:00.000Z",
+        "TotalDeliveryChargeAmt": "2",
+        "SlotAvailableDttm": "2023-05-09T19:00:00.000Z",
+        "SlotTillByDttm": "2023-05-16T18:23:49.000Z",
+        "SlotExpiryDttm": "2023-05-16T23:00:00.000Z",
+        "StageByDttm": "2023-05-16T17:50:00.000Z",
+        "EditCutoffDtTm": "2023-05-16T08:00:00.000Z",
+        "CustomerInstructionTxt": "Make sure: Unit F!",
+        "DeliveryTimeZoneCd": "America/Los_Angeles",
+        "PartnerData": {
+          "PartnerTypeCd": {
+            "Code": "pickerOption"
+          },
+          "PartnerNm": "ABS-GROCERY"
+        }
+      },
+      "ChargeInfo": {
+        "Charge": {
+          "Code": "0000000022155",
+          "Description": "DeliveryFee"
+        },
+        "ChargeCategory": {
+          "Code": "DeliveryFee"
+        },
+        "ChargeAmt": "3.95",
+        "CurrencyCd": "USD",
+        "TaxInfo": {
+          "TaxDetailType": {
+            "TaxChargeCd": "Sales Tax",
+            "TaxAmt": "0.34"
+          }
+        }
+      },
+      "CustomerService": {
+        "PhoneFaxContact": {
+          "TypeCode": "PHONE",
+          "PhoneNbrTxt": "8775054040",
+          "PhonePurposes": {
+            "PurposeDsc": "CUST_SERV_PHONE"
+          }
+        }
+      },
+      "ShoppingBagCnt": "4"
+    }
+  }
+}
